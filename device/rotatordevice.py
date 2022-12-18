@@ -5,6 +5,7 @@
 # not be used as an example of a real device. Settings not remembered.
 #
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
+# 18-Dec-2022   rbd 0.1 Type hints 
 #
 from threading import Timer
 from threading import Lock
@@ -16,13 +17,13 @@ class RotatorDevice(object):
     #
     def __init__(self):
         self._lock = Lock()
-        self.name = 'device'
+        self.name: str = 'device'
         #
         # Rotator device constants
         #
-        self._can_reverse = True
-        self._step_size = 1.0
-        self._steps_per_sec = 6
+        self._can_reverse: bool = True
+        self._step_size: float = 1.0
+        self._steps_per_sec: int = 6
         #
         # Rotator device state variables
         #
@@ -34,11 +35,11 @@ class RotatorDevice(object):
         #
         # Rotator engine
         #
-        self._timer = None
-        self._interval = 1.0 / self._steps_per_sec
-        self._stopped = True
+        self._timer: Timer = None
+        self._interval: float = 1.0 / self._steps_per_sec
+        self._stopped: bool = True
 
-    def start(self, from_run=False):
+    def start(self, from_run: bool = False) -> None:
         #print('[start] try to lock')
         self._lock.acquire()
         #print('[start] got lock')
@@ -56,7 +57,7 @@ class RotatorDevice(object):
             #print('[start] lock released')
 
 
-    def _run(self):
+    def _run(self) -> None:
         #print('[_run] (tmr expired) get lock')
         self._lock.acquire()
         #print('[_run] got lock : tgtpos=' + str(self._target_position) + ' pos=' + str(self._position))
@@ -88,7 +89,7 @@ class RotatorDevice(object):
             #print('[_run] more motion needed, start another timer interval')
             self.start(from_run = True)
 
-    def stop(self):
+    def stop(self) -> None:
         self._lock.acquire()
         print('[stop] Stopping...')
         self._stopped = True
@@ -100,53 +101,52 @@ class RotatorDevice(object):
 
     #
     # Guarded properties
-    # **TODO** Catch lock failures and raise error.
     #
     @property
-    def can_reverse(self):
+    def can_reverse(self) -> bool:
         self._lock.acquire()
         res =  self._can_reverse
         self._lock.release()
         return res
 
     @property
-    def reverse(self):
+    def reverse(self) -> bool:
         self._lock.acquire()
         res =  self._reverse
         self._lock.release()
         return res
     @reverse.setter
-    def reverse (self, reverse):
+    def reverse (self, reverse: bool):
         self._lock.acquire()
         self._reverse = reverse
         self._lock.release()
 
     @property
-    def step_size(self):
+    def step_size(self) -> float:
         self._lock.acquire()
         res =  self._step_size
         self._lock.release()
         return res
     @step_size.setter
-    def step_size (self, step_size):
+    def step_size (self, step_size: float):
         self._lock.acquire()
         self._step_size = step_size
         self._lock.release()
 
     @property
-    def steps_per_sec(self):
+    def steps_per_sec(self) -> int:
         self._lock.acquire()
         res =  self._steps_per_sec
         self._lock.release()
         return res
     @steps_per_sec.setter
-    def steps_per_sec (self, steps_per_sec):
+    def steps_per_sec (self, steps_per_sec: int):
         self._lock.acquire()
         self._steps_per_sec = steps_per_sec
         self._lock.release()
 
     @property
-    def position(self):
+    def position(self) -> float:
         self._lock.acquire()
         res = self._position
         print('[position] ' + str(res))
@@ -154,7 +154,7 @@ class RotatorDevice(object):
         return res
 
     @property
-    def target_position(self):
+    def target_position(self) -> float:
         self._lock.acquire()
         res =  self._target_position
         print('[target_position] ' + str(res))
@@ -162,7 +162,7 @@ class RotatorDevice(object):
         return res
 
     @property
-    def is_moving(self):
+    def is_moving(self) -> bool:
         self._lock.acquire()
         res =  self._is_moving
         print('[is_moving] ' + str(res))
@@ -170,7 +170,7 @@ class RotatorDevice(object):
         return res
 
     @property
-    def connected(self):
+    def connected(self) -> bool:
         self._lock.acquire()
         res =  self._connected
         self._lock.release()
@@ -188,7 +188,7 @@ class RotatorDevice(object):
     #
     # Methods
     #
-    def Move(self, pos):
+    def Move(self, pos: float) -> None:
         self._lock.acquire()
         print('[Move] pos=' + str(pos) + ' cur=' + str(self._position))
         self._is_moving = True
@@ -201,7 +201,7 @@ class RotatorDevice(object):
         self._lock.release()
         self.start()
 
-    def MoveAbsolute(self, pos):
+    def MoveAbsolute(self, pos: float) -> None:
         self._lock.acquire()
         print('[MoveAbs] pos=' + str(pos) + ' cur=' + str(self._position))
         self._is_moving = True
@@ -213,6 +213,6 @@ class RotatorDevice(object):
         self._lock.release()
         self.start()
 
-    def Halt(self):
+    def Halt(self) -> None:
         print('[Halt]')
         self.stop()

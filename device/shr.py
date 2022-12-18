@@ -37,7 +37,7 @@ def get_args_caseless(name: str, req: falcon.Request, default):
 # ------------------
 
 class PropertyResponse():
-    def __init__(self, value, req: falcon.Request, err = exceptions.Success):
+    def __init__(self, value, req: falcon.Request, err = exceptions.Success()):
         self.ServerTransactionID = getNextTransId()
         self.Value = value
         ctid = get_args_caseless('ClientTransactionID', req, None)
@@ -57,7 +57,7 @@ class PropertyResponse():
 # --------------
 
 class MethodResponse():
-    def __init__(self, formdata, err = exceptions.Success):
+    def __init__(self, formdata, err = exceptions.Success()):
         self.ServerTransactionID = getNextTransId()
         if 'ClientTransactionID' in formdata:
             self.ClientTransactionID = formdata['ClientTransactionID']
