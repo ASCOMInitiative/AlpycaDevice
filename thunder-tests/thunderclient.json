@@ -1,14 +1,14 @@
 [
   {
     "_id": "fd6449a5-e89b-44b5-bdad-df7a60fca8c6",
-    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "colId": "81596e36-20ed-4044-a647-e4309ec97c2d",
     "containerId": "",
     "name": "Management API Versions",
     "url": "http://192.168.0.42:5555/management/apiversions?ClientId=123&ClientTransactionID=321",
     "method": "GET",
-    "sortNum": 30000,
+    "sortNum": 10000,
     "created": "2022-12-17T20:47:58.190Z",
-    "modified": "2022-12-17T20:52:07.182Z",
+    "modified": "2022-12-20T18:50:07.852Z",
     "headers": [],
     "params": [
       {
@@ -26,14 +26,14 @@
   },
   {
     "_id": "7c992e7b-10e2-4bf9-a9bc-d6cdd9346ad4",
-    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "colId": "81596e36-20ed-4044-a647-e4309ec97c2d",
     "containerId": "",
     "name": "Management Description",
     "url": "http://192.168.0.42:5555/management/v1/description?ClientId=123&ClientTransactionID=321",
     "method": "GET",
-    "sortNum": 40000,
+    "sortNum": 20000,
     "created": "2022-12-17T20:50:44.080Z",
-    "modified": "2022-12-17T20:55:02.186Z",
+    "modified": "2022-12-20T18:50:14.199Z",
     "headers": [],
     "params": [
       {
@@ -51,14 +51,14 @@
   },
   {
     "_id": "8789fb6f-5738-4328-bde8-4a57833930e5",
-    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "colId": "81596e36-20ed-4044-a647-e4309ec97c2d",
     "containerId": "",
     "name": "Management Configured Devices",
     "url": "http://192.168.0.42:5555/management/v1/configureddevices?ClientId=123&ClientTransactionID=321",
     "method": "GET",
-    "sortNum": 50000,
+    "sortNum": 30000,
     "created": "2022-12-17T20:58:35.601Z",
-    "modified": "2022-12-17T21:00:12.540Z",
+    "modified": "2022-12-20T18:50:19.588Z",
     "headers": [],
     "params": [
       {
@@ -79,11 +79,11 @@
     "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
     "containerId": "",
     "name": "DriverVersion",
-    "url": "http://192.168.0.42:5555/api/v1/driverversion?ClientID=123&ClientTransactionID=321",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/driverversion?ClientID=123&ClientTransactionID=321",
     "method": "GET",
     "sortNum": 40000,
     "created": "2022-12-17T21:05:09.748Z",
-    "modified": "2022-12-17T21:06:31.687Z",
+    "modified": "2022-12-20T19:37:47.176Z",
     "headers": [],
     "params": [
       {
@@ -104,11 +104,11 @@
     "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
     "containerId": "",
     "name": "MoveAbsolute()",
-    "url": "http://192.168.0.42:5555/api/v1/moveabsolute",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/moveabsolute",
     "method": "PUT",
-    "sortNum": 50000,
+    "sortNum": 30000,
     "created": "2022-12-17T21:11:51.326Z",
-    "modified": "2022-12-18T18:40:51.099Z",
+    "modified": "2022-12-20T19:37:38.561Z",
     "headers": [],
     "params": [],
     "body": {
@@ -117,7 +117,7 @@
       "form": [
         {
           "name": "Position",
-          "value": "320"
+          "value": "15"
         },
         {
           "name": "ClientID",
@@ -136,11 +136,11 @@
     "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
     "containerId": "",
     "name": "Connected",
-    "url": "http://192.168.0.42:5555/api/v1/connected",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/connected",
     "method": "PUT",
-    "sortNum": 60000,
+    "sortNum": 20000,
     "created": "2022-12-17T21:38:32.673Z",
-    "modified": "2022-12-18T20:58:26.877Z",
+    "modified": "2022-12-20T21:26:55.514Z",
     "headers": [],
     "params": [],
     "body": {
@@ -149,7 +149,7 @@
       "form": [
         {
           "name": "Connected",
-          "value": "true"
+          "value": "True"
         },
         {
           "name": "ClientID",
@@ -157,6 +157,141 @@
         },
         {
           "name": "ClientTransactionID",
+          "value": "321"
+        }
+      ]
+    },
+    "tests": []
+  },
+  {
+    "_id": "652dcf10-adbf-402c-b5b6-f05b7707babb",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "Sync",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/sync",
+    "method": "PUT",
+    "sortNum": 50000,
+    "created": "2022-12-20T19:01:36.105Z",
+    "modified": "2022-12-20T19:37:57.534Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "formencoded",
+      "raw": "",
+      "form": [
+        {
+          "name": "Position",
+          "value": "10"
+        },
+        {
+          "name": "ClientID",
+          "value": "123"
+        },
+        {
+          "name": "ClientTransactionId",
+          "value": "321"
+        }
+      ]
+    },
+    "tests": []
+  },
+  {
+    "_id": "786fae39-5226-4ec4-a346-bc7dc612e60c",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "Position",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/position?ClientID=123&ClientTransactionID=321",
+    "method": "GET",
+    "sortNum": 60000,
+    "created": "2022-12-20T19:05:27.170Z",
+    "modified": "2022-12-20T19:38:26.759Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "ClientID",
+        "value": "123",
+        "isPath": false
+      },
+      {
+        "name": "ClientTransactionID",
+        "value": "321",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "cf41060e-8156-4d24-9249-04f76df1420e",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "MechanicalPosition",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/mechanicalposition?ClientID=123&ClientTransactionID=321",
+    "method": "GET",
+    "sortNum": 70000,
+    "created": "2022-12-20T19:10:48.222Z",
+    "modified": "2022-12-20T19:38:16.090Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "ClientID",
+        "value": "123",
+        "isPath": false
+      },
+      {
+        "name": "ClientTransactionID",
+        "value": "321",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "b41a7c9e-61d2-4049-ad80-06700e80cfe5",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "IsMoving",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/ismoving?ClientID=123&ClientTransactionID=321",
+    "method": "GET",
+    "sortNum": 80000,
+    "created": "2022-12-20T20:11:14.649Z",
+    "modified": "2022-12-20T20:11:14.649Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "ClientID",
+        "value": "123",
+        "isPath": false
+      },
+      {
+        "name": "ClientTransactionID",
+        "value": "321",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "6bbf43bb-3894-4cc0-9b87-ac37039c3a9d",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "Halt",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/halt",
+    "method": "PUT",
+    "sortNum": 90000,
+    "created": "2022-12-20T21:06:29.397Z",
+    "modified": "2022-12-20T21:06:29.397Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "formencoded",
+      "raw": "",
+      "form": [
+        {
+          "name": "ClientID",
+          "value": "123"
+        },
+        {
+          "name": "CLientTransactionID",
           "value": "321"
         }
       ]

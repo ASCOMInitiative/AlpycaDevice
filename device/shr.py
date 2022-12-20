@@ -1,5 +1,7 @@
 #
 # 15-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
+# 18-Dev-2022   rbd 0.1 Additional driver info items
+# 20-Dec-2022   rbd 0.1 Fix idiotic error in to_bool()
 #
 from threading import Lock
 import exceptions
@@ -10,10 +12,11 @@ import falcon
 # Data Validation
 # ---------------
 bools = ['true', 'false']                               # Only valid JSON bools allowed
-def to_bool(str) -> bool:
-    if str not in bools:
+def to_bool(str: str) -> bool:
+    val = str.lower()
+    if val not in bools:
         raise ValueError
-    return str == bools[0]
+    return val == bools[0]
 
 # -----------
 # Driver Info
@@ -23,7 +26,7 @@ s_DriverVersion = '0.1'
 s_DriverDescription = 'Alpaca Sample Rotator Device'
 s_DriverType = 'Rotator'
 s_DriverID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
-s_DriverInfo = ['Alpaca Sample Device', 'Implements Rotator', 'ASCOM Initiative']
+s_DriverInfo = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
 s_DriverInterfaceVersion = 3        # IRotatorV3
 
 
@@ -49,7 +52,7 @@ class PropertyResponse():
         self.Value = value
         ctid = get_args_caseless('ClientTransactionID', req, None)
         if not ctid is None:
-            self.ClientTransactionID = ctid
+            self.ClientTransactionID = int(ctid)
         else:
             self.ClientTransactionID = 0        # Per Alpaca, Return a 0 if ClientTransactionId is not in the request
         self.ErrorNumber = err.Number
@@ -67,7 +70,7 @@ class MethodResponse():
     def __init__(self, formdata, err = exceptions.Success()):
         self.ServerTransactionID = getNextTransId()
         if 'ClientTransactionID' in formdata:
-            self.ClientTransactionID = formdata['ClientTransactionID']
+            self.ClientTransactionID = int(formdata['ClientTransactionID'])
         else:
             self.ClientTransactionID = 0        # Per Alpaca, Return a 0 if ClientTransactionId is not in the request
         self.ErrorNumber = err.Number

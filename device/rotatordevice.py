@@ -44,6 +44,18 @@ class RotatorDevice(object):
         self._interval: float = 1.0 / self._steps_per_sec
         self._stopped: bool = True
 
+    def _pos_to_mech(self, pos: float) -> float:
+        mech = pos - self._pos_offset
+        if mech < 0.0:
+            mech += 360.0
+        return mech
+    
+    def _mech_to_pos(self, mech: float) -> float:
+        pos = mech + self._pos_offset
+        if pos >= 360.0:
+            pos -= 360.0
+        return pos
+
     def start(self, from_run: bool = False) -> None:
         #print('[start] try to lock')
         self._lock.acquire()
@@ -65,13 +77,13 @@ class RotatorDevice(object):
     def _run(self) -> None:
         #print('[_run] (tmr expired) get lock')
         self._lock.acquire()
-        #print('[_run] got lock : tgtmech=' + str(self._tgt_mech_pos) + ' mech=' + str(self._mech_pos))
+        #print(f'[_run] got lock : tgtmech={str(self._tgt_mech_pos)} mech={str(self._mech_pos)}')
         delta = self._tgt_mech_pos - self._mech_pos
-        if delta >= 360.0:
-           delta -= 360.0
-        if delta < 0.0:
+        if delta < -180.0:
            delta += 360.0
-        #    print('[_run] final delta = ' + str(delta))
+        if delta >= 180.0:
+           delta -= 360.0
+        #print(f'[_run] final delta={str(delta)}')
         if abs(delta) > (self._step_size / 2.0):
             self._is_moving = True
             if delta > 0:
@@ -104,23 +116,13 @@ class RotatorDevice(object):
         self._timer = None
         self._lock.release()
 
-    def _pos_to_mech(self, pos: float) -> float:
-        mech = pos - self._pos_offset
-        if mech < 0.0:
-            mech += 360.0
-    
-    def mech_to_pos(self, mech: float) -> float:
-        pos = mech + self._pos_offset
-        if pos >= 360.0:
-            pos -= 360.0
-
     #
     # Guarded properties
     #
     @property
     def can_reverse(self) -> bool:
         self._lock.acquire()
-        res =  self._can_reverse
+        res =  self._can_reverse 
         self._lock.release()
         return res
 
@@ -163,7 +165,7 @@ class RotatorDevice(object):
     @property
     def position(self) -> float:
         self._lock.acquire()
-        res = self.mech_to_pos(self._mech_pos)
+        res = self._mech_to_pos(self._mech_pos)
         print('[position] ' + str(res))
         self._lock.release()
         return res
@@ -179,7 +181,7 @@ class RotatorDevice(object):
     @property
     def target_position(self) -> float:
         self._lock.acquire()
-        res =  self.mech_to_pos(self._tgt_mech_pos)
+        res =  self._mech_to_pos(self._tgt_mech_pos)
         print('[target_position] ' + str(res))
         self._lock.release()
         return res
@@ -201,7 +203,7 @@ class RotatorDevice(object):
     @connected.setter
     def connected (self, connected: bool):
         self._lock.acquire()
-        if not connected and self._connected and self._is_moving:
+        if (not connected) and self._connected and self._is_moving:
             # Yes you could call Halt() but this is for illustration
             raise RuntimeError('Cannot disconnect while rotator is moving')
         self._connected = connected
@@ -227,7 +229,7 @@ class RotatorDevice(object):
             self._tgt_mech_pos -= 360.0
         if self._tgt_mech_pos < 0.0:
             self._tgt_mech_pos += 360.0
-        print(f'       targetpos={self.mech_to_pos(self._tgt_mech_pos)}')
+        print(f'       targetpos={self._mech_to_pos(self._tgt_mech_pos)}')
         self._lock.release()
         self.start()
 
@@ -248,8 +250,10 @@ class RotatorDevice(object):
             self._lock.release()
             raise RuntimeError('Cannot sync while rotator is moving')
         self._pos_offset = pos - self._mech_pos
-        if self._mech_pos < 0.0:
-            self._mech_pos += 360.0
+        if self._pos_offset < -180.0:
+           self._pos_offset += 360.0
+        if self._pos_offset >= 180.0:
+           self._pos_offset -= 360.0
         self._lock.release()
 
     def Halt(self) -> None:

@@ -36,7 +36,7 @@ class Connected:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Connected must be set to true or false')).json
             return
-        print (f'Connected = {conn}) from ClientID={formdata["ClientID"]}')
+        print (f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
         try:
             # ----------------------
             rot_dev.connected = conn
@@ -55,13 +55,14 @@ class IsMoving:
             return
         try:
             # ---------------------
-            pos = rot_dev.is_moving
+            moving = rot_dev.is_moving
             # ---------------------
         except Exception as ex:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
-        resp.text = PropertyResponse(pos, req).json
+        print(f'{moving=}')
+        resp.text = PropertyResponse(moving, req).json
 
 class MechanicalPosition:
     def on_get(self, req: falcon.Request, resp: falcon.Response):
@@ -72,6 +73,22 @@ class MechanicalPosition:
         try:
             # -------------------------------
             pos = rot_dev.mechanical_position
+            # -------------------------------
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req, 
+                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+            return
+        resp.text = PropertyResponse(pos, req).json
+
+class Position:
+    def on_get(self, req: falcon.Request, resp: falcon.Response):
+        if not rot_dev.connected:
+            resp.text = PropertyResponse(None, req, 
+                            NotConnectedException()).json
+            return
+        try:
+            # -------------------------------
+            pos = rot_dev.position
             # -------------------------------
         except Exception as ex:
             resp.text = PropertyResponse(None, req, 
@@ -166,6 +183,7 @@ class Halt:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = MethodResponse(formdata).json
+        print(f'RESP {resp.text}')
 
 
 class Move:
