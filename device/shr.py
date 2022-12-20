@@ -18,7 +18,14 @@ def to_bool(str) -> bool:
 # -----------
 # Driver Info
 # -----------
+s_DriverName = 'Sample Rotator'
 s_DriverVersion = '0.1'
+s_DriverDescription = 'Alpaca Sample Rotator Device'
+s_DriverType = 'Rotator'
+s_DriverID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
+s_DriverInfo = ['Alpaca Sample Device', 'Implements Rotator', 'ASCOM Initiative']
+s_DriverInterfaceVersion = 3        # IRotatorV3
+
 
 #
 # Get query string item with case-insensitive name

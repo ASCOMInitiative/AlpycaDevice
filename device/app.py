@@ -42,7 +42,7 @@ PORT = 5555                                             # Port on which the devi
 # ---------
 # DISCOVERY
 # ---------
-#_DSC = DiscoveryResponder.DiscoveryResponder(MCAST, HOST, PORT)
+_DSC = DiscoveryResponder(MCAST, HOST, PORT)
 
 # ----------------------------------
 # MAIN HTTP/REST API ENGINE (FALCON)

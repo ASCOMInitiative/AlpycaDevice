@@ -3,9 +3,10 @@
 # ================================================
 #
 # 17-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
+# 19-Dec-2022   rbd 0.1 Constants in shr.py
 #
 import falcon
-from shr import PropertyResponse, s_DriverVersion
+from shr import *
 
 # -----------
 # APIVersions
@@ -24,7 +25,7 @@ class description():
         desc = {
             'ServerName' : 'Alpaca Sample Device Server', 
             'Manufacturer' : 'ASCOM Initiative',
-            'ManufacturerVersion' : '0.1',      # TODO MAKE CONF OR GLOBAL, USE SEMVER
+            'ManufacturerVersion' : s_DriverVersion,
             'Location' : 'Alvord Desert' 
             }
         resp.text = PropertyResponse(desc, req).json
@@ -36,10 +37,10 @@ class configureddevices():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
         confarray = [                          # TODO ADD ONE FOR EACH DEVICE (ANY TYPE) SERVED
             {
-            'DeviceName' : 'Alpaca Sample Device', 
-            'DeviceType' : 'Rotator',
-            'DeviceNumber' : 0,
-            'UniqueID' : '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
+            'DeviceName'    : s_DriverDescription, 
+            'DeviceType'    : s_DriverType,
+            'DeviceNumber'  : 0,
+            'UniqueID'      : s_DriverID 
             }
         ]
         resp.text = PropertyResponse(confarray, req).json
