@@ -61,7 +61,6 @@ class IsMoving:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
-        print(f'{moving=}')
         resp.text = PropertyResponse(moving, req).json
 
 class MechanicalPosition:
@@ -274,9 +273,9 @@ class MoveMechanical:
 
         print (f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
         try:
-            # --------------------------
-            rot_dev.MoveAbsolute(newpos)    # async
-            # --------------------------
+            # ----------------------------
+            rot_dev.MoveMechanical(newpos)    # async
+            # ----------------------------
         except Exception as ex:
             resp.text = MethodResponse(formdata,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json

@@ -1,6 +1,7 @@
 #
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 20-Dec-2022   rbd 0.1 Correct endpoint URIs
+# 21-Dec-2022   rbd 0.1 Refactor for import protection
 #
 
 from wsgiref.simple_server import make_server
@@ -13,46 +14,13 @@ import rotator
 import management
 
 API_VERSION = 1
+PORT = 5555                                             # Port on which the device responds
 
 # -------------------
 # Discovery responder
 # -------------------
 from discovery import DiscoveryResponder
 
-# -----------------
-# Network Connection
-# ----------------
-if os.name == 'nt':                                     # This is really Windows (my dev system eh?)
-    HOST = '127.0.0.1'
-    MCAST = '127.0.0.255'
-    print(f' * Running on Windows for Development... {HOST}')
-    print(f' * Assuming broadcast address is {MCAST}')
-else:
-#
-# Unbelievable what you need to do to get your live IP address
-# on Linux (which one????) and even more fun to know the 
-# correct multicast address. This is a sample so I just hard code
-# both here. See ipsddress and netifaces if you want some fun.
-#
-    HOST = '192.168.0.42'                               # Your device's IP(V4) address
-    MCAST = '192.168.0.255'                             # Discovery: Depends on your CIDR block
-    print(f' * Assuming run on Raspberry Pi Linux {HOST}')
-
-PORT = 5555                                             # Port on which the device responds
-
-# ---------
-# DISCOVERY
-# ---------
-_DSC = DiscoveryResponder(MCAST, HOST, PORT)
-
-# ----------------------------------
-# MAIN HTTP/REST API ENGINE (FALCON)
-# ----------------------------------
-# falcon.App instances are callable WSGI apps
-falc_app = falcon.App()
-#
-# Initialize routes for each endpoint the magic way
-#
 def init_routes(app: falcon.App, devname: str, module):
     # Magic to get list of endpoint controller classes in given module
     # Note that it is suufficient to create the controller instance
@@ -63,22 +31,60 @@ def init_routes(app: falcon.App, devname: str, module):
     for cname,ctype in memlist:
         if ctype.__module__ == module.__name__:    # Only classes *defined* in the module
             app.add_route(f'/api/v{API_VERSION}/{devname}/0/{cname.lower()}', ctype())  # type() creates instance!
-init_routes(falc_app, 'rotator', common)
-init_routes(falc_app, 'rotator', rotator)
-falc_app.add_route('/management/apiversions', management.apiversions())
-falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
-falc_app.add_route(f'/management/v{API_VERSION}/configureddevices', management.configureddevices())
 
 
-# ==================
-# SERVER APPLICATION
-# ==================
+def main():
 
-if __name__ == '__main__':
+    # ------------------
+    # Network Connection
+    # ------------------
+    #
+    # TODO - Improve this
+    #
+    if os.name == 'nt':                                     # This is really Windows (my dev system eh?)
+        HOST = '127.0.0.1'
+        MCAST = '127.0.0.255'
+        print(f' * Running on Windows for Development... {HOST}')
+        print(f' * Assuming broadcast address is {MCAST}')
+    else:
+        # Unbelievable what you need to do to get your live IP address
+        # on Linux (which one????) and even more fun to know the 
+        # correct multicast address. This is a sample so I just hard code
+        # both here. See ipsddress and netifaces if you want some fun.
+        #
+        HOST = '192.168.0.42'                               # Your device's IP(V4) address
+        MCAST = '192.168.0.255'                             # Discovery: Depends on your CIDR block
+        print(f' * Assuming run on Raspberry Pi Linux {HOST}')
+
+    # ---------
+    # DISCOVERY
+    # ---------
+    _DSC = DiscoveryResponder(MCAST, HOST, PORT)
+
+    # ----------------------------------
+    # MAIN HTTP/REST API ENGINE (FALCON)
+    # ----------------------------------
+    # falcon.App instances are callable WSGI apps
+    falc_app = falcon.App()
+    #
+    # Initialize routes for each endpoint the magic way
+    #
+    init_routes(falc_app, 'rotator', common)
+    init_routes(falc_app, 'rotator', rotator)
+    falc_app.add_route('/management/apiversions', management.apiversions())
+    falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
+    falc_app.add_route(f'/management/v{API_VERSION}/configureddevices', management.configureddevices())
+
+    # ------------------
+    # SERVER APPLICATION
+    # ------------------
     # Using the lightweight built-in Python wsgi.simple_server
     with make_server(HOST, PORT, falc_app) as httpd:
         print(f'Serving on port {PORT}...')
-
         # Serve until process is killed
         httpd.serve_forever()
 
+# ========================
+if __name__ == '__main__':
+    main()
+# ========================
