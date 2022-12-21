@@ -199,10 +199,14 @@ class Move:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Position not a valid integer.')).json
             return
-        if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
-            return
+        # if newpos < 0.0 or newpos >= 360.0:
+        #     resp.text = MethodResponse(formdata, 
+        #                     InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+        #     return
+        if newpos < 0.0:
+            newpos += 360.0
+        if newpos >= 360.0:
+            newpos -= 360.0
         print (f'Move({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # ------------------
@@ -227,10 +231,14 @@ class MoveAbsolute:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Position not a valid integer.')).json
             return
-        if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
-            return
+        # if newpos < 0.0 or newpos >= 360.0:
+        #     resp.text = MethodResponse(formdata, 
+        #                     InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+        #     return
+        if newpos < 0.0:
+            newpos += 360.0
+        if newpos >= 360.0:
+            newpos -= 360.0
         print (f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # --------------------------
@@ -255,10 +263,15 @@ class MoveMechanical:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Position not a valid integer.')).json
             return
-        if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
-            return
+        # if newpos < 0.0 or newpos >= 360.0:
+        #     resp.text = MethodResponse(formdata, 
+        #                     InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+        #     return
+        if newpos < 0.0:
+            newpos += 360.0
+        if newpos >= 360.0:
+            newpos -= 360.0
+
         print (f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # --------------------------

@@ -4,6 +4,7 @@
 #
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 18-Dec-2022   rbd 0.1 Implement remaining controller classes
+# 20-Dec-2022   rbd 0.1 Fix SupportedActions ha ha.
 #
 import falcon
 from exceptions import *
@@ -55,5 +56,5 @@ class Name():
 
 class SupportedActions():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
-        resp.text = PropertyResponse(None, req, NotImplementedException()).json
+        resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 
