@@ -13,7 +13,7 @@ from threading import Thread                            # Same here
 class DiscoveryResponder(Thread):
     def __init__(self, MCAST, ADDR, PORT):
         Thread.__init__(self, name='Discovery')
-        # See https://stackoverflow.com/a/32372627/159508
+        # TODO See https://stackoverflow.com/a/32372627/159508
         # It's a sledge hammer technique to bind to ' ' for sending multicast
         # The right way is to bind to the broadcast address for the current
         # subnet. 

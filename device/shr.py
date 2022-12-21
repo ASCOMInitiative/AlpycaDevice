@@ -90,6 +90,6 @@ _stid = 0
 
 def getNextTransId():
     with _lock:
-        global _stid                            # TODO Why this and not _lock?!?!?!?
+        global _stid
         _stid += 1
     return _stid
