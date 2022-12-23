@@ -2,7 +2,7 @@
 # 15-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 18-Dev-2022   rbd 0.1 Additional driver info items
 # 20-Dec-2022   rbd 0.1 Fix idiotic error in to_bool()
-#
+# 22-Dec-2022   rbd 0.1 DeviceMetadata
 from threading import Lock
 import exceptions
 import json
@@ -19,15 +19,18 @@ def to_bool(str: str) -> bool:
     return val == bools[0]
 
 # -----------
-# Driver Info
+# Device Info
 # -----------
-s_DriverName = 'Sample Rotator'
-s_DriverVersion = '0.1'
-s_DriverDescription = 'Alpaca Sample Rotator Device'
-s_DriverType = 'Rotator'
-s_DriverID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
-s_DriverInfo = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
-s_DriverInterfaceVersion = 3        # IRotatorV3
+# Static metadata not subject to configuration changes
+class DeviceMetadata:
+    Name = 'Sample Rotator'
+    Version = '0.1'
+    Description = 'Alpaca Sample Rotator '
+    Type = 'Rotator'
+    ID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
+    Info = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
+    Manufacturer = 'ASCOM Initiative'
+    InterfaceVersion = 3        # IRotatorV3
 
 
 #

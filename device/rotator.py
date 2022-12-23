@@ -7,8 +7,8 @@
 # 19-Dec-2022   rbd 0.1 Implement all IRotatorV3 endpoints
 #
 import falcon
-from shr import *
-from exceptions import *
+from shr import PropertyResponse, MethodResponse, to_bool
+from exceptions import *    # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
 
