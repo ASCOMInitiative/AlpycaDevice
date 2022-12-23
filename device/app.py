@@ -4,8 +4,8 @@
 # 21-Dec-2022   rbd 0.1 Refactor for import protection. Add configurtion.
 #
 
-from wsgiref.simple_server import make_server
-import os
+from wsgiref.simple_server import  WSGIRequestHandler, make_server
+import sys
 import inspect
 import falcon
 # Controller classes (for routing)
@@ -14,15 +14,40 @@ import rotator
 import management
 # Config file support
 from conf import Config
+# Discovery module
+from discovery import DiscoveryResponder
 
 #--------------
 API_VERSION = 1
 #--------------
 
-# -------------------
-# Discovery responder
-# -------------------
-from discovery import DiscoveryResponder
+#
+# Control logging of requests to stdout as well as our own logfile
+# https://stackoverflow.com/questions/31433682/control-wsgiref-simple-server-log
+#
+class LoggingWSGIRequestHandler(WSGIRequestHandler):
+
+    def log_message(self, format, *args):
+        """ 
+            Produce a request log message in the venerable NCSA Common Log Format
+            https://www.w3.org/Daemon/User/Config/Logging.html#common-logfile-format
+            This is the  default format for wsgiref, but we capture it to log to a file
+
+            Parameters:
+                format      Nominally '"%s" %s %s'
+                args[0]     HTTP Method and URI ("request")
+                args[1]     HTTP response status code
+                args[2]     HTTP response content-length
+            
+            Example:
+                '"GET /api/v1/rotator/0/driverversion?ClientID=123&ClientTransactionID=321 HTTP/1.1" 200 108'
+        """
+        msg = "%s - - [%s] %s\n" % (self.client_address[0],
+                                    self.log_date_time_string(),
+                                    format%args)
+        if Config.log_to_stdout:
+            sys.stderr.write(msg)
+
 
 #-----------------------
 # Magic routing function
@@ -66,7 +91,7 @@ def main():
     # SERVER APPLICATION
     # ------------------
     # Using the lightweight built-in Python wsgi.simple_server
-    with make_server(Config.ip_address, Config.port, falc_app) as httpd:
+    with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
         print(f'Serving on {Config.ip_address}:{Config.port}...')
         # Serve until process is killed
         httpd.serve_forever()
