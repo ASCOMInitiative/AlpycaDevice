@@ -1,4 +1,5 @@
 import toml
+import logging
 
 # Of course you can read this from a config file here
 _s = '''
@@ -10,6 +11,7 @@ mc_address = '192.168.0.255'
 port = 5555
 
 [server]
+log_level = 'INFO'
 log_to_stdout = true
 location = 'Alvord Desert'
 verbose_driver_exceptions = true
@@ -33,6 +35,7 @@ class Config:
     # --------------
     # Server Section
     # --------------
+    log_level: int = logging.getLevelName(_dict['server']['log_level'])  # Not documented but works (!!!!)
     log_to_stdout: str = _dict['server']['log_to_stdout']
     location: str = _dict['server']['location']
     verbose_driver_exceptions: bool = _dict['server']['verbose_driver_exceptions']

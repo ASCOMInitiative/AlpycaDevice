@@ -8,8 +8,12 @@
 # 22-Dec-2022   rbd 0.1 Refectored metadata support
 #
 import falcon
+import logging
 from exceptions import *    # Only exception classes here
 from shr import PropertyResponse, MethodResponse, DeviceMetadata
+
+logger = logging.getLogger(__name__)
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------
@@ -49,6 +53,7 @@ class InterfaceVersion():
 
 class DriverVersion():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('DriverVersion')
         resp.text = PropertyResponse(DeviceMetadata.Version, req).json
 
 class Name():

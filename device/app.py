@@ -2,12 +2,14 @@
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 20-Dec-2022   rbd 0.1 Correct endpoint URIs
 # 21-Dec-2022   rbd 0.1 Refactor for import protection. Add configurtion.
+# 22-Dec-2020   rbd 0.1 Start of logging 
 #
 
 from wsgiref.simple_server import  WSGIRequestHandler, make_server
 import sys
 import inspect
 import falcon
+import logging
 # Controller classes (for routing)
 import common
 import rotator
@@ -42,6 +44,7 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
             Example:
                 '"GET /api/v1/rotator/0/driverversion?ClientID=123&ClientTransactionID=321 HTTP/1.1" 200 108'
         """
+        #TODO Log in UTC not local
         msg = "%s - - [%s] %s\n" % (self.client_address[0],
                                     self.log_date_time_string(),
                                     format%args)
@@ -68,6 +71,17 @@ def init_routes(app: falcon.App, devname: str, module):
 # ===========
 def main():
 
+    # -------
+    # LOGGING
+    #--------
+    logging.basicConfig(level=Config.log_level)
+    handler = logging.FileHandler('rotator.log', mode='w')
+    handler.setLevel(Config.log_level)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger = logging.getLogger(__name__)
+    logger.addHandler(handler)
+
     # ---------
     # DISCOVERY
     # ---------
@@ -92,7 +106,7 @@ def main():
     # ------------------
     # Using the lightweight built-in Python wsgi.simple_server
     with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
-        print(f'Serving on {Config.ip_address}:{Config.port}...')
+        logger.info(f'Serving on {Config.ip_address}:{Config.port}...')
         # Serve until process is killed
         httpd.serve_forever()
 
