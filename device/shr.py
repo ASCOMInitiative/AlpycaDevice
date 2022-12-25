@@ -3,11 +3,17 @@
 # 18-Dev-2022   rbd 0.1 Additional driver info items
 # 20-Dec-2022   rbd 0.1 Fix idiotic error in to_bool()
 # 22-Dec-2022   rbd 0.1 DeviceMetadata
+# 24-Dec-2022   rbd 0.1 Logging
 from threading import Lock
 import exceptions
 import json
 import falcon
+import logging
 
+global logger
+logger = None   # Set to global logger at app startup
+def set_shr_logger(lgr):
+    logger = lgr
 # ---------------
 # Data Validation
 # ---------------

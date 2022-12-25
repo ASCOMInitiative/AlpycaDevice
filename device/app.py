@@ -3,11 +3,12 @@
 # 20-Dec-2022   rbd 0.1 Correct endpoint URIs
 # 21-Dec-2022   rbd 0.1 Refactor for import protection. Add configurtion.
 # 22-Dec-2020   rbd 0.1 Start of logging 
+# 24-Dec-2022   rbd 0.1 Logging
 #
-
 from wsgiref.simple_server import  WSGIRequestHandler, make_server
 import sys
 import inspect
+import time
 import falcon
 import logging
 # Controller classes (for routing)
@@ -17,7 +18,12 @@ import management
 # Config file support
 from conf import Config
 # Discovery module
-from discovery import DiscoveryResponder
+from discovery import DiscoveryResponder, set_disc_logger
+# Just the shared logger hooks avoid importing other stuff
+from conf import set_conf_logger
+from shr import set_shr_logger
+
+logger = None               # Logger used throughout.
 
 #--------------
 API_VERSION = 1
@@ -28,29 +34,16 @@ API_VERSION = 1
 # https://stackoverflow.com/questions/31433682/control-wsgiref-simple-server-log
 #
 class LoggingWSGIRequestHandler(WSGIRequestHandler):
-
+    logger = None           # Set during app startup
     def log_message(self, format, *args):
         """ 
-            Produce a request log message in the venerable NCSA Common Log Format
-            https://www.w3.org/Daemon/User/Config/Logging.html#common-logfile-format
-            This is the  default format for wsgiref, but we capture it to log to a file
-
             Parameters:
                 format      Nominally '"%s" %s %s'
                 args[0]     HTTP Method and URI ("request")
                 args[1]     HTTP response status code
                 args[2]     HTTP response content-length
-            
-            Example:
-                '"GET /api/v1/rotator/0/driverversion?ClientID=123&ClientTransactionID=321 HTTP/1.1" 200 108'
         """
-        #TODO Log in UTC not local
-        msg = "%s - - [%s] %s\n" % (self.client_address[0],
-                                    self.log_date_time_string(),
-                                    format%args)
-        if Config.log_to_stdout:
-            sys.stderr.write(msg)
-
+        logger.info(f'{self.client_address[0]} {format%args}')
 
 #-----------------------
 # Magic routing function
@@ -71,16 +64,37 @@ def init_routes(app: falcon.App, devname: str, module):
 # ===========
 def main():
 
+    global logger   # Allow access by LoggingWSGIRequestHandler above
     # -------
     # LOGGING
     #--------
+    # This single logger is used throughout. The module name (the param for get_logger())
+    # isn't needed and would be 'root' anyway, sort of useless. Also the default date-time
+    # is local time, and not ISO-8601. We log in UTC/ISO format. Finally our config options
+    # allow for suppression of logging to stdout, and for this we remove the default stdout
+    # handler. Thank heaven that Python logging is thread-safe!
+    #
     logging.basicConfig(level=Config.log_level)
+    logger = logging.getLogger()                # Nameless, see above
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s', '%Y-%m-%dT%H:%M:%S' )
+    formatter.converter = time.gmtime           # UTC time
+    logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above
+    # Add a logfile handler, same formatter and level
     handler = logging.FileHandler('rotator.log', mode='w')
     handler.setLevel(Config.log_level)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
-    logger = logging.getLogger(__name__)
     logger.addHandler(handler)
+    if not Config.log_to_stdout:
+        logger.debug('Logging to stdout disabled in settings')
+        logger.removeHandler(logger.handlers[0])    # This is the stdout handler
+    # Share this logger throughout
+    common.logger = logger
+    rotator.logger = logger
+    rotator.start_rot_device(logger)
+    set_shr_logger(logger)
+    set_conf_logger(logger)
+    set_disc_logger(logger)
+    LoggingWSGIRequestHandler.logger = logger
 
     # ---------
     # DISCOVERY

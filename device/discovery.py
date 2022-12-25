@@ -5,10 +5,17 @@
 # 17-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 19-Dec-2022   rbd 0.1 Validated with ConformU discovery diagnostics
 #               Add thread name 'Discovery'
+# 24-Dec-2022   rbd 0.1 Logging
 #
 import os
 import socket                                           # for discovery responder
 from threading import Thread                            # Same here
+import logging
+
+global logger
+logger  = None
+def set_disc_logger(lgr) -> logger:
+    logger = lgr
 
 class DiscoveryResponder(Thread):
     def __init__(self, MCAST, ADDR, PORT):
@@ -27,7 +34,7 @@ class DiscoveryResponder(Thread):
         try:
             self.rsock.bind(self.device_address)
         except:
-            print('Discovery responder: failure to bind receive socket')
+            logger.error('Discovery responder: failure to bind receive socket')
             self.rsock.close()
             self.rsock = 0
             raise
@@ -37,7 +44,7 @@ class DiscoveryResponder(Thread):
         try:
              self.tsock.bind((ADDR, 0))
         except:
-            print('Discovery responder: failure to bind send socket')
+            logger.error('Discovery responder: failure to bind send socket')
             self.tsock.close()
             self.tsock = 0
             raise
@@ -49,6 +56,6 @@ class DiscoveryResponder(Thread):
         while True:
             data, addr = self.rsock.recvfrom(1024)
             datascii = str(data, 'ascii')
-            print('Disc rcv ' + datascii + ' from ' + str(addr))
+            logger.info(f'Disc rcv {datascii} from {str(addr)}')
             if 'alpacadiscovery1' in datascii:
                 self.tsock.sendto(self.alpaca_response.encode(), addr)

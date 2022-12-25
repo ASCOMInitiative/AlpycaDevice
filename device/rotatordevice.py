@@ -7,21 +7,23 @@
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 18-Dec-2022   rbd 0.1 Type hints 
 # 19-Dec-2022   rbd 0.1 Add logic for IRotatorV3 offsets
+# 24-Dec-2022   rbd 0.1 Logging
 #
 from threading import Timer
 from threading import Lock
+import logging
 
-# TODO Move connected checks here and raise RuntimeExeption 
-# TODO Change commented-out diagnostics to use f-strings
+# TODO Move connected checks here and raise RuntimeExeption ??
 
-class RotatorDevice(object):
+class RotatorDevice:
     """Implements a rotator device that runs in a separate thread"""
     #
     # Only override __init_()  and run() (pydoc 17.1.2)
     #
-    def __init__(self):
+    def __init__(self, logger):
         self._lock = Lock()
         self.name: str = 'device'
+        self.logger = logger
         #
         # Rotator device constants
         #
@@ -61,58 +63,58 @@ class RotatorDevice(object):
         return pos
 
     def start(self, from_run: bool = False) -> None:
-        #print('[start] try to lock')
+        self.logger.debug('[start] try to lock')
         self._lock.acquire()
-        #print('[start] got lock')
+        self.logger.debug('[start] got lock')
         if from_run or self._stopped:
             self._stopped = False
-            #print('[start] new timer')
+            self.logger.debug('[start] new timer')
             self._timer = Timer(self._interval, self._run)
-            #print('[start] now start the timer')
+            self.logger.debug('[start] now start the timer')
             self._timer.start()
-            #print('[start] timer started')
+            self.logger.debug('[start] timer started')
             self._lock.release()
-            #print('[start] lock released')
+            self.logger.debug('[start] lock released')
         else:
             self._lock.release()
-            #print('[start] lock released')
+            self.logger.debug('[start] lock released')
 
 
     def _run(self) -> None:
-        #print('[_run] (tmr expired) get lock')
+        self.logger.debug('[_run] (tmr expired) get lock')
         self._lock.acquire()
-        #print(f'[_run] got lock : tgtmech={str(self._tgt_mech_pos)} mech={str(self._mech_pos)}')
+        self.logger.debug(f'[_run] got lock : tgtmech={str(self._tgt_mech_pos)} mech={str(self._mech_pos)}')
         delta = self._tgt_mech_pos - self._mech_pos
         if delta < -180.0:
            delta += 360.0
         if delta >= 180.0:
            delta -= 360.0
-        #print(f'[_run] final delta={str(delta)}')
+        self.logger.debug(f'[_run] final delta={str(delta)}')
         if abs(delta) > (self._step_size / 2.0):
             self._is_moving = True
             if delta > 0:
-                #print('[_run] delta > 0 go positive')
+                self.logger.debug('[_run] delta > 0 go positive')
                 self._mech_pos += self._step_size
                 if self._mech_pos >= 360.0:
                     self._mech_pos -= 360.0
             else:
-                #print('[_run] delta < 0 go negative')
+                self.logger.debug('[_run] delta < 0 go negative')
                 self._mech_pos -= self._step_size
                 if self._mech_pos < 0.0:
                     self._mech_pos += 360.0
-            #print(f'[_run] new pos = {str(self._mech_to_pos(self._mech_pos))}')
+            self.logger.debug(f'[_run] new pos = {str(self._mech_to_pos(self._mech_pos))}')
         else:
             self._is_moving = False
             self._stopped = True
         self._lock.release()
-        #print('[_run] lock released')
+        self.logger.debug('[_run] lock released')
         if self._is_moving:
-            #print('[_run] more motion needed, start another timer interval')
+            self.logger.debug('[_run] more motion needed, start another timer interval')
             self.start(from_run = True)
 
     def stop(self) -> None:
         self._lock.acquire()
-        #print('[stop] Stopping...')
+        self.logger.debug('[stop] Stopping...')
         self._stopped = True
         self._is_moving = False
         if self._timer is not None:
@@ -170,7 +172,7 @@ class RotatorDevice(object):
     def position(self) -> float:
         self._lock.acquire()
         res = self._mech_to_pos(self._mech_pos)
-        #print('[position] ' + str(res))
+        self.logger.debug(f'[position] {str(res)}')
         self._lock.release()
         return res
 
@@ -178,7 +180,7 @@ class RotatorDevice(object):
     def mechanical_position(self) -> float:
         self._lock.acquire()
         res = self._mech_pos
-        #print('[mech position] ' + str(res))
+        self.logger.debug(f'[mech position] {str(res)}')
         self._lock.release()
         return res
 
@@ -186,7 +188,7 @@ class RotatorDevice(object):
     def target_position(self) -> float:
         self._lock.acquire()
         res =  self._mech_to_pos(self._tgt_mech_pos)
-        #print('[target_position] ' + str(res))
+        self.logger.debug(f'[target_position] {str(res)}')
         self._lock.release()
         return res
 
@@ -194,7 +196,7 @@ class RotatorDevice(object):
     def is_moving(self) -> bool:
         self._lock.acquire()
         res =  self._is_moving
-        #print('[is_moving] ' + str(res))
+        self.logger.debug(f'[is_moving] {str(res)}')
         self._lock.release()
         return res
 
@@ -211,10 +213,10 @@ class RotatorDevice(object):
             # Yes you could call Halt() but this is for illustration
             raise RuntimeError('Cannot disconnect while rotator is moving')
         self._connected = connected
-        # if connected:
-        #     print('[connected]')
-        # else:
-        #     print('[disconnected]')
+        if connected:
+            self.logger.info('[connected]')
+        else:
+            self.logger.info('[disconnected]')
         self._lock.release()
 
     #
@@ -226,14 +228,14 @@ class RotatorDevice(object):
         if self._is_moving:
             self._lock.release()
             raise RuntimeError('Cannot start a move while the rotator is moving')
-        #print(f'[Move] pos={str(delta_pos)}')
+        self.logger.debug(f'[Move] pos={str(delta_pos)}')
         self._is_moving = True
         self._tgt_mech_pos = self._mech_pos + delta_pos - self._pos_offset
         if self._tgt_mech_pos >= 360.0:
             self._tgt_mech_pos -= 360.0
         if self._tgt_mech_pos < 0.0:
             self._tgt_mech_pos += 360.0
-        #print(f'       targetpos={self._mech_to_pos(self._tgt_mech_pos)}')
+        self.logger.debug(f'       targetpos={self._mech_to_pos(self._tgt_mech_pos)}')
         self._lock.release()
         self.start()
 
@@ -242,7 +244,7 @@ class RotatorDevice(object):
         if self._is_moving:
             self._lock.release()
             raise RuntimeError('Cannot start a move while the rotator is moving')
-        #print(f'[MoveAbs] pos={str(pos)}')
+        self.logger.debug(f'[MoveAbs] pos={str(pos)}')
         self._is_moving = True
         self._tgt_mech_pos = self._pos_to_mech(pos)
         self._lock.release()
@@ -253,7 +255,7 @@ class RotatorDevice(object):
         if self._is_moving:
             self._lock.release()
             raise RuntimeError('Cannot start a move while the rotator is moving')
-        #print(f'[MoveMech] pos={str(pos)}')
+        self.logger.debug(f'[MoveMech] pos={str(pos)}')
         self._is_moving = True
         self._tgt_mech_pos = pos
         self._lock.release()
@@ -272,5 +274,5 @@ class RotatorDevice(object):
         self._lock.release()
 
     def Halt(self) -> None:
-        #print('[Halt]')
+        self.logger.debug('[Halt]')
         self.stop()

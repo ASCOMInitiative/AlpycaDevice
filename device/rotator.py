@@ -5,17 +5,24 @@
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 18-Dec-2022   rbd 0.1 For upgraded exception classes
 # 19-Dec-2022   rbd 0.1 Implement all IRotatorV3 endpoints
+# 24-Dec-2022   rbd 0.1 Logging
 #
 import falcon
 from shr import PropertyResponse, MethodResponse, to_bool
 from exceptions import *    # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
+logger = None   # Set to global logger at app startup
 
 # --------------------
 # SIMULATED ROTATOR ()
 # --------------------
-rot_dev = RotatorDevice()             # Start it up now
+rot_dev = None
+# At app init not import :-)
+def start_rot_device(logger: logger):
+    logger = logger
+    global rot_dev
+    rot_dev = RotatorDevice(logger)
 
 # --------------------
 # RESOURCE CONTROLLERS
@@ -36,7 +43,7 @@ class Connected:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Connected must be set to true or false')).json
             return
-        print (f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
+        logger.debug(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
         try:
             # ----------------------
             rot_dev.connected = conn
@@ -123,7 +130,6 @@ class Reverse:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Reverse must be set to true or false')).json
             return
-        print (f'Connected = {rev}) from ClientID={formdata["ClientID"]}')
         try:
             # ----------------------
             rot_dev.reverse = rev
@@ -182,7 +188,6 @@ class Halt:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = MethodResponse(formdata).json
-        print(f'RESP {resp.text}')
 
 
 class Move:
@@ -198,11 +203,17 @@ class Move:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Position not a valid integer.')).json
             return
-        if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
-            return
-        print (f'Move({newpos}) from ClientID={formdata["ClientID"]}')
+        # if newpos < 0.0 or newpos >= 360.0:
+        #     resp.text = MethodResponse(formdata, 
+        #                     InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+        #     return
+        logger.debug(f'Move({newpos}) from ClientID={formdata["ClientID"]}')
+        if newpos >= 360.0:
+            newpos -= 360.0
+            logger.debug('Result would be >= 360, setting to {newpos}')
+        if newpos < 0:
+            newpos += 360
+            logger.debug('Result would be < 0, setting to {newpos}')
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
@@ -230,7 +241,7 @@ class MoveAbsolute:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
             return
-        print (f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.debug(f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # --------------------------
             rot_dev.MoveAbsolute(newpos)    # async
@@ -258,7 +269,7 @@ class MoveMechanical:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
             return
-        print (f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.debug(f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # ----------------------------
             rot_dev.MoveMechanical(newpos)    # async
@@ -286,7 +297,7 @@ class Sync:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
             return
-        print (f'Sync({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.debug(f'Sync({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # ------------------
             rot_dev.Sync(newpos) 

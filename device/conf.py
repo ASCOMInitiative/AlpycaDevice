@@ -1,6 +1,12 @@
+# 24-Dec-2022   rbd 0.1 Logging
 import toml
 import logging
 
+global logger
+logger = None   # Set to global logger at app startup
+def set_conf_logger(lgr):
+    logger = lgr
+    
 # Of course you can read this from a config file here
 _s = '''
 title = "Alpaca Sample Driver (Rotator)"
@@ -12,7 +18,7 @@ port = 5555
 
 [server]
 log_level = 'INFO'
-log_to_stdout = true
+log_to_stdout = false
 location = 'Alvord Desert'
 verbose_driver_exceptions = true
 
@@ -21,7 +27,6 @@ can_reverse = true
 step_size = 1.0
 steps_per_sec = 6
 '''
-
 _dict = toml.loads(_s)
 
 class Config:

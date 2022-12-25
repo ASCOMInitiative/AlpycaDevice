@@ -9,11 +9,17 @@
 import falcon
 from shr import PropertyResponse, DeviceMetadata
 from conf import Config
+import logging
+
+logger = None
+def set_management_logger(lgr):
+    global logger
+    logger = lgr
 
 # -----------
 # APIVersions
 # -----------
-class apiversions():
+class apiversions:
     def on_get(self, req: falcon.Request, resp: falcon.Response):
         apis = [ 1 ]                            # TODO MAKE CONFIG OR GLOBAL
         resp.text = PropertyResponse(apis, req).json
@@ -21,7 +27,7 @@ class apiversions():
 # -----------
 # Description
 # -----------
-class description():
+class description:
     def on_get(self, req: falcon.Request, resp: falcon.Response):
         desc = {
             'ServerName'   : DeviceMetadata.Description,
