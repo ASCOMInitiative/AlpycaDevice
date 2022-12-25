@@ -5,13 +5,14 @@
 # 17-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 19-Dec-2022   rbd 0.1 Constants in shr.py
 # 22-Dec-2022   rbd 0.1 Device metadata, Configuration
+# 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 #
 import falcon
 from shr import PropertyResponse, DeviceMetadata
 from conf import Config
-import logging
+from logging import Logger
 
-logger = None
+logger: Logger = None   # Set to global logger at app startup
 def set_management_logger(lgr):
     global logger
     logger = lgr

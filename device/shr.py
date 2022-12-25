@@ -4,15 +4,18 @@
 # 20-Dec-2022   rbd 0.1 Fix idiotic error in to_bool()
 # 22-Dec-2022   rbd 0.1 DeviceMetadata
 # 24-Dec-2022   rbd 0.1 Logging
+# 25-Dec-2022   rbd 0.1 Logging typing for intellisense
+#
 from threading import Lock
 import exceptions
 import json
 import falcon
-import logging
+from logging import Logger
 
-global logger
-logger = None   # Set to global logger at app startup
+logger: Logger = None   # Set to global logger at app startup
+
 def set_shr_logger(lgr):
+    global logger
     logger = lgr
 # ---------------
 # Data Validation

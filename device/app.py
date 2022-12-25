@@ -4,13 +4,14 @@
 # 21-Dec-2022   rbd 0.1 Refactor for import protection. Add configurtion.
 # 22-Dec-2020   rbd 0.1 Start of logging 
 # 24-Dec-2022   rbd 0.1 Logging
+# 25-Dec-2022   rbd 0.1 Add milliseconds to logger time stamp
 #
 from wsgiref.simple_server import  WSGIRequestHandler, make_server
 import sys
 import inspect
 import time
 import falcon
-import logging
+import logging.handlers
 # Controller classes (for routing)
 import common
 import rotator
@@ -20,9 +21,10 @@ from conf import Config
 # Discovery module
 from discovery import DiscoveryResponder, set_disc_logger
 # Just the shared logger hooks avoid importing other stuff
-from conf import set_conf_logger
+#from conf import set_conf_logger
 from shr import set_shr_logger
 
+global logger
 logger = None               # Logger used throughout.
 
 #--------------
@@ -34,7 +36,7 @@ API_VERSION = 1
 # https://stackoverflow.com/questions/31433682/control-wsgiref-simple-server-log
 #
 class LoggingWSGIRequestHandler(WSGIRequestHandler):
-    logger = None           # Set during app startup
+    #logger = None           # Set during app startup
     def log_message(self, format, *args):
         """ 
             Parameters:
@@ -64,25 +66,31 @@ def init_routes(app: falcon.App, devname: str, module):
 # ===========
 def main():
 
-    global logger   # Allow access by LoggingWSGIRequestHandler above
+
     # -------
     # LOGGING
     #--------
     # This single logger is used throughout. The module name (the param for get_logger())
     # isn't needed and would be 'root' anyway, sort of useless. Also the default date-time
-    # is local time, and not ISO-8601. We log in UTC/ISO format. Finally our config options
-    # allow for suppression of logging to stdout, and for this we remove the default stdout
-    # handler. Thank heaven that Python logging is thread-safe!
+    # is local time, and not ISO-8601. We log in UTC/ISO format, and with fractional seconds.
+    # Finally our config options allow for suppression of logging to stdout, and for this 
+    # we remove the default stdout handler. Thank heaven that Python logging is thread-safe! 
     #
+    global logger
     logging.basicConfig(level=Config.log_level)
     logger = logging.getLogger()                # Nameless, see above
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s', '%Y-%m-%dT%H:%M:%S' )
+    formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s %(message)s', '%Y-%m-%dT%H:%M:%S')
     formatter.converter = time.gmtime           # UTC time
     logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above
     # Add a logfile handler, same formatter and level
-    handler = logging.FileHandler('rotator.log', mode='w')
+    handler = logging.handlers.RotatingFileHandler('rotator.log', 
+                                                    mode='w', 
+                                                    delay=True,     # Prevent creation of empty logs
+                                                    maxBytes=Config.max_size_mb * 1000000,
+                                                    backupCount=Config.num_keep_logs)
     handler.setLevel(Config.log_level)
     handler.setFormatter(formatter)
+    handler.doRollover()                                            # Always start with fresh log
     logger.addHandler(handler)
     if not Config.log_to_stdout:
         logger.debug('Logging to stdout disabled in settings')
@@ -92,9 +100,8 @@ def main():
     rotator.logger = logger
     rotator.start_rot_device(logger)
     set_shr_logger(logger)
-    set_conf_logger(logger)
     set_disc_logger(logger)
-    LoggingWSGIRequestHandler.logger = logger
+#    LoggingWSGIRequestHandler.logger = logger
 
     # ---------
     # DISCOVERY
@@ -120,7 +127,7 @@ def main():
     # ------------------
     # Using the lightweight built-in Python wsgi.simple_server
     with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
-        logger.info(f'Serving on {Config.ip_address}:{Config.port}...')
+        logger.info(f'==STARTUP== Serving on {Config.ip_address}:{Config.port}. Time stamps are UTC.')
         # Serve until process is killed
         httpd.serve_forever()
 

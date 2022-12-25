@@ -6,13 +6,15 @@
 # 18-Dec-2022   rbd 0.1 For upgraded exception classes
 # 19-Dec-2022   rbd 0.1 Implement all IRotatorV3 endpoints
 # 24-Dec-2022   rbd 0.1 Logging
+# 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 #
 import falcon
+from logging import Logger
 from shr import PropertyResponse, MethodResponse, to_bool
 from exceptions import *    # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
-logger = None   # Set to global logger at app startup
+logger: Logger = None   # Set to global logger at app startup
 
 # --------------------
 # SIMULATED ROTATOR ()

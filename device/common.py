@@ -7,13 +7,14 @@
 # 20-Dec-2022   rbd 0.1 Fix SupportedActions ha ha.
 # 22-Dec-2022   rbd 0.1 Refectored metadata support
 # 24-Dec-2022   rbd 0.1 Logging
+# 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 #
 import falcon
-import logging
 from exceptions import *    # Only exception classes here
 from shr import PropertyResponse, MethodResponse, DeviceMetadata
+from logging import Logger
 
-logger = None   # Set to global logger at app startup
+logger: Logger = None   # Set to global logger at app startup
 
 # --------------------
 # RESOURCE CONTROLLERS
@@ -54,6 +55,7 @@ class InterfaceVersion():
 
 class DriverVersion():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('Hello from DriverVersion')
         resp.text = PropertyResponse(DeviceMetadata.Version, req).json
 
 class Name():

@@ -6,15 +6,16 @@
 # 19-Dec-2022   rbd 0.1 Validated with ConformU discovery diagnostics
 #               Add thread name 'Discovery'
 # 24-Dec-2022   rbd 0.1 Logging
+# 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 #
 import os
 import socket                                           # for discovery responder
 from threading import Thread                            # Same here
-import logging
+from logging import Logger
 
-global logger
-logger  = None
+logger: Logger = None
 def set_disc_logger(lgr) -> logger:
+    global logger
     logger = lgr
 
 class DiscoveryResponder(Thread):
