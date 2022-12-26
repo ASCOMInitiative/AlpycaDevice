@@ -16,6 +16,7 @@ import logging.handlers
 import common
 import rotator
 import management
+import exceptions
 # Config file support
 from conf import Config
 # Discovery module
@@ -98,9 +99,11 @@ def main():
     # Share this logger throughout
     common.logger = logger
     rotator.logger = logger
+    exceptions.logger = logger
     rotator.start_rot_device(logger)
     set_shr_logger(logger)
     set_disc_logger(logger)
+
 #    LoggingWSGIRequestHandler.logger = logger
 
     # ---------

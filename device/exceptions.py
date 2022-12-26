@@ -6,9 +6,14 @@
 # 18-Dec-2022   rbd 0.1 Refactor to support optional overriding
 #                       error message, and support DriverException
 #                       with variable error number.
+# 26-Dev-2022   rbd 0.1 Logging, including Python low level exceptions
 #
 import traceback
-exc_verbose = True      # True for verbose DriverException messages
+from conf import Config
+from logging import Logger
+
+global logger
+logger: Logger = None
 
 class Success:
     def __init__(self):
@@ -20,7 +25,7 @@ class Success:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 class ActionNotImplementedException:
@@ -30,13 +35,15 @@ class ActionNotImplementedException:
         ):
         self.number = 0x40C
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 
@@ -52,14 +59,14 @@ class DriverException:
         This exception is used for device errors and other internal exceptions. 
         It can be instantiated with a captured exception object, and if so format 
         the Alpaca error message to include line number/module or optionally a 
-        complete traceback of the exception. 
+        complete traceback of the exception (a config option).
     """
     def __init__(
             self, 
             number: int = 0x500,
             message: str = 'Internal driver error - this should be more specific.',
             exc = None,  # Python exception info 
-            full: bool = exc_verbose
+            full: bool = Config.verbose_driver_exceptions
         ):
         """Initialize the DeviceException object
         
@@ -75,20 +82,22 @@ class DriverException:
         """
         assert number >= 0x500 and number <= 0xFFF, 'Programmer error, bad DriverException number'
         self.number = number
+        cname = self.__class__.__name__
         if not exc is None:
             if full:
-                self.fullmsg = f'{message}:\n{traceback.format_exc()}'  # TODO Safe if not explicitly using exc?
+                self.fullmsg = f'{cname}: {message}\n{traceback.format_exc()}'  # TODO Safe if not explicitly using exc?
             else:
-                self.fullmsg = f'{message}:\n{type(exc).__name__}: {str(exc)}'
+                self.fullmsg = f'{cname}: {message}\n{type(exc).__name__}: {str(exc)}'
         else:
-            self.fullmsg = message
+            self.fullmsg = f'{cname}: {message}'
+        logger.error(self.fullmsg)
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.fullmsg
 
 
@@ -99,13 +108,15 @@ class InvalidOperationException:
         ):
         self.number = 0x40B
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 
@@ -116,13 +127,15 @@ class InvalidValueException:
         ):
         self.number = 0x401
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 
@@ -133,13 +146,15 @@ class NotConnectedException:
         ):
         self.number = 0x407
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 class NotImplementedException:
@@ -149,13 +164,15 @@ class NotImplementedException:
         ):
         self.number = 0x400
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 class ParkedException:
@@ -165,13 +182,15 @@ class ParkedException:
         ):
         self.number = 0x408
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 class SlavedException:
@@ -181,13 +200,15 @@ class SlavedException:
         ):
         self.number = 0x409
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
 
@@ -198,12 +219,14 @@ class ValueNotSetException:
         ):
         self.number = 0x402
         self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
 
     @property
     def Number(self) -> int:
         return self.number
 
     @property
-    def Message(self) -> int:
+    def Message(self) -> str:
         return self.message
 
