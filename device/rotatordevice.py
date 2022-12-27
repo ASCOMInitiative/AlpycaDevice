@@ -1,20 +1,56 @@
 # =================================================================
 # ROTATORDEVICE.PY - Poor-man's simulaton of a Rotator
 # =================================================================
+#
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# rotatordevice.py - Poor-man's simulation of a rotator
+#
+# Part of the Alpyca-Device Alpaca skeleton/template device driver
+#
 # This is only for demo purposes. It's extremely fragile, and should
 # not be used as an example of a real device. Settings not remembered.
 #
+# Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
+#
+# Python Compatibility: Requires Python 3.7 or later
+# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+#
+# -----------------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2022 Bob Denny
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# -----------------------------------------------------------------------------
+# Edit History:
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 18-Dec-2022   rbd 0.1 Type hints 
 # 19-Dec-2022   rbd 0.1 Add logic for IRotatorV3 offsets
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 # 26-Dec-2022   rbd 0.1 Do not log within lock()ed sections
+# 27-Dec-2022   rbd 0.1 MIT license and module header
 #
 from threading import Timer
 from threading import Lock
 from logging import Logger
-# TODO Move connected checks here and raise RuntimeExeption ??
 
 class RotatorDevice:
     """

@@ -1,18 +1,50 @@
-# ====================================================
-# DISCOVERY.PY - Discovery Responder for Alpaca Device
-# ====================================================
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# discovery.py - Discovery Responder for Alpaca Device
+#
+# Part of the Alpyca-Device Alpaca skeleton/template device driver
+#
+# Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
+#
+# Python Compatibility: Requires Python 3.7 or later
+# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+#
+# -----------------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2022 Bob Denny
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# -----------------------------------------------------------------------------
+# Edit History:
 #
 # 17-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 19-Dec-2022   rbd 0.1 Validated with ConformU discovery diagnostics
 #               Add thread name 'Discovery'
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
+# 27-Dec-2022   rbd 0.1 MIT license and module header
 #
 import os
 import socket                                           # for discovery responder
 from threading import Thread                            # Same here
 from logging import Logger
-
 
 logger: Logger = None
 def set_disc_logger(lgr) -> logger:

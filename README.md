@@ -4,13 +4,15 @@
 
 ## Python 3.7+ Alpaca Device Framework
 
-This project aims to produce a very lightweight framework for a device
-driver that supports the Alpaca procol and ASCOM Standards. It implements
+This project aims to produce a lightweight framework for a device
+driver that supports the Alpaca protocol and ASCOM Standards. It implements
 a basic Rotator device that is structured in a way that the Rotator-
 specific API endpoint implementations can be easily replaced with an
 API implementation for any device. The "boiler plate" logic remains the
 same.
 
-## Status (December 2022)
+## Status (Late December 2022)
 
-Still in early state development
+Construction complete, passes Conform for Rotator. Internal/docstring is
+minimal since this is a skeleton. A separate document describing its
+usage and features will be written.

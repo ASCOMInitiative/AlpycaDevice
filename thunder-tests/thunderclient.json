@@ -301,5 +301,44 @@
       ]
     },
     "tests": []
+  },
+  {
+    "_id": "a3a28831-2c47-421b-9f14-cf0186f652fa",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "CommandBool",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/commandbool?ClientID=123&ClientTransactionID=321",
+    "method": "PUT",
+    "sortNum": 100000,
+    "created": "2022-12-27T16:53:44.357Z",
+    "modified": "2022-12-27T17:05:00.669Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "ClientID",
+        "value": "123",
+        "isPath": false
+      },
+      {
+        "name": "ClientTransactionID",
+        "value": "321",
+        "isPath": false
+      }
+    ],
+    "body": {
+      "type": "formencoded",
+      "raw": "",
+      "form": [
+        {
+          "name": "Command",
+          "value": "\"foo\""
+        },
+        {
+          "name": "Raw",
+          "value": "false"
+        }
+      ]
+    },
+    "tests": []
   }
 ]

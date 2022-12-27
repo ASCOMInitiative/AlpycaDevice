@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "_id": "dfa2ce83-0fb5-487e-9d96-0e322c678aaa",
+    "colId": "history",
+    "containerId": "",
+    "name": "hthttp://192.168.0.42:5555/api/v1/rotator/0/commandcool?ClientID=123&ClientTransactionID=321&Command=\"foobar'",
+    "url": "hthttp://192.168.0.42:5555/api/v1/rotator/0/commandcool?ClientID=123&ClientTransactionID=321&Command=\"foobar'",
+    "method": "PUT",
+    "sortNum": 0,
+    "created": "2022-12-27T16:52:57.260Z",
+    "modified": "2022-12-27T16:52:57.260Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "ClientID",
+        "value": "123",
+        "isPath": false
+      },
+      {
+        "name": "ClientTransactionID",
+        "value": "321",
+        "isPath": false
+      },
+      {
+        "name": "Command",
+        "value": "\"foobar'",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  }
+]

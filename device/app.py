@@ -1,10 +1,46 @@
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# app.py - Application module
 #
+# Part of the Alpyca-Device Alpaca skeleton/template device driver
+#
+# Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
+#
+# Python Compatibility: Requires Python 3.7 or later
+# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+#
+# -----------------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2022 Bob Denny
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# -----------------------------------------------------------------------------
+# Edit History:
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 20-Dec-2022   rbd 0.1 Correct endpoint URIs
 # 21-Dec-2022   rbd 0.1 Refactor for import protection. Add configurtion.
 # 22-Dec-2020   rbd 0.1 Start of logging 
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Add milliseconds to logger time stamp
+# 27-Dec-2022   rbd 0.1 Post-processing logging of request only if not 200 OK
+#               MIT License and module header.
 #
 from wsgiref.simple_server import  WSGIRequestHandler, make_server
 import inspect
@@ -17,6 +53,7 @@ import rotator
 import management
 import exceptions
 import discovery
+from shr import set_shr_logger
 from discovery import DiscoveryResponder
 
 #--------------
@@ -37,7 +74,8 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
                 args[1]     HTTP response status code
                 args[2]     HTTP response content-length
         """
-        conf.logger.info(f'{self.client_address[0]} {format%args}')
+        if args[1] != '200':  # Log this only on non-200 responses
+            conf.logger.info(f'{self.client_address[0]} <- {format%args}')
 
 #-----------------------
 # Magic routing function
@@ -66,7 +104,7 @@ def main():
     exceptions.logger = logger
     rotator.start_rot_device(logger)
     discovery.logger = logger
-    # set_shr_logger(logger)
+    set_shr_logger(logger)
 
     # ---------
     # DISCOVERY
@@ -93,7 +131,6 @@ def main():
     # Using the lightweight built-in Python wsgi.simple_server
     with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
         logger.info(f'==STARTUP== Serving on {Config.ip_address}:{Config.port}. Time stamps are UTC.')
-        logger.info('NOTE: logged data for a request precedes the logging of the request itself.')
         # Serve until process is killed
         httpd.serve_forever()
 
