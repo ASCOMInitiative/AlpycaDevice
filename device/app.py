@@ -7,26 +7,17 @@
 # 25-Dec-2022   rbd 0.1 Add milliseconds to logger time stamp
 #
 from wsgiref.simple_server import  WSGIRequestHandler, make_server
-import sys
 import inspect
-import time
 import falcon
-import logging.handlers
+import conf
+from conf import Config
 # Controller classes (for routing)
 import common
 import rotator
 import management
 import exceptions
-# Config file support
-from conf import Config
-# Discovery module
-from discovery import DiscoveryResponder, set_disc_logger
-# Just the shared logger hooks avoid importing other stuff
-#from conf import set_conf_logger
-from shr import set_shr_logger
-
-global logger
-logger = None               # Logger used throughout.
+import discovery
+from discovery import DiscoveryResponder
 
 #--------------
 API_VERSION = 1
@@ -46,7 +37,7 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
                 args[1]     HTTP response status code
                 args[2]     HTTP response content-length
         """
-        logger.info(f'{self.client_address[0]} {format%args}')
+        conf.logger.info(f'{self.client_address[0]} {format%args}')
 
 #-----------------------
 # Magic routing function
@@ -67,44 +58,15 @@ def init_routes(app: falcon.App, devname: str, module):
 # ===========
 def main():
 
-
-    # -------
-    # LOGGING
-    #--------
-    # This single logger is used throughout. The module name (the param for get_logger())
-    # isn't needed and would be 'root' anyway, sort of useless. Also the default date-time
-    # is local time, and not ISO-8601. We log in UTC/ISO format, and with fractional seconds.
-    # Finally our config options allow for suppression of logging to stdout, and for this 
-    # we remove the default stdout handler. Thank heaven that Python logging is thread-safe! 
-    #
-    global logger
-    logging.basicConfig(level=Config.log_level)
-    logger = logging.getLogger()                # Nameless, see above
-    formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s %(message)s', '%Y-%m-%dT%H:%M:%S')
-    formatter.converter = time.gmtime           # UTC time
-    logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above
-    # Add a logfile handler, same formatter and level
-    handler = logging.handlers.RotatingFileHandler('rotator.log', 
-                                                    mode='w', 
-                                                    delay=True,     # Prevent creation of empty logs
-                                                    maxBytes=Config.max_size_mb * 1000000,
-                                                    backupCount=Config.num_keep_logs)
-    handler.setLevel(Config.log_level)
-    handler.setFormatter(formatter)
-    handler.doRollover()                                            # Always start with fresh log
-    logger.addHandler(handler)
-    if not Config.log_to_stdout:
-        logger.debug('Logging to stdout disabled in settings')
-        logger.removeHandler(logger.handlers[0])    # This is the stdout handler
+    conf.init_logging()
+    logger = conf.logger
     # Share this logger throughout
     common.logger = logger
     rotator.logger = logger
     exceptions.logger = logger
     rotator.start_rot_device(logger)
-    set_shr_logger(logger)
-    set_disc_logger(logger)
-
-#    LoggingWSGIRequestHandler.logger = logger
+    discovery.logger = logger
+    # set_shr_logger(logger)
 
     # ---------
     # DISCOVERY
@@ -131,6 +93,7 @@ def main():
     # Using the lightweight built-in Python wsgi.simple_server
     with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
         logger.info(f'==STARTUP== Serving on {Config.ip_address}:{Config.port}. Time stamps are UTC.')
+        logger.info('NOTE: logged data for a request precedes the logging of the request itself.')
         # Serve until process is killed
         httpd.serve_forever()
 

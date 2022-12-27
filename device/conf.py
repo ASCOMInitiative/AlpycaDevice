@@ -1,33 +1,17 @@
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 More config items, separate logging section
+# 27-Dec-2022   rbd 0.1 Move shared logger construction and global 
+#               var here
+#
 import toml
 import logging
- 
-# Of course you can read this from a config file here
-_s = '''
-title = "Alpaca Sample Driver (Rotator)"
+import logging.handlers
+import time
+from os import getcwd
 
-[network]
-ip_address = '192.168.0.42'
-mc_address = '192.168.0.255'
-port = 5555
+# Only on first import
+_dict = toml.load(f'{getcwd()}/config.toml')    # Errors here are fatal. 
 
-[server]
-location = 'Alvord Desert'
-verbose_driver_exceptions = true
-
-[device]
-can_reverse = true
-step_size = 1.0
-steps_per_sec = 6
-
-[logging]
-log_level = 'INFO'
-log_to_stdout = false
-max_size_mb = 5
-num_keep_logs = 10
-'''
-_dict = toml.loads(_s)
 class Config:
     # ---------------
     # Network Section
@@ -54,4 +38,45 @@ class Config:
     max_size_mb: int = _dict['logging']['max_size_mb']
     num_keep_logs: int = _dict['logging']['num_keep_logs']
 
+"""
+    -------------
+    MASTER LOGGER
+    -------------
 
+    This single logger is used throughout. The module name (the param for get_logger())
+    isn't needed and would be 'root' anyway, sort of useless. Also the default date-time
+    is local time, and not ISO-8601. We log in UTC/ISO format, and with fractional seconds.
+    Finally our config options allow for suppression of logging to stdout, and for this 
+    we remove the default stdout handler. Thank heaven that Python logging is thread-safe! 
+"""
+
+global logger
+logger: logging.Logger = None   # Master copy of the logger
+
+def init_logging():
+    """ Create the logger - called at app startup """
+    global logger
+    logging.basicConfig(level=Config.log_level)
+    logger = logging.getLogger()                # Nameless, see above
+    formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s %(message)s', '%Y-%m-%dT%H:%M:%S')
+    formatter.converter = time.gmtime           # UTC time
+    logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above
+    # Add a logfile handler, same formatter and level
+    handler = logging.handlers.RotatingFileHandler('rotator.log', 
+                                                    mode='w', 
+                                                    delay=True,     # Prevent creation of empty logs
+                                                    maxBytes=Config.max_size_mb * 1000000,
+                                                    backupCount=Config.num_keep_logs)
+    handler.setLevel(Config.log_level)
+    handler.setFormatter(formatter)
+    handler.doRollover()                                            # Always start with fresh log
+    logger.addHandler(handler)
+    if not Config.log_to_stdout:
+        """
+            This allows control of logging to stdout by simply
+            removing the stdout handler from the logger's 
+            handler list. It's always handler[0] as created
+            by logging.basicConfig()
+        """
+        logger.debug('Logging to stdout disabled in settings')
+        logger.removeHandler(logger.handlers[0])    # This is the stdout handler

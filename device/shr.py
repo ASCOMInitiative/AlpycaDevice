@@ -5,18 +5,20 @@
 # 22-Dec-2022   rbd 0.1 DeviceMetadata
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
+# 26-Dec-2022   rbd 0.1 Refacor logging to conf module
 #
 from threading import Lock
 import exceptions
 import json
 import falcon
-from logging import Logger
+# from logging import Logger
 
-logger: Logger = None   # Set to global logger at app startup
+# logger: Logger = None   # Set to global logger at app startup
 
-def set_shr_logger(lgr):
-    global logger
-    logger = lgr
+# def set_shr_logger(lgr):
+#     global logger
+#     logger = lgr
+
 # ---------------
 # Data Validation
 # ---------------

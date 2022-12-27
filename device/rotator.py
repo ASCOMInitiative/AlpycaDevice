@@ -7,6 +7,7 @@
 # 19-Dec-2022   rbd 0.1 Implement all IRotatorV3 endpoints
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
+# 26-Dec-2022   rbd 0.1 Logging of endpoints 
 #
 import falcon
 from logging import Logger
@@ -31,10 +32,12 @@ def start_rot_device(logger: logger):
 # --------------------
 class CanReverse:
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('True')
         resp.text = PropertyResponse(True, req).json    # IRotatorV3, CanReverse must be True
 
 class Connected:
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info(str(rot_dev.connected))
         resp.text = PropertyResponse(rot_dev.connected, req).json
 
     def on_put(self, req: falcon.Request, resp: falcon.Response):
@@ -45,7 +48,6 @@ class Connected:
             resp.text = MethodResponse(formdata, 
                             InvalidValueException('Connected must be set to true or false')).json
             return
-        logger.debug(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
         try:
             # ----------------------
             rot_dev.connected = conn
@@ -54,6 +56,7 @@ class Connected:
             resp.text = MethodResponse(formdata, # Put is actually like a method :-(
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
+        logger.info(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
         resp.text = MethodResponse(formdata).json
 
 class IsMoving:
@@ -70,6 +73,7 @@ class IsMoving:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
+        logger.info(str(moving))
         resp.text = PropertyResponse(moving, req).json
 
 class MechanicalPosition:
@@ -86,6 +90,7 @@ class MechanicalPosition:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
+        logger.info(str(pos))
         resp.text = PropertyResponse(pos, req).json
 
 class Position:
@@ -102,6 +107,7 @@ class Position:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
+        logger.info(str(pos))
         resp.text = PropertyResponse(pos, req).json
 
 class Reverse:
@@ -118,6 +124,7 @@ class Reverse:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
+        logger.info(str(rev))
         resp.text = PropertyResponse(rev, req).json
 
     def on_put(self, req: falcon.Request, resp: falcon.Response):
@@ -140,6 +147,7 @@ class Reverse:
             resp.text = MethodResponse(formdata, # Put is actually like a method :-(
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
+        logger.info(f'(reverse = {str(rev)}) from ClientID={formdata["ClientID"]}')
         resp.text = MethodResponse(formdata).json
 
 class StepSize:
@@ -150,13 +158,14 @@ class StepSize:
             return
         try:
             # ---------------------
-            rev = rot_dev.step_size
+            steps = rot_dev.step_size
             # ---------------------
         except Exception as ex:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
-        resp.text = PropertyResponse(rev, req).json
+        logger.info(str(steps))
+        resp.text = PropertyResponse(steps, req).json
 
 class TargetPosition:
     def on_get(self, req: falcon.Request, resp: falcon.Response):
@@ -166,13 +175,14 @@ class TargetPosition:
             return
         try:
             # ---------------------------
-            rev = rot_dev.target_position
+            pos = rot_dev.target_position
             # ---------------------------
         except Exception as ex:
             resp.text = PropertyResponse(None, req, 
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
-        resp.text = PropertyResponse(rev, req).json
+        logger.info(str(pos))
+        resp.text = PropertyResponse(pos, req).json
 
 class Halt:
     def on_put(self, req: falcon.Request, resp: falcon.Response):
@@ -181,6 +191,7 @@ class Halt:
             resp.text = MethodResponse(formdata, 
                             NotConnectedException()).json
             return
+        logger.info(f'Halt() from ClientID={formdata["ClientID"]}')
         try:
             # ------------
             rot_dev.Halt()
@@ -203,11 +214,11 @@ class Move:
             newpos = float(formdata['Position'])
         except:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Position not a valid integer.')).json
+                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         # if newpos < 0.0 or newpos >= 360.0:
         #     resp.text = MethodResponse(formdata, 
-        #                     InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+        #                     InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
         #     return
         logger.debug(f'Move({newpos}) from ClientID={formdata["ClientID"]}')
         if newpos >= 360.0:
@@ -216,6 +227,7 @@ class Move:
         if newpos < 0:
             newpos += 360
             logger.debug('Result would be < 0, setting to {newpos}')
+        logger.info(f'Move({formdata["Position"]}) -> {str(newpos)} from ClientID={formdata["ClientID"]}')
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
@@ -237,13 +249,13 @@ class MoveAbsolute:
             newpos = float(formdata['Position'])
         except:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Position not a valid integer.')).json
+                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+                            InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.debug(f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.info(f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # --------------------------
             rot_dev.MoveAbsolute(newpos)    # async
@@ -265,13 +277,13 @@ class MoveMechanical:
             newpos = float(formdata['Position'])
         except:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Position not a valid integer.')).json
+                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+                            InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.debug(f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.info(f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # ----------------------------
             rot_dev.MoveMechanical(newpos)    # async
@@ -293,13 +305,13 @@ class Sync:
             newpos = float(formdata['Position'])
         except:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Position not a valid integer.')).json
+                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(formdata, 
-                            InvalidValueException('Invalid position outside range 0 <= pos < 360.')).json
+                            InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.debug(f'Sync({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.info(f'Sync({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # ------------------
             rot_dev.Sync(newpos) 

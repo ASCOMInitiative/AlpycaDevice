@@ -13,6 +13,7 @@ import socket                                           # for discovery responde
 from threading import Thread                            # Same here
 from logging import Logger
 
+
 logger: Logger = None
 def set_disc_logger(lgr) -> logger:
     global logger

@@ -8,6 +8,7 @@
 # 22-Dec-2022   rbd 0.1 Refectored metadata support
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
+# 26-Dec-2022   rbd 0.1 Logging of endpoints
 #
 import falcon
 from exceptions import *    # Only exception classes here
@@ -22,47 +23,56 @@ logger: Logger = None   # Set to global logger at app startup
 
 class Action:
     def on_put(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('NotImplementedException')
         formdata = req.get_media()
         resp.text = MethodResponse(formdata, NotImplementedException()).json
 
 class CommandBlind:
     def on_put(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('NotImplementedException')
         formdata = req.get_media()
         resp.text = MethodResponse(formdata, NotImplementedException()).json
 
 class CommandBool:
     def on_put(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('NotImplementedException')
         formdata = req.get_media()
         resp.text = MethodResponse(formdata, NotImplementedException()).json
 
 class CommandString():
     def on_put(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('NotImplementedException')
         formdata = req.get_media()
         resp.text = MethodResponse(formdata, NotImplementedException()).json
 
 # Connected, though common, is implemented in rotator.py
 class Description():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info(DeviceMetadata.Description)
         resp.text = PropertyResponse(DeviceMetadata.Description, req).json
 
 class DriverInfo():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info(DeviceMetadata.Info)
         resp.text = PropertyResponse(DeviceMetadata.Info, req).json
 
 class InterfaceVersion():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info(DeviceMetadata.InterfaceVersion)
         resp.text = PropertyResponse(DeviceMetadata.InterfaceVersion, req).json
 
 class DriverVersion():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
-        logger.info('Hello from DriverVersion')
+        logger.info(DeviceMetadata.Version)
         resp.text = PropertyResponse(DeviceMetadata.Version, req).json
 
 class Name():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info(DeviceMetadata.Name)
         resp.text = PropertyResponse(DeviceMetadata.Name, req).json
 
 class SupportedActions():
     def on_get(self, req: falcon.Request, resp: falcon.Response):
+        logger.info('[] empty list')
         resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 
