@@ -1,11 +1,11 @@
 title = "Alpaca Sample Driver (Rotator)"
 
 [network]
-ip_address = '127.0.0.1'
+ip_address = ''             # Any address
 port = 5555
 
 [server]
-location = 'Alvord Desert'
+location = 'Alvord Desert'  # Anything you want here
 verbose_driver_exceptions = true
 
 [device]
