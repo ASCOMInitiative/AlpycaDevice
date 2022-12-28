@@ -41,7 +41,7 @@
 # 27-Dec-2022   rbd 0.1 MIT License and module header
 #
 import traceback
-from conf import Config
+from config import Config
 from logging import Logger
 
 global logger

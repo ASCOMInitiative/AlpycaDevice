@@ -1,0 +1,24 @@
+Alpyca Device - Sample/Template Alpaca (Rotator device)
+-------------------------------------------------------
+28-Dec-2022 Starting to make notes. I got quite a ways along with this. Now I want to set up
+to do the docs ion Sphinx. I don't plan to extract info from docstrings just to keep the
+code from being cluttered. I have put comments into the source in plain # form.
+Now to set up for making Sphinx docs. What a process. Although I made the Alpyca docs,
+and a start on the ASCOM Master docs, using Sphinx and rinohtype, it was so full of crazy
+tinkering and problem hunting I just wanted to forget it all Hance these notes so I can
+save myself from a fresh round of (repeat) frustrations.
+
+So starting with the RBD-Notes from the Alpyca project and using VSCode for RST writing:
+
+* (21-Jul-2022) Install the Sphinx-related packages into the .venv get all of the sphinx and 
+rinoh pieces into the .venv because the reStructuredText extension depends on the esbonio 
+language server, and that is actually real-time rendering the document at design time! 
+This led to several hours of installing shit.
+  ==== AHHHH ====
+  Look at the docs/source/conf.py and those things are in the extensions. REDO THE VENV... AGAIN!!! 
+* This time I created the venv python -m venv .venv and restarted VSCode. It found the .venv OK. Then I followed
+  the prompts to install docutils and esbonio, RESTART, then again via "Problems" to install rinohtype RESTART
+  then again to get sphinx_rtd_theme, which BACK-REVVED DOCUTILS to 0.17.1. Damn. These things are in the Sphinx
+  conf.py file, which was getting confused with mine before I renamed it. 
+* ==== HOORAY ==== The reStructruredText extension is working!! It found the junk .rst files I put there as place
+  holders.  Now I need to clean up the Sphinx conf.py ... done.

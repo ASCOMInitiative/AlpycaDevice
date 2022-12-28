@@ -42,7 +42,7 @@
 #
 from falcon import Request, Response
 from shr import PropertyResponse, DeviceMetadata
-from conf import Config
+from config import Config
 from logging import Logger
 from shr import log_request
 

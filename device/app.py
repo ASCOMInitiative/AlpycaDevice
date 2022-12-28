@@ -41,21 +41,24 @@
 # 25-Dec-2022   rbd 0.1 Add milliseconds to logger time stamp
 # 27-Dec-2022   rbd 0.1 Post-processing logging of request only if not 200 OK
 #               MIT License and module header. No multicast on device duh.
+# 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
 #
-from wsgiref.simple_server import  WSGIRequestHandler, make_server
 import inspect
-import falcon
-import conf
-from conf import Config
+from wsgiref.simple_server import WSGIRequestHandler, make_server
+
+# -- isort wants the above line to be blank --
 # Controller classes (for routing)
 import common
-import rotator
-import management
-import exceptions
+import config
 import discovery
+import exceptions
+import falcon
+import management
+import rotator
 import setup
-from shr import set_shr_logger
+from config import Config
 from discovery import DiscoveryResponder
+from shr import set_shr_logger
 
 #--------------
 API_VERSION = 1
@@ -76,7 +79,7 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
                 args[2]     HTTP response content-length
         """
         if args[1] != '200':  # Log this only on non-200 responses
-            conf.logger.info(f'{self.client_address[0]} <- {format%args}')
+            config.logger.info(f'{self.client_address[0]} <- {format%args}')
 
 #-----------------------
 # Magic routing function
@@ -97,8 +100,8 @@ def init_routes(app: falcon.App, devname: str, module):
 # ===========
 def main():
 
-    conf.init_logging()
-    logger = conf.logger
+    config.init_logging()
+    logger = config.logger
     # Share this logger throughout
     common.logger = logger
     rotator.logger = logger

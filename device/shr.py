@@ -39,11 +39,12 @@
 # 22-Dec-2022   rbd 0.1 DeviceMetadata
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
-# 26-Dec-2022   rbd 0.1 Refactor logging to conf module. 
+# 26-Dec-2022   rbd 0.1 Refactor logging to config module. 
 # 27-Dec-2022   rbd 0.1 Methods can return values. Common request
 #                       logging (before starting processing).
 #                       MIT license and module header. Logging cleanup.
 #                       Python 3.7 global restriction.
+# 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
 #
 from threading import Lock
 import exceptions
