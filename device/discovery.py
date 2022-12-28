@@ -39,7 +39,7 @@
 #               Add thread name 'Discovery'
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
-# 27-Dec-2022   rbd 0.1 MIT license and module header
+# 27-Dec-2022   rbd 0.1 MIT license and module header. No mcast on device, duh!
 #
 import os
 import socket                                           # for discovery responder
@@ -52,13 +52,13 @@ def set_disc_logger(lgr) -> logger:
     logger = lgr
 
 class DiscoveryResponder(Thread):
-    def __init__(self, MCAST, ADDR, PORT):
+    def __init__(self, ADDR, PORT):
         Thread.__init__(self, name='Discovery')
         # TODO See https://stackoverflow.com/a/32372627/159508
         # It's a sledge hammer technique to bind to ' ' for sending multicast
         # The right way is to bind to the broadcast address for the current
         # subnet. 
-        self.device_address = (MCAST, 32227)    # Listen at multicast address, not ' '
+        self.device_address = (ADDR, 32227)    # Listen at multicast address, not ' '
         self.alpaca_response  = "{\"AlpacaPort\": " + str(PORT) + "}"
         self.rsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.rsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  #share address

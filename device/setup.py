@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# management.py - Management API for  ALpaca device
+# setup.py - Device setup endpoints.
 #
 # Part of the Alpyca-Device Alpaca skeleton/template device driver
 #
@@ -33,60 +33,21 @@
 # SOFTWARE.
 # -----------------------------------------------------------------------------
 # Edit History:
-# 17-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
-# 19-Dec-2022   rbd 0.1 Constants in shr.py
-# 22-Dec-2022   rbd 0.1 Device metadata, Configuration
-# 25-Dec-2022   rbd 0.1 Logging typing for intellisense
-# 27-Dec-2022   rbd 0.1 Minimize imports. MIT license and module header.
-#               Enhanced logging.
+# 27-Dec-2022   rbd V0.1 Initial edit. Simply say no GUI. 
 #
 from falcon import Request, Response
-from shr import PropertyResponse, DeviceMetadata
-from conf import Config
-from logging import Logger
-from shr import log_request
+from shr import PropertyResponse, DeviceMetadata, log_request
 
-#logger: Logger = None
-logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
-def set_management_logger(lgr):
-    global logger
-    logger = lgr
-
-# -----------
-# APIVersions
-# -----------
-class apiversions:
+class svrsetup:
     def on_get(self, req: Request, resp: Response):
         log_request(req)
-        apis = [ 1 ]                            # TODO MAKE CONFIG OR GLOBAL
-        resp.text = PropertyResponse(apis, req).json
+        resp.content_type = 'text/html'
+        resp.text = '<!DOCTYPE html><html><body><h2>Server setup is in config.toml</h2></body></html>'
 
-# -----------
-# Description
-# -----------
-class description:
+class devsetup:
     def on_get(self, req: Request, resp: Response):
+        resp.content_type = 'text/html'
         log_request(req)
-        desc = {
-            'ServerName'   : DeviceMetadata.Description,
-            'Manufacturer' : DeviceMetadata.Manufacturer,
-            'Version'      : DeviceMetadata.Version,
-            'Location'     : Config.location
-            }
-        resp.text = PropertyResponse(desc, req).json
+        resp.text = '<!DOCTYPE html><html><body><h2>Device setup is in config.toml</h2></body></html>'
 
-# -----------------
-# ConfiguredDevices
-# -----------------
-class configureddevices():
-    def on_get(self, req: Request, resp: Response):
-        log_request(req)
-        confarray = [                          # TODO ADD ONE FOR EACH DEVICE (ANY TYPE) SERVED
-            {
-            'DeviceName'    : DeviceMetadata.Name, 
-            'DeviceType'    : DeviceMetadata.Type,
-            'DeviceNumber'  : 0,
-            'UniqueID'      : DeviceMetadata.ID 
-            }
-        ]
-        resp.text = PropertyResponse(confarray, req).json
+

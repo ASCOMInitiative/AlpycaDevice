@@ -49,7 +49,8 @@ from shr import PropertyResponse, MethodResponse, to_bool, log_request
 from exceptions import *    # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
-logger: Logger = None   # Set to global logger at app startup
+#logger: Logger = None
+logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 # --------------------
 # SIMULATED ROTATOR ()

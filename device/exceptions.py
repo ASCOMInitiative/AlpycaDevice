@@ -45,7 +45,8 @@ from conf import Config
 from logging import Logger
 
 global logger
-logger: Logger = None
+#logger: Logger = None
+logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 class Success:
     def __init__(self):

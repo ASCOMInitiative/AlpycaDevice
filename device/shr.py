@@ -42,7 +42,8 @@
 # 26-Dec-2022   rbd 0.1 Refactor logging to conf module. 
 # 27-Dec-2022   rbd 0.1 Methods can return values. Common request
 #                       logging (before starting processing).
-#                       MIT license and module header
+#                       MIT license and module header. Logging cleanup.
+#                       Python 3.7 global restriction.
 #
 from threading import Lock
 import exceptions
@@ -50,7 +51,8 @@ import json
 from falcon import Request
 from logging import Logger
 
-logger: Logger = None   # Set to global logger at app startup
+#logger: Logger = None
+logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 def set_shr_logger(lgr):
     global logger
@@ -80,7 +82,6 @@ class DeviceMetadata:
     Manufacturer = 'ASCOM Initiative'
     InterfaceVersion = 3        # IRotatorV3
 
-
 #
 # Get query string item with case-insensitive name
 # These must be caseless per the Alpaca spec
@@ -92,8 +93,15 @@ def get_args_caseless(name: str, req: Request, default):
             return param[1]
     return default                                      # not in args, return default
 
+# 
+# Log the request as soon as the resource andler gets it so subsequent
+# logged messages are in the right order. Logs PUT body as well.
+#
 def log_request(req: Request):
-    logger.info(f'{req.remote_addr} {req.method} {req.path}?{req.query_string}')
+    msg = f'{req.remote_addr} {req.method} {req.path}'
+    if not req.query_string is None:
+        msg += f'?{req.query_string}'
+    logger.info(msg)
     if req.method == 'PUT' and req.content_length != None:
         logger.info(f'{req.remote_addr} -> {req.media}')
 
@@ -141,7 +149,6 @@ class MethodResponse():
     @property
     def json(self) -> str:
         return json.dumps(self.__dict__)
-
 
 
 # -------------------------------

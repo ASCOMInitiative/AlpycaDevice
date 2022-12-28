@@ -40,7 +40,7 @@
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Add milliseconds to logger time stamp
 # 27-Dec-2022   rbd 0.1 Post-processing logging of request only if not 200 OK
-#               MIT License and module header.
+#               MIT License and module header. No multicast on device duh.
 #
 from wsgiref.simple_server import  WSGIRequestHandler, make_server
 import inspect
@@ -53,6 +53,7 @@ import rotator
 import management
 import exceptions
 import discovery
+import setup
 from shr import set_shr_logger
 from discovery import DiscoveryResponder
 
@@ -109,7 +110,7 @@ def main():
     # ---------
     # DISCOVERY
     # ---------
-    _DSC = DiscoveryResponder(Config.mc_address, Config.ip_address, Config.port)
+    _DSC = DiscoveryResponder(Config.ip_address, Config.port)
 
     # ----------------------------------
     # MAIN HTTP/REST API ENGINE (FALCON)
@@ -124,6 +125,8 @@ def main():
     falc_app.add_route('/management/apiversions', management.apiversions())
     falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
     falc_app.add_route(f'/management/v{API_VERSION}/configureddevices', management.configureddevices())
+    falc_app.add_route('/setup', setup.svrsetup())
+    falc_app.add_route(f'/setup/v{API_VERSION}/rotator/0/setup', setup.devsetup())
 
     # ------------------
     # SERVER APPLICATION

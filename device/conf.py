@@ -35,7 +35,7 @@
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 More config items, separate logging section
 # 27-Dec-2022   rbd 0.1 Move shared logger construction and global 
-#               var here. MIT license and modle header.
+#               var here. MIT license and module header. No mcast.
 #
 import toml
 import logging
@@ -51,7 +51,6 @@ class Config:
     # Network Section
     # ---------------
     ip_address: str = _dict['network']['ip_address']
-    mc_address: str = _dict['network']['mc_address']
     port: int = _dict['network']['port']
     # --------------
     # Server Section
@@ -85,7 +84,8 @@ class Config:
 """
 
 global logger
-logger: logging.Logger = None   # Master copy of the logger
+#logger: logging.Logger = None   # Master copy of the logger
+logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 def init_logging():
     """ Create the logger - called at app startup """
