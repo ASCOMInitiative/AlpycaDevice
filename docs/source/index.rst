@@ -13,25 +13,28 @@
         :width: 128px
         :align: right
 
-    =======================
-    Welcome to Alpyca 2.0.3
-    =======================
+    ========================
+    Welcome to Alpyca Device
+    ========================
 
 .. only:: rinoh or rst
 
-    =======================
-    Welcome to Alpyca 2.0.3
-    =======================
+    ========================
+    Welcome to Alpyca Device
+    =========================
 
-This document describes the Alpyca package, a Python API client library for
-ASCOM Alpaca, produced by the ASCOM Initiative, and derived from Ethan
-Chappel's Alpyca 1.0.0. Ethan kindly released the name **Alpyca** to the ASCOM
-Initiative, hence this expanded package starts life as Version 2.0.
+This document describes the Alpyca Device project, a lightweight sample of
+an Alpaca device driver. While meant to serve as a template, this sample
+is actually a fully functional Alpaca Rotator simulator which passes the 
+Conform Universal tests. 
 
-The package provides all of the ASCOM Standard universal interfaces to
-astronomical devices using the Alpaca network protocol. As an application
-developer, your usage of the various devices is simplified and universal,
-independent of the particular make/model of device.
+The idea here is to provide you, the prospective Alpaca device driver author,
+with the code structure and boiler-plate code needed. By starting with this
+project, you will see how to use the Falcon REST processor in conjunction with
+the built-in Python wsgiref HTTP server to handle each of the REST endpoints
+needed to implement a fully functional conforming Alopaca device. In addition,
+you will see how to handle exceptions the correct way, including mapping 
+Python run-time errors into the Alpaca Exception response. 
 
 .. only:: html
 
@@ -96,8 +99,8 @@ independent of the particular make/model of device.
 
 .. |github| raw:: html
 
-    <a href="https://github.com/ASCOMInitiative/alpyca/" target="_blank">
-    Alpyca GitHub repository</a>
+    <a href="https://github.com/BobDenny/alpyca-device" target="_blank">
+    Alpyca Device GitHub repository</a>
 
 .. |ascsite| raw:: html
 
