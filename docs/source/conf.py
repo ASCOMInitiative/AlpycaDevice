@@ -42,7 +42,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
     # https://github.com/brechtm/rinohtype  Makes PDF
-    'rinoh.frontend.sphinx'
+    'rinoh.frontend.sphinx'    #Not found on Linux ?!?!?!?
 ]
 
 # Autodoc settings (override defaults)

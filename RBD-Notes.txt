@@ -22,3 +22,13 @@ This led to several hours of installing shit.
   conf.py file, which was getting confused with mine before I renamed it. 
 * ==== HOORAY ==== The reStructruredText extension is working!! It found the junk .rst files I put there as place
   holders.  Now I need to clean up the Sphinx conf.py ... done.
+* Moved over to the RPi. I installed Sphinx, the rsStructuredText VSCode plugin popped up installs for docutils,
+  and esbonio. I restarted, esbonio can't install the rinoh.frontend.sphinx plugin. I installed rinohtype
+  pip install rinohtype. No luck even after starting VSCode. So I went to https://github.com/brechtm/rinohtype
+  and found how to install the latest version via pip/GitHub:
+    https://github.com/brechtm/rinohtype
+  This installed markdown-it-py-2.1.0 mdit-py-plugins-0.3.3 mdurl-0.1.2 myst-parser-0.18.1 pyyaml-6.0 
+  rinohtype-0.5.5, and removed rinohtype-0.5.3. No luck. wtf. It's not showing on the pip list either. 
+  HOW WEIRD - Now same deal with sphinx_rtd_theme. So I used the Pip Manager to install them. Well now
+  rinoh stuff shows in pip manager but not in the pip list????? Now Esbonio/pip succeeds but without
+  
