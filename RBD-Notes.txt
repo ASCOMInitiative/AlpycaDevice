@@ -31,4 +31,14 @@ This led to several hours of installing shit.
   rinohtype-0.5.5, and removed rinohtype-0.5.3. No luck. wtf. It's not showing on the pip list either. 
   HOW WEIRD - Now same deal with sphinx_rtd_theme. So I used the Pip Manager to install them. Well now
   rinoh stuff shows in pip manager but not in the pip list????? Now Esbonio/pip succeeds but without
-  
+* Making HTML docs!!! I wanted to disable the "hyperlink not referenced" errors from rstcheck, but
+trying to follow the directions in the manual I added a setting "--ignore-errors REGEX_STRING" but no 
+luck. So I want back into settings restructuredtext: Linters: Disabled-linters, and disabled rstcheck. 
+This caused restructuedtext to start asking to load the restructuredtext_lint package, so I installed
+that with pipmanager. It is there now.
+* SHIT - Now it is using rst-lint, a brain damaged linter that doesn't know some of the directives
+  like .. only:: So I want back and disabled that one. GRRRRR Now it wants doc8. So I installed that with pip.
+  HOORAY!!! It is using doc8. This one has ways of controlling the errors and other  stuff. See the
+  VSCode settings restructuredtext.linter.doc8.extraArgs and remove the rstcheck shit. Right below
+  in the JSON are the disabling items. I must hve done this before (dump rstcheck and rst-lint).
+  Anyway doc8 is finding my errors in real time. 
