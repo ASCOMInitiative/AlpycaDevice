@@ -43,9 +43,10 @@
 # 27-Dec-2022   rbd 0.1 Revamp logging so request precedes response.
 #               Minimize imported stuff. MIT license and module header.
 #
-from falcon import Request, Response
+from falcon import Request, Response, before
 from exceptions import *    # Only exception classes here
-from shr import PropertyResponse, MethodResponse, DeviceMetadata, log_request
+from shr import PropertyResponse, MethodResponse, DeviceMetadata, \
+                PreProcessRequest
 from logging import Logger
 
 logger: Logger = None   # Set to global logger at app startup
@@ -54,55 +55,54 @@ logger: Logger = None   # Set to global logger at app startup
 # RESOURCE CONTROLLERS
 # --------------------
 
+@before(PreProcessRequest())
 class Action:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = MethodResponse(req, NotImplementedException()).json
 
+@before(PreProcessRequest())
 class CommandBlind:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = MethodResponse(req, NotImplementedException()).json
 
+@before(PreProcessRequest())
 class CommandBool:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
-        logger.info(f'{req.remote_addr} {req.media}')
         resp.text = MethodResponse(req, NotImplementedException()).json
 
+@before(PreProcessRequest())
 class CommandString():
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 # Connected, though common, is implemented in rotator.py
+@before(PreProcessRequest())
 class Description():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(DeviceMetadata.Description, req).json
 
+@before(PreProcessRequest())
 class DriverInfo():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(DeviceMetadata.Info, req).json
 
+@before(PreProcessRequest())
 class InterfaceVersion():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(DeviceMetadata.InterfaceVersion, req).json
 
+@before(PreProcessRequest())
 class DriverVersion():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(DeviceMetadata.Version, req).json
 
+@before(PreProcessRequest())
 class Name():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(DeviceMetadata.Name, req).json
 
+@before(PreProcessRequest())
 class SupportedActions():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 

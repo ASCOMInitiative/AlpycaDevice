@@ -45,11 +45,13 @@
 #                       MIT license and module header. Logging cleanup.
 #                       Python 3.7 global restriction.
 # 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
+# 29-Dec-2022   rbd 0.1 ProProcess() Falcon hook class for pre-logging and 
+#                       common request validation (Client IDs for now).
 #
 from threading import Lock
 import exceptions
 import json
-from falcon import Request
+from falcon import Request, Response, HTTPBadRequest
 from logging import Logger
 
 #logger: Logger = None
@@ -58,16 +60,6 @@ logger = None                   # Safe on Python 3.7 but no intellisense in VSCo
 def set_shr_logger(lgr):
     global logger
     logger = lgr
-
-# ---------------
-# Data Validation
-# ---------------
-bools = ['true', 'false']                               # Only valid JSON bools allowed
-def to_bool(str: str) -> bool:
-    val = str.lower()
-    if val not in bools:
-        raise ValueError
-    return val == bools[0]
 
 # -----------
 # Device Info
@@ -83,19 +75,35 @@ class DeviceMetadata:
     Manufacturer = 'ASCOM Initiative'
     InterfaceVersion = 3        # IRotatorV3
 
-#
-# Get query string item with case-insensitive name
-# These must be caseless per the Alpaca spec
-#
-def get_args_caseless(name: str, req: Request, default):
-    lcName = name.lower()
-    for param in req.params.items():                    # [name,value] tuples
-        if param[0].lower() == lcName:
-            return param[1]
-    return default                                      # not in args, return default
+
+# ---------------
+# Data Validation
+# ---------------
+bools = ['true', 'false']                               # Only valid JSON bools allowed
+def to_bool(str: str) -> bool:
+    val = str.lower()
+    if val not in bools:
+        raise ValueError
+    return val == bools[0]
+
+# ---------------------------------------------------------
+# Get parameter/field from query string or body "form" data
+# ---------------------------------------------------------
+def get_request_field(name: str, req: Request, default: str) -> str:
+    if req.method == 'GET':
+        lcName = name.lower()
+        for param in req.params.items():        # [name,value] tuples
+            if param[0].lower() == lcName:
+                return param[1]
+        return default                          # not in args, return default
+    else:                                       # Assume PUT since we never route other methods
+        formdata= req.get_media()
+        if name in formdata:
+            return formdata[name]
+        return default
 
 # 
-# Log the request as soon as the resource andler gets it so subsequent
+# Log the request as soon as the resource handler gets it so subsequent
 # logged messages are in the right order. Logs PUT body as well.
 #
 def log_request(req: Request):
@@ -106,19 +114,52 @@ def log_request(req: Request):
     if req.method == 'PUT' and req.content_length != None:
         logger.info(f'{req.remote_addr} -> {req.media}')
 
+# ------------------------------------------------
+# Incoming Pre-Logging and Request Quality Control
+# ------------------------------------------------
+class PreProcessRequest():
+
+    #
+    # Quality check of numerical value for trans IDs
+    #
+    @staticmethod
+    def _pos_or_zero(val: str) -> bool:
+        try:
+            test = int(val)
+            return test >= 0
+        except ValueError:
+            return False
+    
+    def check_request(self, req: Request):  # Raise on failure
+        bad_title='Bad Alpaca Request'
+        test: str = get_request_field('ClientID', req, None)
+        if test is None:
+            msg = 'Request has missing Alpaca ClientID value'
+            logger.error(msg)
+            raise HTTPBadRequest(title=bad_title, description=msg)
+        if not self._pos_or_zero(test):
+            msg = 'Request has bad Alpaca ClientID value'
+            logger.error(msg)
+            raise HTTPBadRequest(title=bad_title, description=msg)
+        test: str = get_request_field('ClientTransactionID', req, 0)    # Missing allowed by Alpaca
+        if not self._pos_or_zero(test):
+            msg = 'Request has bad Alpaca ClientTransactionID value'
+            logger.error(msg)
+            raise HTTPBadRequest(title=bad_title, description=msg)
+
+    
+    def __call__(self, req: Request, resp: Response, resource, params):
+        log_request(req)                       # Log even a bad request
+        self.check_request(req)                     # Raises to 400 error on check failure
+
 # ------------------
 # PropertyResponse
 # ------------------
-
 class PropertyResponse():
     def __init__(self, value, req: Request, err = exceptions.Success()):
         self.ServerTransactionID = getNextTransId()
+        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0)) 
         self.Value = value
-        ctid = get_args_caseless('ClientTransactionID', req, None)
-        if not ctid is None:
-            self.ClientTransactionID = int(ctid)
-        else:
-            self.ClientTransactionID = 0        # Per Alpaca, Return a 0 if ClientTransactionId is not in the request
         self.ErrorNumber = err.Number
         self.ErrorMessage = err.Message
         if not value is None:
@@ -131,19 +172,13 @@ class PropertyResponse():
 # --------------
 # MethodResponse
 # --------------
-
 class MethodResponse():
     def __init__(self, req: Request, err = exceptions.Success(), value = None): # value useless unless Success
         self.ServerTransactionID = getNextTransId()
-        formdata= req.get_media()
-        if 'ClientTransactionID' in formdata:
-            self.ClientTransactionID = int(formdata['ClientTransactionID'])
-        else:
-            self.ClientTransactionID = 0        # Per Alpaca, Return a 0 if ClientTransactionId is not in the request
+        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0))   # 0 for missing CTID
         if not value is None:
             self.Value = value
             logger.info(f'{req.remote_addr} <- {str(value)}')
-
         self.ErrorNumber = err.Number
         self.ErrorMessage = err.Message
         

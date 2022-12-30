@@ -44,7 +44,6 @@ from falcon import Request, Response
 from shr import PropertyResponse, DeviceMetadata
 from config import Config
 from logging import Logger
-from shr import log_request
 
 #logger: Logger = None
 logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
@@ -57,7 +56,6 @@ def set_management_logger(lgr):
 # -----------
 class apiversions:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         apis = [ 1 ]                            # TODO MAKE CONFIG OR GLOBAL
         resp.text = PropertyResponse(apis, req).json
 
@@ -66,7 +64,6 @@ class apiversions:
 # -----------
 class description:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         desc = {
             'ServerName'   : DeviceMetadata.Description,
             'Manufacturer' : DeviceMetadata.Manufacturer,
@@ -80,7 +77,6 @@ class description:
 # -----------------
 class configureddevices():
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         confarray = [                          # TODO ADD ONE FOR EACH DEVICE (ANY TYPE) SERVED
             {
             'DeviceName'    : DeviceMetadata.Name, 

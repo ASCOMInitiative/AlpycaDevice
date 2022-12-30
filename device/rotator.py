@@ -43,9 +43,10 @@
 #               response. Minimize imported stuff. MIT license
 #               and m odule header.
 #
-from falcon import Request, Response
+from falcon import Request, Response, before
 from logging import Logger
-from shr import PropertyResponse, MethodResponse, to_bool, log_request
+from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
+                get_request_field, to_bool
 from exceptions import *    # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
@@ -65,18 +66,17 @@ def start_rot_device(logger: logger):
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------
+@before(PreProcessRequest())
 class CanReverse:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(True, req).json    # IRotatorV3, CanReverse must be True
 
+@before(PreProcessRequest())
 class Connected:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         resp.text = PropertyResponse(rot_dev.connected, req).json
 
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         formdata = req.get_media()
         try:
             conn = to_bool(formdata['Connected'])
@@ -95,9 +95,9 @@ class Connected:
         logger.info(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
         resp.text = MethodResponse(req).json
 
+@before(PreProcessRequest())
 class IsMoving:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req, 
                             NotConnectedException()).json
@@ -112,9 +112,9 @@ class IsMoving:
             return
         resp.text = PropertyResponse(moving, req).json
 
+@before(PreProcessRequest())
 class MechanicalPosition:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req, 
                             NotConnectedException()).json
@@ -129,9 +129,9 @@ class MechanicalPosition:
             return
         resp.text = PropertyResponse(pos, req).json
 
+@before(PreProcessRequest())
 class Position:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req, 
                             NotConnectedException()).json
@@ -146,9 +146,9 @@ class Position:
             return
         resp.text = PropertyResponse(pos, req).json
 
+@before(PreProcessRequest())
 class Reverse:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req, 
                             NotConnectedException()).json
@@ -164,7 +164,6 @@ class Reverse:
         resp.text = PropertyResponse(rev, req).json
 
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req, 
@@ -187,9 +186,9 @@ class Reverse:
         logger.info(f'(reverse = {str(rev)}) from ClientID={formdata["ClientID"]}')
         resp.text = MethodResponse(req).json
 
+@before(PreProcessRequest())
 class StepSize:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req, 
                             NotConnectedException()).json
@@ -204,9 +203,9 @@ class StepSize:
             return
         resp.text = PropertyResponse(steps, req).json
 
+@before(PreProcessRequest())
 class TargetPosition:
     def on_get(self, req: Request, resp: Response):
-        log_request(req)
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req, 
                             NotConnectedException()).json
@@ -221,15 +220,14 @@ class TargetPosition:
             return
         resp.text = PropertyResponse(pos, req).json
 
+@before(PreProcessRequest())
 class Halt:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
-        formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req, 
                             NotConnectedException()).json
             return
-        logger.info(f'Halt() from ClientID={formdata["ClientID"]}')
+        logger.info(f'Halt() from ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # ------------
             rot_dev.Halt()
@@ -241,16 +239,16 @@ class Halt:
         resp.text = MethodResponse(req).json
 
 
+@before(PreProcessRequest())
 class Move:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req, 
                             NotConnectedException()).json
             return
         try:
-            newpos = float(formdata['Position'])
+            newpos = origpos = float(formdata['Position'])
         except:
             resp.text = MethodResponse(req, 
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
@@ -266,7 +264,7 @@ class Move:
         if newpos < 0:
             newpos += 360
             logger.debug('Result would be < 0, setting to {newpos}')
-        logger.info(f'Move({formdata["Position"]}) -> {str(newpos)} from ClientID={formdata["ClientID"]}')
+        logger.info(f'Move({origpos}) -> {str(newpos)} ClientID={formdata["ClientID"]}')
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
@@ -277,9 +275,9 @@ class Move:
             return
         resp.text = MethodResponse(req).json
 
+@before(PreProcessRequest())
 class MoveAbsolute:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req, 
@@ -306,9 +304,9 @@ class MoveAbsolute:
             return
         resp.text = MethodResponse(req).json
 
+@before(PreProcessRequest())
 class MoveMechanical:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req, 
@@ -335,9 +333,9 @@ class MoveMechanical:
             return
         resp.text = MethodResponse(req).json
 
+@before(PreProcessRequest())
 class Sync:
     def on_put(self, req: Request, resp: Response):
-        log_request(req)
         formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req, 
