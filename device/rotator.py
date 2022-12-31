@@ -229,7 +229,7 @@ class Halt:
             resp.text = MethodResponse(req, 
                             NotConnectedException()).json
             return
-        logger.info(f'Halt() from ClientID={get_request_field("ClientID", "??")}')
+        logger.info(f'Halt() from ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # ------------
             rot_dev.Halt()

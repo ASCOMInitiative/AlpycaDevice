@@ -113,7 +113,8 @@ class DriverException:
                             Defaulted True above with exc_verbose, may be overriden
                             at construction time.
         """
-        assert number >= 0x500 and number <= 0xFFF, 'Programmer error, bad DriverException number'
+        if number >= 0x500 and number <= 0xFFF:
+            raise InvalidValueException('Programmer error, bad DriverException number')
         self.number = number
         cname = self.__class__.__name__
         if not exc is None:

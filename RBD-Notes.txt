@@ -43,21 +43,8 @@ that with pipmanager. It is there now.
   in the JSON are the disabling items. I must hve done this before (dump rstcheck and rst-lint).
   Anyway doc8 is finding my errors in real time. 
 
-Need to capture this for the log and maybe the 500 server error even
-----
-2022-12-30 11:35:46 [FALCON] [ERROR] PUT /api/v1/rotator/0/halt => Traceback (most recent call last):
-  File "falcon/app.py", line 365, in falcon.app.App.__call__
-  File "/home/pi/Documents/alpyca-device/.venv/lib/python3.9/site-packages/falcon/hooks.py", line 264, in do_before
-    responder(self, req, resp, **kwargs)
-  File "device/rotator.py", line 230, in on_put
-    logger.info(f'Halt() from ClientID={get_request_field("ClientID", "??")}')
-TypeError: get_request_field() missing 1 required positional argument: 'default'
-
-2022-12-30 11:35:58 [FALCON] [ERROR] PUT /api/v1/rotator/0/halt => Traceback (most recent call last):
-  File "falcon/app.py", line 365, in falcon.app.App.__call__
-  File "/home/pi/Documents/alpyca-device/.venv/lib/python3.9/site-packages/falcon/hooks.py", line 264, in do_before
-    responder(self, req, resp, **kwargs)
-  File "device/rotator.py", line 230, in on_put
-    logger.info(f'Halt() from ClientID={get_request_field("ClientID", "??")}')
-TypeError: get_request_field() missing 1 required positional argument: 'default'
-----
+* Three types of exceptions here:
+  1. Errors in the HTTP request itself -> 400 or 404
+  2. Device operational errors RunTimeError -> Alpaca DeviceException and detailed message with -> 200 -> logged also
+  3. Python uncaught exception in the Falcon responder class -> 500 -> Logged also
+  4. Python uncaught exception in the app outside Falcon -> Logged and possible app death.

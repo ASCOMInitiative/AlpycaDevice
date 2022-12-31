@@ -42,7 +42,8 @@
 # 27-Dec-2022   rbd 0.1 Post-processing logging of request only if not 200 OK
 #               MIT License and module header. No multicast on device duh.
 # 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
-# 30-Dec-2022   rbd 0.1 Device number in /setup routing template
+# 30-Dec-2022   rbd 0.1 Device number in /setup routing template. Last chance
+#               exception handler, Falcon responder uncaught exeption handler.
 #
 import sys
 import traceback
@@ -55,7 +56,7 @@ import common
 import config
 import discovery
 import exceptions
-from falcon import Request, Response, App
+from falcon import Request, Response, App, HTTPInternalServerError
 import management
 import rotator
 import setup
@@ -112,11 +113,10 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
-    config.logger.error('An uncaught exception occurred:')
-    config.logger.error(f'Type: {exc_type}')
-    config.logger.error(f'Value: {exc_value}')
+    config.logger.error(f'An uncaught {exc_type.__name__} exception occurred:')
+    config.logger.error(exc_value)
 
-    if exc_traceback:
+    if Config.verbose_driver_exceptions and exc_traceback:
         format_exception = traceback.format_tb(exc_traceback)
         for line in format_exception:
             config.logger.error(repr(line))
@@ -126,9 +126,10 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
 # logging the info to our log file instead of it being lost to 
 # stdout. Then it logs and responds with a 500 Internal Server Error.
 #
-def falcon_uncaught_exception_handler(req: Request, resp: Response, ex, params):
-    # TODO - Log the exception and traceback,then set Response to a 500 Internal Server Error
-    config.logger.error("test")
+def falcon_uncaught_exception_handler(req: Request, resp: Response, ex: BaseException, params):
+    exc = sys.exc_info()
+    custom_excepthook(exc[0], exc[1], exc[2])
+    raise HTTPInternalServerError('Internal Server Error', 'Alpaca endpoint responder failed. See logfile.')
 
 # ===========
 # APP STARTUP 
