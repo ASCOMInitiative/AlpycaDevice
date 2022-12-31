@@ -79,17 +79,16 @@
     "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
     "containerId": "",
     "name": "DriverVersion",
-    "url": "http://192.168.0.42:5555/api/v1/rotator/0/driverversion?ClientTransactionID=321",
+    "url": "http://192.168.0.42:5555/api/v1/rotator/0/driverversion?ClientID=123&ClientTransactionID=321",
     "method": "GET",
     "sortNum": 40000,
     "created": "2022-12-17T21:05:09.748Z",
-    "modified": "2022-12-30T18:23:45.522Z",
+    "modified": "2022-12-30T23:17:56.221Z",
     "headers": [],
     "params": [
       {
         "name": "ClientID",
         "value": "123",
-        "isDisabled": true,
         "isPath": false
       },
       {

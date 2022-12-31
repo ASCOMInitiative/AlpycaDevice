@@ -34,6 +34,7 @@
 # -----------------------------------------------------------------------------
 # Edit History:
 # 27-Dec-2022   rbd V0.1 Initial edit. Simply say no GUI. 
+# 30-Dec-2022   rbd V0.1 Device number captured and sent to responder
 #
 from falcon import Request, Response
 from shr import PropertyResponse, DeviceMetadata, log_request
@@ -45,7 +46,7 @@ class svrsetup:
         resp.text = '<!DOCTYPE html><html><body><h2>Server setup is in config.toml</h2></body></html>'
 
 class devsetup:
-    def on_get(self, req: Request, resp: Response):
+    def on_get(self, req: Request, resp: Response, devnum: str):
         resp.content_type = 'text/html'
         log_request(req)
         resp.text = '<!DOCTYPE html><html><body><h2>Device setup is in config.toml</h2></body></html>'

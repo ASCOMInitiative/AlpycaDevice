@@ -84,14 +84,14 @@ class Config:
 """
 
 global logger
-#logger: logging.Logger = None   # Master copy of the logger
+#logger: logging.Logger = None  # Master copy (root) of the logger
 logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 def init_logging():
     """ Create the logger - called at app startup """
     global logger
     logging.basicConfig(level=Config.log_level)
-    logger = logging.getLogger()                # Nameless, see above
+    logger = logging.getLogger()                # Root logger, see above
     formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s %(message)s', '%Y-%m-%dT%H:%M:%S')
     formatter.converter = time.gmtime           # UTC time
     logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above

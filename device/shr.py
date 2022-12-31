@@ -73,6 +73,7 @@ class DeviceMetadata:
     ID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
     Info = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
     Manufacturer = 'ASCOM Initiative'
+    MaxDeviceNumber = 0
     InterfaceVersion = 3        # IRotatorV3
 
 
@@ -130,8 +131,12 @@ class PreProcessRequest():
         except ValueError:
             return False
     
-    def check_request(self, req: Request):  # Raise on failure
+    def check_request(self, req: Request, devnum: int):  # Raise on failure
         bad_title='Bad Alpaca Request'
+        if devnum > DeviceMetadata.MaxDeviceNumber:
+            msg = f'Device number {str(devnum)} does not exist'
+            logger.error(msg)
+            raise HTTPBadRequest(title=bad_title, description=msg)
         test: str = get_request_field('ClientID', req, None)
         if test is None:
             msg = 'Request has missing Alpaca ClientID value'
@@ -141,16 +146,19 @@ class PreProcessRequest():
             msg = 'Request has bad Alpaca ClientID value'
             logger.error(msg)
             raise HTTPBadRequest(title=bad_title, description=msg)
-        test: str = get_request_field('ClientTransactionID', req, 0)    # Missing allowed by Alpaca
+        test: str = get_request_field('ClientTransactionID', req, '0')    # Missing allowed by Alpaca
         if not self._pos_or_zero(test):
             msg = 'Request has bad Alpaca ClientTransactionID value'
             logger.error(msg)
             raise HTTPBadRequest(title=bad_title, description=msg)
 
-    
+    #
+    # params contains {'devnum': n } from the URI template matcher
+    # and format converter. This is the device number from the URI
+    #
     def __call__(self, req: Request, resp: Response, resource, params):
-        log_request(req)                       # Log even a bad request
-        self.check_request(req)                     # Raises to 400 error on check failure
+        log_request(req)                            # Log even a bad request
+        self.check_request(req, params['devnum'])   # Raises to 400 error on check failure
 
 # ------------------
 # PropertyResponse

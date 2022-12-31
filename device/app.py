@@ -42,7 +42,10 @@
 # 27-Dec-2022   rbd 0.1 Post-processing logging of request only if not 200 OK
 #               MIT License and module header. No multicast on device duh.
 # 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
+# 30-Dec-2022   rbd 0.1 Device number in /setup routing template
 #
+import sys
+import traceback
 import inspect
 from wsgiref.simple_server import WSGIRequestHandler, make_server
 
@@ -52,7 +55,7 @@ import common
 import config
 import discovery
 import exceptions
-import falcon
+from falcon import Request, Response, App
 import management
 import rotator
 import setup
@@ -69,7 +72,6 @@ API_VERSION = 1
 # https://stackoverflow.com/questions/31433682/control-wsgiref-simple-server-log
 #
 class LoggingWSGIRequestHandler(WSGIRequestHandler):
-    #logger = None           # Set during app startup
     def log_message(self, format, *args):
         """ 
             Parameters:
@@ -84,16 +86,49 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
 #-----------------------
 # Magic routing function
 # ----------------------
-def init_routes(app: falcon.App, devname: str, module):
+def init_routes(app: App, devname: str, module):
     # Magic to get list of endpoint controller classes in given module
     # Note that it is suufficient to create the controller instance
     # directly from the type returned by inspect.getmembers since 
     # the instance is saved within Falcon as its resource controller.
-    # Single device implementation, device #0
+    # The responder methods are called with an additional 'devno'
+    # parameter, containing the device number from the URI. Reject
+    # negative device numbers.
     memlist = inspect.getmembers(module, inspect.isclass)
     for cname,ctype in memlist:
         if ctype.__module__ == module.__name__:    # Only classes *defined* in the module
-            app.add_route(f'/api/v{API_VERSION}/{devname}/0/{cname.lower()}', ctype())  # type() creates instance!
+            app.add_route(f'/api/v{API_VERSION}/{devname}/{{devnum:int(min=0)}}/{cname.lower()}', ctype())  # type() creates instance!
+
+#
+# Hook this as last-chance only after the logger is set up!
+# https://stackoverflow.com/a/58593345/159508
+# Should never be called since unhandled exceptions are
+# theoretically caught in falcon. Well it's here so the
+# exception has a chance of being logged to our file. 
+#
+def custom_excepthook(exc_type, exc_value, exc_traceback):
+    # Do not print exception when user cancels the program
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    config.logger.error('An uncaught exception occurred:')
+    config.logger.error(f'Type: {exc_type}')
+    config.logger.error(f'Value: {exc_value}')
+
+    if exc_traceback:
+        format_exception = traceback.format_tb(exc_traceback)
+        for line in format_exception:
+            config.logger.error(repr(line))
+
+#
+# This catches unhandled exceptions within the Falcon responder,
+# logging the info to our log file instead of it being lost to 
+# stdout. Then it logs and responds with a 500 Internal Server Error.
+#
+def falcon_uncaught_exception_handler(req: Request, resp: Response, ex, params):
+    # TODO - Log the exception and traceback,then set Response to a 500 Internal Server Error
+    config.logger.error("test")
 
 # ===========
 # APP STARTUP 
@@ -110,6 +145,11 @@ def main():
     discovery.logger = logger
     set_shr_logger(logger)
 
+    # -----------------------------
+    # Last-Chance Exception Handler
+    # -----------------------------
+    sys.excepthook = custom_excepthook
+
     # ---------
     # DISCOVERY
     # ---------
@@ -119,7 +159,7 @@ def main():
     # MAIN HTTP/REST API ENGINE (FALCON)
     # ----------------------------------
     # falcon.App instances are callable WSGI apps
-    falc_app = falcon.App()
+    falc_app = App()
     #
     # Initialize routes for each endpoint the magic way
     #
@@ -129,7 +169,12 @@ def main():
     falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
     falc_app.add_route(f'/management/v{API_VERSION}/configureddevices', management.configureddevices())
     falc_app.add_route('/setup', setup.svrsetup())
-    falc_app.add_route(f'/setup/v{API_VERSION}/rotator/0/setup', setup.devsetup())
+    falc_app.add_route(f'/setup/v{API_VERSION}/rotator/{{devno}}/setup', setup.devsetup())
+
+    #
+    # Install the unhandled exception processor. See above,
+    #
+    falc_app.add_error_handler(Exception, falcon_uncaught_exception_handler)
 
     # ------------------
     # SERVER APPLICATION
@@ -138,6 +183,7 @@ def main():
     with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
         logger.info(f'==STARTUP== Serving on {Config.ip_address}:{Config.port}. Time stamps are UTC.')
         # Serve until process is killed
+
         httpd.serve_forever()
 
 # ========================
