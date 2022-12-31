@@ -47,7 +47,8 @@
 # 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
 # 29-Dec-2022   rbd 0.1 ProProcess() Falcon hook class for pre-logging and 
 #                       common request validation (Client IDs for now).
-#
+# 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
+
 from threading import Lock
 import exceptions
 import json
@@ -84,7 +85,7 @@ bools = ['true', 'false']                               # Only valid JSON bools 
 def to_bool(str: str) -> bool:
     val = str.lower()
     if val not in bools:
-        raise ValueError
+        raise HTTPBadRequest                            # Always a bad request
     return val == bools[0]
 
 # ---------------------------------------------------------

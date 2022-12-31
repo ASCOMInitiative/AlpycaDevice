@@ -44,8 +44,9 @@
 #               and module header.
 # 30-Dec-2022   rbd 0.1 Revamp request pre-processing, logging, and 
 #               quality control. Device number from URI.
+# 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
 #
-from falcon import Request, Response, before
+from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
                 get_request_field, to_bool
@@ -80,12 +81,7 @@ class Connected:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
-        try:
-            conn = to_bool(formdata['Connected'])
-        except:
-            resp.text = MethodResponse(req,
-                            InvalidValueException('Connected must be set to true or false')).json
-            return
+        conn = to_bool(formdata['Connected'])   # Raises 400 BadRequest
         try:
             # ----------------------
             rot_dev.connected = conn
@@ -171,12 +167,7 @@ class Reverse:
             resp.text = MethodResponse(req, 
                             NotConnectedException()).json
             return
-        try:
-            rev = to_bool(formdata['Reverse'])
-        except:
-            resp.text = MethodResponse(req, 
-                            InvalidValueException('Reverse must be set to true or false')).json
-            return
+        rev = to_bool(formdata['Reverse'])   # Raises 400 BadRequest
         try:
             # ----------------------
             rot_dev.reverse = rev
