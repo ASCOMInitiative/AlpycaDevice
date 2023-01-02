@@ -11,12 +11,12 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # The critical thing is to make the path to the folder above 'alpaca' so that
 # Sphinx will see the alpaca folder as a package (due to the __init__.py in it).
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('..//..'))
-# # Prevent Python crash on infinite recursion
-# sys.setrecursionlimit(1500)
+# NOTE: Without 'device' in the path, I'd have to use  device.app, etc.
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..//..//device'))
+# Prevent Python crash on infinite recursion
+sys.setrecursionlimit(1500)
 
 
 # -- Project information -----------------------------------------------------
@@ -53,9 +53,9 @@ autodoc_class_signature = 'mixed'   # Display signature with class name!
 autodoc_member_order = 'groupwise'
 autodoc_typehints = 'signature'
 autodoc_typehints_format = 'short'
-autodoc_default_options = {
-    'show-inheritance': True
-}
+# autodoc_default_options = {
+#     'show-inheritance': True
+# }
 
 # Napoleon specific settings
 napoleon_use_admonition_for_examples = True

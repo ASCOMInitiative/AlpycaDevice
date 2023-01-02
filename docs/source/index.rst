@@ -21,7 +21,7 @@
 
     ========================
     Welcome to Alpyca Device
-    =========================
+    ========================
 
 .. only:: html
 
@@ -139,6 +139,9 @@
     introduction
 
     faq
+
+    modules
+
 
 .. only:: html
 

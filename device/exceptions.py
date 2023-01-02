@@ -98,8 +98,7 @@ class DriverException:
             self, 
             number: int = 0x500,
             message: str = 'Internal driver error - this should be more specific.',
-            exc = None,  # Python exception info 
-            full: bool = Config.verbose_driver_exceptions
+            exc = None  # Python exception info 
         ):
         """Initialize the DeviceException object
         
@@ -118,7 +117,7 @@ class DriverException:
         self.number = number
         cname = self.__class__.__name__
         if not exc is None:
-            if full:
+            if Config.verbose_driver_exceptions:
                 self.fullmsg = f'{cname}: {message}\n{traceback.format_exc()}'  # TODO Safe if not explicitly using exc?
             else:
                 self.fullmsg = f'{cname}: {message}\n{type(exc).__name__}: {str(exc)}'
