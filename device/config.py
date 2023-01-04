@@ -37,8 +37,10 @@
 # 27-Dec-2022   rbd 0.1 Move shared logger construction and global 
 #               var here. MIT license and module header. No mcast.
 #
+import sys
 import toml
 import logging
+
 
 #
 # This slimy hack is for Sphinx which, despite the toml.load() being
@@ -46,7 +48,7 @@ import logging
 # initialized or ?!?!?!?!? If you try to use getcwd() in the file name
 # here, it will also choke Sphinx. This cost me a day. 
 _dict = {}
-_dict = toml.load(f'/home/pi/Documents/alpyca-device/config.toml')    # Errors here are fatal. 
+_dict = toml.load(f'{sys.path[0]}/config.toml')    # Errors here are fatal. 
 def get_toml(sect: str, item: str):
     if not _dict is {}:
         return _dict[sect][item]
