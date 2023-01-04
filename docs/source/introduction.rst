@@ -11,193 +11,117 @@
         :width: 128px
         :align: right
 
-Introduction and Quick Start
-============================
-
-.. only:: html
-
-    This package provides access to ASCOM compatible astronomy devices via the Alpaca network protocol.
-    For more information see the |ascsite|, specifically the |devhelp| section, and the |apiref|.
-
-.. only:: rinoh or rst
-
-    This package provides access to ASCOM compatible astronomy devices via the Alpaca network protocol.
-    For more information see the
-    `ASCOM Initiative web site <https://ascom-standards.org/index.htm>`_,
-    specifically the
-    `Alpaca Developers Info <https://ascom-standards.org/AlpacaDeveloper/Index.htm>`_
-    section, and the
-    `Alpaca API Reference (PDF) <https://github.com/ASCOMInitiative/ASCOMRemote/raw/master/Documentation/ASCOM%20Alpaca%20API%20Reference.pdf>`_.
-
-.. _intro-stat:
-
-Status of This Document
------------------------
-The descriptions of the ASCOM Standard interfaces implemented in Alpyca are
-our best efforts as of May 2022. At that time, the ASCOM Core Team announced
-that they are formalizing the operation of the non-blocking (asynchronous)
-methods in the standards documentation. This library manual includes
-additional information and clarification of the asynchronous methods which
-follows the formalization agreements as of July 2022. If there are any
-resulting changes to the interface definitions, we will release an updated
-(compatible) library as soon as possible.
+Introduction
+============
 
 .. note::
-    Changes to the interfaces will never be breaking. Your code using this
-    library is safe from being broken by such changes.
-
-Installation
-------------
-Requires Python 3.7 or later. The package installs from PyPi as::
-
-    pip install alpyca
-
-or if you have the source code in a tar file, extract it and run::
-
-    python3 setup.py install
-
-General Usage Pattern
----------------------
-To connect and control a device, the basic steps are:
-
-1. Import the device class and Alpaca exceptions you plan to catch
-2. Create an instance of the device class, giving the IP:port and device
-   index on the server
-3. Connect to the device
-4. Call methods and read/write properties as desired, catching exceptions(!)
-5. Assure that you disconnect from the device.
-
-You will be controlling *physical devices* with your function calls here.
-Devices are more susceptible to problems than software. There are some
-very important things to be aware of:
-
-- Some of the methods (initiator functions) are non-blocking (asynchronous)
-  and will return right away if the operation was *started* successfully.
-  These are clearly marked in the docs. You must validate that the operation
-  completes *successfully* (later) by reading a *completion property* which
-  is documented with each non-blocking function.
-- You will receive an exception wherever anything fails to complete
-  *successfully*. Not only might an initiator raise an exception, but the
-  completion property will raise one as well if the operation failed
-  *while in progress*. Use a ``finally`` clause to assure that you disconnect
-  from the device no matter what.
-
-Simple Example
---------------
+    Writing a successful device driver requires, first and foremost, a clear understanding
+    of the role of a driver, and by extension, the responsibilities of the driver and
+    the developer. There are subtleties and easily missed aspects. We can't overstress
+    the importance of starting a driver project with a clear view of the landscape.
 
 .. only:: html
 
-    Run the self-contained cross-platform |omnisim| on your local system
+    These documents will give you a good overview of driver development.
 
-.. only:: rinoh or rst
+    1. |ascsite| All things ASCOM and Alpaca
+    2. |devhelp| See the Design Principles sections: General Principles, Asynchronous APIs, and  Exceptions.
+    3. |apiref| General specifications for Alpaca network protocol and API
 
-    Run the self-contained cross-platform
-    `Alpaca Omni Simulator <https://github.com/DanielVanNoord/ASCOM.Alpaca.Simulators#readme>`_
-    on your local system
+.. only:: rinoh
 
-Then execute this little program::
+    These documents will give you a good overview of driver development.
 
-    import time
-    from alpaca.telescope import *      # Multiple Classes including Enumerations
-    from alpaca.exceptions import *     # Or just the exceptions you want to catch
+    1. `ASCOM Initiative web site <https://ascom-standards.org/index.htm>`_ All things ASCOM and Alpaca
+    2. `Alpaca Developers Info <https://ascom-standards.org/AlpacaDeveloper/Index.htm>`_ See the Design Principles sections: General Principles, Asynchronous APIs, and  Exceptions.
+    3. `Alpaca API Reference (PDF) <https://github.com/ASCOMInitiative/ASCOMRemote/raw/master/Documentation/ASCOM%20Alpaca%20API%20Reference.pdf>`_ General specifications for Alpaca network protocol and API
 
-    T = Telescope('localhost:32323', 0) # Local Omni Simulator
-    try:
-        T.Connected = True
-        print(f'Connected to {T.Name}')
-        print(T.Description)
-        T.Tracking = True               # Needed for slewing (see below)
-        print('Starting slew...')
-        T.SlewToCoordinatesAsync(T.SiderealTime + 2, 50)    # 2 hrs east of meridian
-        while(T.Slewing):
-            time.sleep(5)               # What do a few seconds matter?
-        print('... slew completed successfully.')
-        print(f'RA={T.RightAscension} DE={T.Declination}')
-        print('Turning off tracking then attempting to slew...')
-        T.Tracking = False
-        T.SlewToCoordinatesAsync(T.SiderealTime + 2, 55)    # 5 deg slew N
-        # This will fail for tracking being off
-        print("... you won't get here!")
-    except Exception as e:              # Should catch specific InvalidOperationException
-        print(f'Slew failed: {str(e)}')
-    finally:                            # Assure that you disconnect
-        print("Disconnecting...")
-        T.Connected = False
+Alpaca Server and Driver Architecture
+-------------------------------------
 
-Results::
+An Alpaca driver consists of a **server** which can host one or more **drivers**
+for *multiple* devices of *multiple* types. For example, a single Alpaca server
+could provide the HTTP/REST communications for two cameras and a mount, all through
+the same IP address and port.
 
-    Connected to Alpaca Telescope Sim
-    Software Telescope Simulator for ASCOM
-    Starting slew...
-    ... slew completed successfully.
-    RA=10.939969572854931 DE=50
-    Turning off tracking then attempting to slew...
-    Slew failed: SlewToCoordinatesAsync is not allowed when tracking is False
-    Disconnecting...
-    done
+The **server** is an HTTP (web) server that apps talk to using the Alpaca HTTP/REST
+protocol, and which dispatches endpoint requests as calls to the drivers for each
+device type and instance.
 
+A **driver** consists of a set of *responder* classes for each Alpaca endpoint,
+including the ones common to all devices like ``Description`` and ``DriverVersion``,
+as well as the ones specific to the device type like ``Rotator.MoveMechanical()``.
+Incoming REST requests are *routed* to their respective responder class.
+The responder is responsible for performing the action or accessing the data
+represented by the endpoint. Thus, each member of the ASCOM interface for a
+device is mapped one-for-one to an Alpaca REST endpoint and thence to a responder
+class for that endpoint.
 
-Member Capitalization
----------------------
-This help file provides detailed descriptions of the ASCOM Interfaces
-for all supported device types. Note that, rather than follow :pep:`8`,
-the method and property names, as well as enumerations and exceptions,
-all follow the capitalization that has historically been assigned to ASCOM
-interface members. The Class and member descriptions, notes, and exceptions
-raised all follow the universal ASCOM standards established long ago.
+The endpoint URI contains both the device type (its device name) and also a
+device number (the particular instance of that device type). The server instance
+responsible for calling the responder for the device type and instance. Typically
+this is done via a routing table.
 
-Numeric Datatypes
------------------
-The Alpyca library takes care of numeric conversions so you always work in
-native Python numbers. When comparing numeric datatypes here in Python 3,
-keep the following in mind:
+The server is additionally responsible for responding to Alpaca ``Discovery``
+multicasts coming from clients. This is really simple mechanism. It sends back
+a simple JSON response ``{AlpacaPort: *n*}``. Together with this port number,
+and the server's IP address in the HTTP response packet, the client now knows
+now to talk to the Alpaca server.
 
-* Python 3's ``float`` is equivalent to a double-precision floating point
-  in other languages
-  (e.g. ``double`` in C#, 64-bit)
-* Python 3's ``int`` is not restricted by the number of bits, and can
-  expand to the limit of available memory.
+Once a client has found the Alpaca server, it can determine the types of devices
+served,, and the number of instances of each device that are available (and some
+other metadata). This is done through three ``Management`` endpoints. These
+are typically used by client apps to select a specific device served [#]_
 
-Example::
+Finally, device settings and configuration is optionally provided with a set of
+HTML web pages via the ``setup`` endpoint. Alternatively, for lightweight
+applications (like this sample) an alternative is to use a simple text
+config file.
 
-    # A Python 3 program to demonstrate that we can store
-    # large numbers in Python 3
-    x = 10000000000000000000000000000000000000000000
-    x = x + 1
-    print (x)
+.. hint::
+    For details see |apiref|
 
-Output::
+Sample Driver Organization
+--------------------------
 
-    10000000000000000000000000000000000000000001
+In this sample the HTTP server function is provided by the
+lightweight Python |wsgiref| combined with the |falcweb|. These two
+components together provide the REST API engine for the actual driver).
+the server and the Falcon back-end application are created on the
+main thread at app startup and run "forever".
 
-Common Misconceptions and Confusions
-------------------------------------
+The responders for each Alpaca device API are kept in separate modules, one
+for the endpoints common to all device types, and the other for the
+device-specific endpoints. In this sample, these are ``common.py`` and
+``rotator.py``.
 
-.. only:: html
+.. note:: Your main development effort will focus on the device-specific
+    responder classes. Metadata elsewhere can be tailored quickly.
 
-    Throughout the evolution of ASCOM, and particularly recently with Alpaca, our goal has been to
-    provide a strong framework for reliability and integrity. We see newcomers to programming
-    looking for help on the |supforum|. There are a few subject areas within which misconceptions
-    and confusion are common. Before starting an application development project with Alpyca,
-    you may benefit from reviewing the following design principles that are *foundational*:
+Routing of incoming requests to the responder classes is done with a simple
+function ``app.init_routes()`` which inspects each .py module containing
+responder classes, finds each class, constructs the endpoint URI template
+and then enters the URI and responder class into the Falcon routing table. Thus you
+do not need to manually create routes for responders. See |falcweb|.
 
-    * |princ|
-    * |async|
-    * |excep|
+Alpaca discovery is provided by a simple engine running in a separate thread.
+It is started at app startup, and runs "forever". You should not need to edit this.
 
-.. only:: rinoh or rst
+Management API is provided in a separate module and routing for the management
+endpoits is set up at app startup.
 
-    Throughout the evolution of ASCOM, and particularly recently with Alpaca, our goal has been to
-    provide a strong framework for reliability and integrity. We see newcomers to programming
-    looking for help on the
-    `ASCOM Driver and Application Development Support Forum <https://ascomtalk.groups.io/g/Developer>`_.
-    There are a few subject areas within which misconceptions
-    and confusion are common. Before starting an application development project with Alpyca,
-    you may benefit from reviewing the following design principles that are *foundational*:
+Logging is provided by the standard Python logger engine, with customizations
+for the logging format including ISO-8601/UTC time stamps and logging to a file
+(and optionally stdout). In addition, the HTTP server's logging output, normally
+coming at the *end* of a request, is replaced with an HTTP request log at
+the *beginning* of the request so that it is in context with logged messages
+that may appear during processing of requests. The HTTP server is allowed to
+write the post-request log line for non-200 (OK) HTTP responses.
 
-    * `The General Principles <https://ascom-standards.org/AlpacaDeveloper/Principles.htm>`_
-    * `Asynchronous APIs <https://ascom-standards.org/AlpacaDeveloper/Async.htm>`_
-    * `Exceptions in ASCOM <https://ascom-standards.org/AlpacaDeveloper/Exceptions.htm>`_
+Finally the ``setup`` endpoint simply displays a static web page. Configuration
+for this lightweight sample uses a config file in |toml|. Of course you can
+provide your own web pages, or get really fancy and use |falcjinja|.
+
 
 
 .. |ascsite| raw:: html
@@ -240,6 +164,28 @@ Common Misconceptions and Confusions
     <a href="https://github.com/DanielVanNoord/ASCOM.Alpaca.Simulators#readme" target="_blank">
     Alpaca Omni Simulator</a> (external)
 
+.. |falcweb| raw:: html
 
+    <a href="https://falcon.readthedocs.io/en/stable/" target="_blank">
+    The Falcon Web Framework</a> (external)
+
+.. |wsgiref| raw:: html
+
+    <a href="https://docs.python.org/3/library/wsgiref.html#module-wsgiref.simple_server" target="_blank">
+    wsgiref.simple_server</a> (external)
+
+.. |toml| raw:: html
+
+     <a href="https://toml.io/en/" target="_blank">
+    Tom's Obvious Minimal Language</a> (external)
+
+.. |falcjinja| raw:: html
+
+     <a href="https://github.com/myusko/falcon-jinja" target="_blank">
+    Falcon support for Jinja-2</a> (external)
+
+
+.. [#] The Windows ASCOM Chooser uses discovery and the management
+    endpoints to provide the user with the devices to select from.
 
 

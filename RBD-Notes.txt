@@ -36,13 +36,40 @@ trying to follow the directions in the manual I added a setting "--ignore-errors
 luck. So I want back into settings restructuredtext: Linters: Disabled-linters, and disabled rstcheck. 
 This caused restructuedtext to start asking to load the restructuredtext_lint package, so I installed
 that with pipmanager. It is there now.
-* SHIT - Now it is using rst-lint, a brain damaged linter that doesn't know some of the directives
+* DAMN - Now it is using rst-lint, a brain damaged linter that doesn't know some of the directives
   like .. only:: So I want back and disabled that one. GRRRRR Now it wants doc8. So I installed that with pip.
   HOORAY!!! It is using doc8. This one has ways of controlling the errors and other  stuff. See the
   VSCode settings restructuredtext.linter.doc8.extraArgs and remove the rstcheck shit. Right below
   in the JSON are the disabling items. I must hve done this before (dump rstcheck and rst-lint).
   Anyway doc8 is finding my errors in real time. 
 
+03-Jan-2023
+-----------
+* It is OK to make Sphinx docs on the command line if you deactivate the .venv. That's enough
+  for now till I decide to get into another wrestling match with version conflicts. TRhe older
+  versions of packages in the global site-packages all seems to work so DON'T TOUCH IT!!!
+* === OH!! ALong the lower left of the VSCode status bar, there is a selector for the Sphinx path!!
+  I never saw this. It was set to use <docutils> but I changed it to use Sphinx with the conf.py
+  info. Maybe this will remove some of the inscrutable linting stuff.
+  One of the effects is to add this wo the workspace level settings:
+  		"esbonio.sphinx.confDir": "${workspaceFolder}/docs/source",
+  This makes me realize that esbonio can benefit from not guessing, and that this is project-specific,
+  so now I will commit the alpaca-device.code-workspace to the Git repo, along with the thunder-tests
+  in order to create a portable dev environment. 
+* Shit, esbonio is now building into docs/source/_build instead of docs/build. This is with the 
+  .venv deactivated. Is there no end to the surprises and side effects?
+  + OK, I have now set up the workspace settings so that esbonio builds into 
+    docs/build/_esbonio/ (doctrees and html), and also Sphinx builds into docs/build 
+    (doctrees and html).
+      "settings": {
+        "esbonio.sphinx.confDir": "${workspaceFolder}/docs/source",
+        "esbonio.sphinx.buildDir": "${workspaceFolder}/docs/build/_esbonio"
+      }
+    This makes it easy to .gitignore the esbonio output while keeping it separate from the
+    actual Sphinx final build output for HTML and rinoh/PDF.
+
+
+Ideas for writing:
 * Three types of exceptions here:
   1. Errors in the HTTP request itself -> 400 or 404
   2. Device operational errors RunTimeError -> Alpaca DeviceException and detailed message with -> 200 -> logged also

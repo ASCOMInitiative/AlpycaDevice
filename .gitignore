@@ -3,7 +3,6 @@
 .venv
 __pycache__
 device/__pycache__
-alpyca-device.code-workspace
 rotator.log*
 docs/build
 docs/refs

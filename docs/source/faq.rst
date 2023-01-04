@@ -18,7 +18,6 @@ Frequently Asked Questions
 
 How can I tell if my asynchronous request failed after being started?
 ---------------------------------------------------------------------
-See :ref:`intro-stat`
 
 All asynchronous (non-blocking) methods in ASCOM are paired with corresponding
 properties that allow you to determine if the operation (running in the

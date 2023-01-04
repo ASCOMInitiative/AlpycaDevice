@@ -7,7 +7,7 @@
 The app Module
 ==============
 
-This module blah blah.
+This module blah blah blah.
 
 .. automodule:: app
     :members:
