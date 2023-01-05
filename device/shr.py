@@ -67,6 +67,7 @@ def set_shr_logger(lgr):
 # -----------
 # Static metadata not subject to configuration changes
 class DeviceMetadata:
+    """ Metadata describing the Rotator Device"""
     Name = 'Sample Rotator'
     Version = '0.1'
     Description = 'Alpaca Sample Rotator '

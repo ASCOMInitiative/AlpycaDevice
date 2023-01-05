@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"esbonio.sphinx.confDir": "${workspaceFolder}/docs/source",
+		"esbonio.sphinx.confDir": "${workspaceFolder}\\docs\\source",
 		"autoDocstring.customTemplatePath": "alpaca-device.mustache",
 		"esbonio.sphinx.buildDir": "${workspaceFolder}/docs/build/_esbonio"
 	}

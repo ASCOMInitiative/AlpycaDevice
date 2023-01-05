@@ -144,24 +144,10 @@ provide your own web pages, or get really fancy and use |falcjinja|.
     <a href="https://ascomtalk.groups.io/g/Developer" target="_blank">
     ASCOM Driver and Application Development Support Forum</a> (external)
 
-.. |princ| raw:: html
-
-    <a href="https://ascom-standards.org/AlpacaDeveloper/Principles.htm" target="_blank">
-    The General Principles</a> (external)
-
-.. |async| raw:: html
-
-    <a href="https://ascom-standards.org/AlpacaDeveloper/Async.htm" target="_blank">
-    Asynchronous APIs</a> (external)
-
-.. |excep| raw:: html
-
-    <a href="https://ascom-standards.org/AlpacaDeveloper/Exceptions.htm" target="_blank">
-    Exceptions in ASCOM</a> (external)
 
 .. |omnisim| raw:: html
 
-    <a href="https://github.com/DanielVanNoord/ASCOM.Alpaca.Simulators#readme" target="_blank">
+    <a href="https://github.com/ASCOMInitiative/ASCOM.Alpaca.Simulators#readme" target="_blank">
     Alpaca Omni Simulator</a> (external)
 
 .. |falcweb| raw:: html

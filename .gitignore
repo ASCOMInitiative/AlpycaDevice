@@ -6,3 +6,4 @@ device/__pycache__
 rotator.log*
 docs/build
 docs/refs
+alpyca-device.code-workspace

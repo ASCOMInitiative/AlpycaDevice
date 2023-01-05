@@ -9,9 +9,7 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# The critical thing is to make the path to the folder above 'alpaca' so that
-# Sphinx will see the alpaca folder as a package (due to the __init__.py in it).
-# NOTE: Without 'device' in the path, I'd have to use  device.app, etc.
+#
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..//..//device'))
