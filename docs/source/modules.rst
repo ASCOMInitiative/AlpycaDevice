@@ -24,5 +24,6 @@ These are the modules.
    rotator
    shr
    common
+   exceptions
 
 This is a test.

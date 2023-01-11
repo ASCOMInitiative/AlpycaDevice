@@ -39,18 +39,21 @@ Introduction
 Alpaca Server and Driver Architecture
 -------------------------------------
 
-An Alpaca driver consists of a **server** which can host one or more **drivers**
-for *multiple* devices of *multiple* types. For example, a single Alpaca server
-could provide the HTTP/REST communications for two cameras and a mount, all through
-the same IP address and port.
+An Alpaca device consists of a **server** which can host one or more **drivers**
+for *multiple* ASCOM devices of *multiple* types. For example, a single Alpaca device
+could provide the HTTP/REST communications for two ASCOM cameras and an ASCOM
+mount, all through the same IP address and port.
 
-The **server** is an HTTP (web) server that apps talk to using the Alpaca HTTP/REST
-protocol, and which dispatches endpoint requests as calls to the drivers for each
-device type and instance.
+The device's internal **server** is an HTTP (web) server that apps talk to using the
+Alpaca HTTP/REST protocol, and which dispatches endpoint requests as calls to the
+drivers for each device type and instance.
 
-A **driver** consists of a set of *responder* classes for each Alpaca endpoint,
-including the ones common to all devices like ``Description`` and ``DriverVersion``,
-as well as the ones specific to the device type like ``Rotator.MoveMechanical()``.
+An ASCOM **device driver** consists of a set of *responder* classes for each
+Alpaca endpoint,
+including the ones common to all ASCOM devices like ``Description`` and
+``DriverVersion``,
+as well as the ones specific to the ASCOM device type like
+``Rotator.MoveMechanical()``.
 Incoming REST requests are *routed* to their respective responder class.
 The responder is responsible for performing the action or accessing the data
 represented by the endpoint. Thus, each member of the ASCOM interface for a
@@ -62,18 +65,21 @@ device number (the particular instance of that device type). The server instance
 responsible for calling the responder for the device type and instance. Typically
 this is done via a routing table.
 
-The server is additionally responsible for responding to Alpaca ``Discovery``
-multicasts coming from clients. This is really simple mechanism. It sends back
+The Alpaca device's server is additionally responsible for
+responding to Alpaca ``Discovery``
+multicasts coming from clients. This is a really simple mechanism. It sends back
 a simple JSON response ``{AlpacaPort: *n*}``. Together with this port number,
 and the server's IP address in the HTTP response packet, the client now knows
 now to talk to the Alpaca server.
 
-Once a client has found the Alpaca server, it can determine the types of devices
-served,, and the number of instances of each device that are available (and some
+Once a client has found the Alpaca device, it can talk to its internal server
+to determine the types of ASCOM devices
+served, and the number of instances of each ASCOM device that are
+available (and some
 other metadata). This is done through three ``Management`` endpoints. These
 are typically used by client apps to select a specific device served [#]_
 
-Finally, device settings and configuration is optionally provided with a set of
+Finally, device settings and configuration are optionally provided with a set of
 HTML web pages via the ``setup`` endpoint. Alternatively, for lightweight
 applications (like this sample) an alternative is to use a simple text
 config file.

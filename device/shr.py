@@ -48,9 +48,10 @@
 # 29-Dec-2022   rbd 0.1 ProProcess() Falcon hook class for pre-logging and 
 #                       common request validation (Client IDs for now).
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
+# 10-Jan-2023   rbd 0.1 Cleanups for documentation and add docstrings for Sphinx.
 
 from threading import Lock
-import exceptions
+from exceptions import Success
 import json
 from falcon import Request, Response, HTTPBadRequest
 from logging import Logger
@@ -166,7 +167,20 @@ class PreProcessRequest():
 # PropertyResponse
 # ------------------
 class PropertyResponse():
-    def __init__(self, value, req: Request, err = exceptions.Success()):
+    """JSON response for an Alpaca Property (GET) Request"""
+    def __init__(self, value, req: Request, err = Success()):
+        """Initialize a PropertyResponse object.
+        
+        Attributes:
+            value:  The value of the requested property, or None if there was an
+                exception.
+            req: The Falcon Request property that was provided to the responder.
+            err: An Alpaca exception class as defined in the exceptions
+                or defaults to :py:class:`~exceptions.Success` 
+
+        Notes:
+            * Bumps the ServerTransactionID value and returns it in sequence
+        """
         self.ServerTransactionID = getNextTransId()
         self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0)) 
         self.Value = value
@@ -177,13 +191,26 @@ class PropertyResponse():
 
     @property
     def json(self) -> str:
+        """Return the JSON for the Property Response"""
         return json.dumps(self.__dict__)
 
 # --------------
 # MethodResponse
 # --------------
 class MethodResponse():
-    def __init__(self, req: Request, err = exceptions.Success(), value = None): # value useless unless Success
+    """JSON response for an Alpaca Method (PUT) Request"""
+    def __init__(self, req: Request, err = Success(), value = None): # value useless unless Success
+        """Initialize a MethodResponse object.
+
+        Attributes:
+            req: The Falcon Request property that was provided to the responder.
+            err: An Alpaca exception class as defined in the exceptions
+                or defaults to :py:class:`~exceptions.Success` 
+            value:  If method returns a value, or defaults to None
+        
+        Notes:
+            * Bumps the ServerTransactionID value and returns it in sequence
+        """
         self.ServerTransactionID = getNextTransId()
         self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0))   # 0 for missing CTID
         if not value is None:
@@ -191,9 +218,11 @@ class MethodResponse():
             logger.info(f'{req.remote_addr} <- {str(value)}')
         self.ErrorNumber = err.Number
         self.ErrorMessage = err.Message
-        
+
+
     @property
     def json(self) -> str:
+        """Return the JSON for the Method Response"""
         return json.dumps(self.__dict__)
 
 
@@ -203,7 +232,7 @@ class MethodResponse():
 _lock = Lock()
 _stid = 0
 
-def getNextTransId():
+def getNextTransId() -> int:
     with _lock:
         global _stid
         _stid += 1
