@@ -22,6 +22,7 @@ These are the modules.
    config
    log
    rotator
+   rotatordevice
    shr
    common
    exceptions

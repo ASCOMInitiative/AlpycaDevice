@@ -36,7 +36,7 @@
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
 # 20-Dec-2022   rbd 0.1 Correct endpoint URIs
 # 21-Dec-2022   rbd 0.1 Refactor for import protection. Add configurtion.
-# 22-Dec-2020   rbd 0.1 Start of logging 
+# 22-Dec-2020   rbd 0.1 Start of logging
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Add milliseconds to logger time stamp
 # 27-Dec-2022   rbd 0.1 Post-processing logging of request only if not 200 OK
@@ -45,6 +45,8 @@
 # 30-Dec-2022   rbd 0.1 Device number in /setup routing template. Last chance
 #               exception handler, Falcon responder uncaught exeption handler.
 # 01-Jan-2023   rbd 0.1 Docstring docs
+# 13-Jan-2023   rbd 0.1 More docstring docs
+#
 import sys
 import traceback
 import inspect
@@ -75,15 +77,15 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
     def log_message(self, format: str, *args):
         """Log a message from within the Python **wsgiref** simple server
 
-        Logging elsewhere logs the incoming request *before* 
+        Logging elsewhere logs the incoming request *before*
         processing in the responder, making it easier to read
         the overall log. The wsgi server calls this function
         at the end of processing. Normally the request would not
-        need to be logged again. However, in order to assure 
-        logging of responses with HTTP status other than 
-        200 OK, we log the request again here. 
+        need to be logged again. However, in order to assure
+        logging of responses with HTTP status other than
+        200 OK, we log the request again here.
 
-        For more info see 
+        For more info see
         `this article <https://stackoverflow.com/questions/31433682/control-wsgiref-simple-server-log>`_
 
         Args:
@@ -92,14 +94,14 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
             args[1] (str):   HTTP response status code
             args[2] (str):   HTTP response content-length
 
-        
+
         Notes:
             * Logs using :py:mod:`log`, our rotating file logger ,
               rather than using stdout.
             * The **format** argument is unused. It is an old C-style format
-              for producing NCSA Commmon Log Format web server logging. 
+              for producing NCSA Commmon Log Format web server logging.
 
-        """        
+        """
 
         if args[1] != '200':  # Log this only on non-200 responses
             log.logger.info(f'{self.client_address[0]} <- {format%args}')
@@ -112,11 +114,11 @@ def init_routes(app: App, devname: str, module):
 
     Inspects a module and finds all classes, assuming they are Falcon
     responder classes, and calls Falcon to route the corresponding
-    Alpaca URI to each responder. This is done by creating the 
-    URI template from the responder class name. 
-    
+    Alpaca URI to each responder. This is done by creating the
+    URI template from the responder class name.
+
     Note that it is sufficient to create the controller instance
-    directly from the type returned by inspect.getmembers() since 
+    directly from the type returned by inspect.getmembers() since
     the instance is saved within Falcon as its resource controller.
     The responder methods are called with an additional 'devno'
     parameter, containing the device number from the URI. Reject
@@ -133,9 +135,10 @@ def init_routes(app: App, devname: str, module):
         * The device number is extracted from the URI by using an
           **int** placeholder in the URI template, and also using
           a format converter to assure that the number is not
-          negative.          
+          negative. If it is, Falcon will send back an HTTP
+          ``400 Bad Request``.
 
-    """ 
+    """
 
     memlist = inspect.getmembers(module, inspect.isclass)
     for cname,ctype in memlist:
@@ -149,11 +152,14 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
     Caution:
         Hook this as last-chance only after the config info
         has been initiized and the logger is set up!
-    
+
     Assures that any unhandled exceptions are logged to our logfile.
-    Should never be called since unhandled exceptions are
+    Should "never" be called since unhandled exceptions are
     theoretically caught in falcon. Well it's here so the
-    exception has a chance of being logged to our file. 
+    exception has a chance of being logged to our file. It's
+    used by :py:func:`~app.falcon_uncaught_exception_handler` to
+    make sure exception info is logged instead of going to
+    stdout.
 
     Args:
         exc_type (_type_): _description_
@@ -165,7 +171,7 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
         * See `This StackOverflow article <https://stackoverflow.com/a/58593345/159508>`_
         * A config option provides for a full traceback to be logged.
 
-    """    
+    """
     # Do not print exception when user cancels the program
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -179,20 +185,24 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
         for line in format_exception:
             log.logger.error(repr(line))
 
-#
-# This catches unhandled exceptions within the Falcon responder,
-# logging the info to our log file instead of it being lost to 
-# stdout. Then it logs and responds with a 500 Internal Server Error.
-#
+
 def falcon_uncaught_exception_handler(req: Request, resp: Response, ex: BaseException, params):
+    """Handle Uncaught Exceptions while in a Falcon Responder
+
+        This catches unhandled exceptions within the Falcon responder,
+        logging the info to our log file instead of it being lost to
+        stdout. Then it logs and responds with a 500 Internal Server Error.
+
+    """
     exc = sys.exc_info()
     custom_excepthook(exc[0], exc[1], exc[2])
     raise HTTPInternalServerError('Internal Server Error', 'Alpaca endpoint responder failed. See logfile.')
 
 # ===========
-# APP STARTUP 
+# APP STARTUP
 # ===========
 def main():
+    """ Application startup"""
 
     logger = log.init_logging()
     # Share this logger throughout

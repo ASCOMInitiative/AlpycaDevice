@@ -1,15 +1,7 @@
-..
-    The rinohtype PDF builder I use chokes on right-justified images
-    failing to wrap them with the text. It also chokes on the |xxx|
-    format hyperlinks to externals that I use for opening in a separate
-    tab. Therefore I have html and rinoh conditionals in these docs (typ)
-
-.. only:: html
-
-    .. image:: alpaca128.png
-        :height: 92px
-        :width: 128px
-        :align: right
+.. image:: alpaca128.png
+    :height: 92px
+    :width: 128px
+    :align: right
 
 Developer Roadmap
 =================
@@ -24,43 +16,6 @@ Developer Roadmap
     It's suggested that you make an Alpaca driver for a single ASCOM device type
     and a single instance of that device. This roadmap is written with that in mind.
 
-Making this sample into your driver
------------------------------------
-
-When using this sample to make your own Alpaca device driver, follow this general
-set of steps.
-
-1. Familiarize yourself with |falcweb| specifically how incoming REST requests are
-   routed to *responders* with the Request and Response objects.
-2. Run this sample, using the |conformu| tool to generate traffic to all of the Rotator
-   endpoints. Walk through the app startup in the :doc:`app` with the debugger.
-   See how the API endpoint URIs are registered to the responder classes in the
-   :py:func:`app.init_routes` function. Walk through
-   a GET request, then a PUT request. See how the Alpaca JSON
-   responses are created by the
-   :py:class:`shr.PropertyResponse` and :py:class:`shr.MethodResponse` classes.
-   Look how the simulated rotator machine
-   is started and runs in a separate class. Observe how locks are used to prevent
-   conflicts in accesses between threads. In short, become very familiar with how
-   this simulated device works.
-3. Using :doc:`/rotator` as a guide, and the responder classes within as a template,
-   create a module containing responder classes for each Alpaca endpoint of *your* device.
-   Of course, if you're making a Rotator driver you can use :doc:`/rotator` as a starting
-   point.
-4. Look in :doc:`shr` for the :py:class:`shr.DeviceMetadata` static class.
-   Edit the fields for your device. Generate your own unique **ID** using the |guidgen|
-5. Adjust the user configuration file (config.toml) for the Title, IP/Port etc.
-6. Develop the low-level code to control your device. Try to design it so that it
-   provides variables and functions that can be used by the Alpaca methods and
-   properties. Obviously this is going to be the major portion of your work,
-   followed by the time required to create the module containing the Alpaca endpoint
-   responder classes (step 2 above).
-7. Wire up the device control code to the endpoint responder classes.
-8. Test and fix until your device passes the full Conform Universal test.
-9. Use the Alpaca Protocol Tester in ConformU to check your driver at the Alpaca
-   protocol level (as opposed to the operational tests provided by the
-   Conformance checker.)
-
 Alpaca Driver Request Flow - Responder Classes
 ----------------------------------------------
 
@@ -74,10 +29,10 @@ Here is the code to handle a simple request for the Rotator's
 :py:class:`~rotator.IsMoving` property. For simplicity we don't look at the
 ``CLientID``or the ``ClientTransactionID``.
 
-    .. image:: ismoving.png
-        :height: 264px
-        :width: 700px
-        :align: center
+.. image:: ismoving.png
+    :height: 264px
+    :width: 700px
+    :align: center
 
 Preprocessor
 ~~~~~~~~~~~~
@@ -119,10 +74,30 @@ value. For example:
     }
 
 It sets the ``Response.text`` to the above Alpaca JSON, and returns to Falcon, which
-returns the JSON as the HTTP body with a ``200 OK`` status. That's it!
+sends the response to the remote app the JSON as the HTTP body with a ``200 OK`` status.
+That's it!
+
+PUT Responder
+~~~~~~~~~~~~~
+
+Alpaca API *method* calls, those which do something, use the HTTP ``PUT`` method. Here is
+the responder code for :py:class:`~rotator.MoveAbsolute`:
+
+.. image:: moveabsolute.png
+    :height: 264px
+    :width: 700px
+    :align: center
+
+The main thing to note here is that the parameter for the *method* comes in the HTTP
+body of the ``PUT``. Falcon provides the ``req.get_media()`` function to get the form data,
+and the fields are in a Python dictionary. So for example the ``Position`` parameter to
+``MoveAbsolute()`` is element ``'Position'`` of the dictionary. It uses the
+:py:class:`~shr.MethodResponse` class to construct the JSON response. We'll cover the more
+detailed exception handling in the next section.
+
 
 Alpaca Exceptions
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Continuing with the above sample, note how the Alpaca
 :py:class:`~exceptions.NotConnectedException` is returned to the remote app. The
@@ -150,14 +125,17 @@ the response might be an Alpaca exception like this.
 .. tip::
 
     You can supply your own error message as an optional parameter to any of the
-    Alpaca exception classes.
+    Alpaca exception classes. You should try to help the app and its user by
+    providing specifics about the error, and even perhaps a suggestion on how
+    to fix the problem.
 
 Alpaca DriverException - "Do it Right or Raise an Error"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the example above notice that the call into the device ``rot_dev.ismoving`` is guarded
 by a ``try/except``. The Alpaca :py:class:`~exceptions.DriverException` is specified
-for use by the device for any error or failure not covered by the Alpaca exceptions.
+for use by the device for any error or failure not covered by the other more specific
+Alpaca exceptions.
 
 .. caution::
     It's vital that *any* problem encountered by your device be telegraphed back to
@@ -166,75 +144,137 @@ for use by the device for any error or failure not covered by the Alpaca excepti
 
 The :py:class:`~exceptions.DriverException` has unique enhancements. Look now.
 In the example above, note the construction of ``DriverException`` includes an
-error code, a n automaticelly constructed
+error code, an automaticelly constructed
 responder class name, and the Python exception object. This allows
 ``DriverException`` to construct a detailed error message that includes the API
-endpoint name (the name of the responder class) and optionally includes
-a Python traceback
-(the :py:attr:`~config.Config.verbose_driver_exceptions` config option). Also, since
-``DriverException`` can use error codes from 0x500 through 0xFFF, you can
-supply an error code. These codes are for you to use and have no specified
-meaning within Alpaca.
+endpoint name (the name of the responder class), the Python module and line number,
+and optionally a Python call stack traceback
+(the :py:attr:`~config.Config.verbose_driver_exceptions` config option).
+
+Also, since
+``DriverException`` can use any error codes from ``0x500``
+through ``0xFFF``, you can supply an error code. These codes are for you to
+use and have no specified meaning within Alpaca.
 
 .. note::
     This may surprise you, but if your device runs into trouble after
     successfully starting an operation, you *must* raise an exception when
-    the client app asks for the status of that operation. So if your Rotator
-    accepted a request to move to a new angle, and then got jammed up or
-    otherwise failed to successfully complete the move to the new angle,
-    then ``Rotator.IsMoving`` must
-    raise a ``DriverException`` with a detailed error message like "Rotator
-    has failed, possible jam or cable wrap". In this case, even deep within
-    your device code raise a Python ``RuntimeError`` exception with your
+    the client app later asks for the status of that operation. See |async|.
+
+    So if your Rotator
+    accepts a request to move to a new angle, and then gets jammed up or
+    otherwise fails to successfully complete the move to the new angle,
+    then :py:class:`~rotator.IsMoving` must
+    raise a ``DriverException`` with a detailed error
+    message like
+    ``Rotator has failed, possible jam or cable wrap``.
+    In this case, even deep within
+    your device code, raise a Python ``RuntimeError`` exception with your
     detailed message. The boiler plate will turn this into a useful Alpaca
-    ``DriverException``. The app should always check ``Rotator.IsMoving``
-    to make sure that the move request completed successfully. See |async|.
+    ``DriverException``. The app should always check
+    :py:class:`~rotator.IsMoving`
+    to make sure that the move request completed successfully.
 
+Example of DriverException with Verbose and Concise Exceptions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Asynchronous Operations
------------------------
+To see the exception handling in action, look at the
+:py:meth:`rotatordevice.RotatorDevice.MoveAbsolute` method in the simulated
+rotator logic where it checks to see if it's being asked to move while it's
+already moving:
 
-All time-consuming device operations, such as slewing a mount, are implemented
-in Alpaca as **asynchronous operations**. While you may be familiar with async programming
-with an async/await type feature, the Alpaca model is one of explicit
-endpoints acting as *initiators* and *completion
-properties*. Clients may choose to wrap these actions in async constructions for their
-languages, but we're on the other end. Please take a few minutes to read |async|.
+.. code-block:: python
+    :emphasize-lines: 3
 
-Handling Exceptions
--------------------
+    if self._is_moving:
+        self._lock.release()
+        raise RuntimeError('Cannot start a move while the rotator is moving')
 
-It's vital that your driver implement the *prime directive* for distributed systems:
+Now start up the rotator sample and then
+use a tool like ``curl`` or the |thunder| to send Alpaca
+HTTP requests to set ``Connected`` to ``True`` then ``MoveAbsolute(123)`` which will take
+some time. Now, while it is moving, make another request to ``MoveAbsolute()``.
+This will trigger the above
+logic to raise an internal Python ``RuntimeError``. The result will be your
+driver returning something like the following ``DriverException`` (with a ``200 OK``
+HTTP status).
 
-.. epigraph::
-    *Do it right or raise an Exception*
-    -- ASCOM Initiative
+.. code-block:: json
 
-For a detailed description of this vital principle as it applies to ASCOM and Alpaca,
-read through |excep|. It will only take a few minutes. We've tried to make this as
-TL:DR-proof as we could.
+    {
+        "ServerTransactionID": 3,
+        "ClientTransactionID": 321,
+        "ErrorNumber": 1280,
+        "ErrorMessage": "DriverException: MoveAbsolute failed
+                Traceback (most recent call last):
+                File \"device/rotator.py\", line 292, in on_put
+                    rot_dev.MoveAbsolute(newpos)    # async
+                        File \"device/rotatordevice.py\", line 289, in MoveAbsolute
+                            raise RuntimeError('Cannot start a move while the rotator is moving')
+                            RuntimeError: Cannot start a move while the rotator is moving\n"
+    }
 
-Alpaca Exceptions
-~~~~~~~~~~~~~~~~~
+Since the low-level call and the Alpaca endpoint names are the same and also the
+line numbers in the two modules are similar, this may be confusing. What this traceback
+says is that the Python exception ``RunTimeError`` is raised at line 289 in the
+**rotatordevice.py** module (in *its* :py:meth:`~rotatordevice.RotatorDevice.MoveAbsolute`)
+method, and that was called at line 292 in the Alpaca API responder class'
+:py:meth:`rotator.MoveAbsolute.on_put` handler. Note the first part of the ``ErrorMessage``
+automatically prints the Alpaca exception type ``DriverException`` as well at the name
+of the Alpaca API EndPoint ``MoveAbsolute``. Also note that the error message passed To
+the Python RunTimeError exception appears in the Alpaca DriverException error message.
 
-The JSON
-responses to all Alpaca requests include ``ErrorNumber`` and ``ErrorMessage`` members. If
-``ErrorNumber`` is 0 then the client considers the request to have been a success
-(the ``ErrorMessage`` is ignored). Otherwise, a non-zero ``ErrorNumber`` in the JSON
-response tells the client that an Alpaca exception was raised (see :doc:`exceptions`).
-|apiref| (Sec. 2.8) describes these Alpaca exceptions. Each one has a specific error number.
-The accompanying error message defaults to a generic descriptive message but you can override
-the message with something more detailed and helpful (recommended) when you instantiate
-the Apaca Exception class.
+.. note::
 
-Python Exceptions
-~~~~~~~~~~~~~~~~~
+    Observe that the Rotator continues to function normally. The initial ``MoveAbsolute``
+    will complete normally, at which time ``IsMoving`` will transition from ``True`` To
+    ``False``. The failed second ``MoveAbsolute()`` will fail without compromising the
+    device's operation.
 
-Within your driver, your code may raise Python Exceptions. So how do you
-communicate a Python exception through your Alpaca API responder and back to the client?
-The |apiref| specifies that the Alpaca :py:class:`~exceptions.DriverException` should be
-used for all problems within the device and driver code. In this sample, the
-:py:class:`~exceptions.DriverException` class is unique in that it accepts a Python
+With the :py:attr:`~config.Config.verbose_driver_exceptions` config option set to
+``false``, this is what is returned when the app violates the "can't move while moving"
+rule.
+
+.. code-block:: json
+
+    {
+        "ServerTransactionID": 3,
+        "ClientTransactionID": 321,
+        "ErrorNumber": 1280,
+        "ErrorMessage": "DriverException: MoveAbsolute failed
+                RuntimeError: Cannot start a move while the rotator is moving"
+    }
+
+This is more suitable for production and end-user operations. However to help
+troubleshoot device and driver issues, the verbose/traceback
+option is provided.
+
+.. note::
+
+    All of this is provided by the "boilerplate" logic in the sample/tempate. All you need
+    to do is raise an exception in your Python code that gets called from any of the
+    Alpaca API responder classes.
+
+Unhandled Exceptions
+--------------------
+
+What happens if there is an unhandled exception somewhere? If it's triggered during
+handling of an Alpaca request, it needs to result in an HTTP ``500 Server Error``
+response. This template/sample handes this as well. See
+:py:func:`app.falcon_uncaught_exception_handler`, which calls
+:py:func:`app.custom_excepthook` to make sure the exception info is logged, then it
+sends the ``500 Server Error``. The simplicity of this logic is possibly lost
+in all of the docstring info.
+
+Last but not least, if an unhandled exception occure *outside* the context of a
+Falcon API responder, it ends up in the "last-chance exception handler"
+:py:func:`app.custom_excepthook`. Here, a Control-C is allowed to kill the
+application. Otherwise the unhanded exception is logged and dismissed. If there
+is any possibility that the Python code can still run, it will. If the exception
+leads to a cascade of other exceptions, the Python will eventually die. This
+handler is installed during app startup :py:func:`app.main`. Have a look at this
+but don't change anything except the list of API endpoint class modules that
+:py:func:`app.init_routes` sets up.
 
 .. rubric:: Footnotes
 
@@ -278,5 +318,8 @@ used for all problems within the device and driver code. In this sample, the
     <a href="https://github.com/ASCOMInitiative/ASCOMRemote/raw/master/Documentation/ASCOM%20Alpaca%20API%20Reference.pdf"
     target="_blank">Alpaca API Reference (PDF)</a> (external)
 
+.. |thunder| raw:: html
 
+    <a href="https://www.thunderclient.com/" target="_blank">
+    Thunder Client for VS Code</a> (external)
 

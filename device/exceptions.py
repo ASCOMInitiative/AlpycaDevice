@@ -39,6 +39,7 @@
 #                       with variable error number.
 # 26-Dev-2022   rbd 0.1 Logging, including Python low level exceptions
 # 27-Dec-2022   rbd 0.1 MIT License and module header
+# 13-Jan-2023   rbd 0.1 Fix DriverException's recovery from bad error number
 #
 import traceback
 from config import Config
@@ -63,7 +64,7 @@ class Success:
 
 class ActionNotImplementedException:
     def __init__(
-            self, 
+            self,
             message: str = 'The requested action is not implemented in this driver.'
         ):
         self.number = 0x40C
@@ -89,19 +90,19 @@ class ActionNotImplementedException:
 class DriverException:
     """
     **Exception Class for Driver Internal Errors**
-        This exception is used for device errors and other internal exceptions. 
-        It can be instantiated with a captured exception object, and if so format 
-        the Alpaca error message to include line number/module or optionally a 
+        This exception is used for device errors and other internal exceptions.
+        It can be instantiated with a captured exception object, and if so format
+        the Alpaca error message to include line number/module or optionally a
         complete traceback of the exception (a config option).
     """
     def __init__(
-            self, 
+            self,
             number: int = 0x500,
             message: str = 'Internal driver error - this should be more specific.',
-            exc = None  # Python exception info 
+            exc = None  # Python exception info
         ):
         """Initialize the DeviceException object
-        
+
         Args:
             number (int):   Alpaca error number between 0x500 and 0xFFF, your choice
             message (str):  Specific error message or generic if left blank (see above)
@@ -109,8 +110,9 @@ class DriverException:
                             then only message is included. If supplied, then a detailed
                             error message with traceback is created (see full parameter)
         """
-        if number >= 0x500 and number <= 0xFFF:
-            raise InvalidValueException('Programmer error, bad DriverException number')
+        if number <= 0x500 and number >= 0xFFF:
+            logger.error(f'Programmer error, bad DriverException number {hex(number)}, substituting 0x500')
+            number = 0x500
         self.number = number
         cname = self.__class__.__name__
         if not exc is None:
@@ -133,7 +135,7 @@ class DriverException:
 
 class InvalidOperationException:
     def __init__(
-            self, 
+            self,
             message: str = 'The requested operation cannot be undertaken at this time.'
         ):
         self.number = 0x40B
@@ -152,7 +154,7 @@ class InvalidOperationException:
 
 class InvalidValueException:
     def __init__(
-            self, 
+            self,
             message: str = 'Invalid value given.'
         ):
         self.number = 0x401
@@ -171,7 +173,7 @@ class InvalidValueException:
 
 class NotConnectedException:
     def __init__(
-            self, 
+            self,
             message: str = 'The device is not connected.'
         ):
         self.number = 0x407
@@ -189,7 +191,7 @@ class NotConnectedException:
 
 class NotImplementedException:
     def __init__(
-            self, 
+            self,
             message: str = 'Property or method not implemented.'
         ):
         self.number = 0x400
@@ -207,7 +209,7 @@ class NotImplementedException:
 
 class ParkedException:
     def __init__(
-            self, 
+            self,
             message: str = 'Illegal operation while parked.'
         ):
         self.number = 0x408
@@ -225,7 +227,7 @@ class ParkedException:
 
 class SlavedException:
     def __init__(
-            self, 
+            self,
             message: str = 'Illegal operation while slaved.'
         ):
         self.number = 0x409
@@ -244,7 +246,7 @@ class SlavedException:
 
 class ValueNotSetException:
     def __init__(
-            self, 
+            self,
             message: str = 'The value has not yet been set.'
         ):
         self.number = 0x402

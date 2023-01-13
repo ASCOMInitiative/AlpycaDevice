@@ -6,7 +6,7 @@ port = 5555
 
 [server]
 location = 'Alvord Desert'  # Anything you want here
-verbose_driver_exceptions = true
+verbose_driver_exceptions = false
 
 [device]
 can_reverse = true

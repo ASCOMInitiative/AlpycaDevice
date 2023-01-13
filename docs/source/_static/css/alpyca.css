@@ -20,11 +20,12 @@
 
     /*  Same with the module and class xrefs */
     .rst-content code.xref, .rst-content tt.xref, a .rst-content code, a .rst-content tt {
-        font-weight: 600;
+        font-weight: 500;
         color: #2980b9 !important;
         overflow-wrap: normal;
-        border: 1px solid;
-        padding: 2px 5px;
+        /* border: 1px solid; */
+        /* padding: 2px 5px; */
+        border: none;
         font-family: Cascadia Code,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,Courier,monospace;
-        font-size: 90%;
+        font-size: 95% /* 90% */;
     }

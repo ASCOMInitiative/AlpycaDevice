@@ -38,11 +38,11 @@
 # 19-Dec-2022   rbd 0.1 Implement all IRotatorV3 endpoints
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
-# 26-Dec-2022   rbd 0.1 Logging of endpoints 
-# 27-Dec-2022   rbd 0.1 Revamp logging so request precedes 
+# 26-Dec-2022   rbd 0.1 Logging of endpoints
+# 27-Dec-2022   rbd 0.1 Revamp logging so request precedes
 #               response. Minimize imported stuff. MIT license
 #               and module header.
-# 30-Dec-2022   rbd 0.1 Revamp request pre-processing, logging, and 
+# 30-Dec-2022   rbd 0.1 Revamp request pre-processing, logging, and
 #               quality control. Device number from URI.
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
 #
@@ -97,7 +97,7 @@ class Connected:
 class IsMoving:
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
         try:
@@ -105,7 +105,7 @@ class IsMoving:
             moving = rot_dev.is_moving
             # ---------------------
         except Exception as ex:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = PropertyResponse(moving, req).json
@@ -114,7 +114,7 @@ class IsMoving:
 class MechanicalPosition:
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
         try:
@@ -122,7 +122,7 @@ class MechanicalPosition:
             pos = rot_dev.mechanical_position
             # -------------------------------
         except Exception as ex:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = PropertyResponse(pos, req).json
@@ -131,7 +131,7 @@ class MechanicalPosition:
 class Position:
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
         try:
@@ -139,7 +139,7 @@ class Position:
             pos = rot_dev.position
             # -------------------------------
         except Exception as ex:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = PropertyResponse(pos, req).json
@@ -148,7 +148,7 @@ class Position:
 class Reverse:
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
         try:
@@ -156,7 +156,7 @@ class Reverse:
             rev = rot_dev.reverse
             # -------------------
         except Exception as ex:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = PropertyResponse(rev, req).json
@@ -164,7 +164,7 @@ class Reverse:
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
         rev = to_bool(formdata['Reverse'])   # Raises 400 BadRequest
@@ -183,7 +183,7 @@ class Reverse:
 class StepSize:
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
         try:
@@ -191,7 +191,7 @@ class StepSize:
             steps = rot_dev.step_size
             # ---------------------
         except Exception as ex:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = PropertyResponse(steps, req).json
@@ -200,7 +200,7 @@ class StepSize:
 class TargetPosition:
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
         try:
@@ -208,7 +208,7 @@ class TargetPosition:
             pos = rot_dev.target_position
             # ---------------------------
         except Exception as ex:
-            resp.text = PropertyResponse(None, req, 
+            resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = PropertyResponse(pos, req).json
@@ -217,7 +217,7 @@ class TargetPosition:
 class Halt:
     def on_put(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
         logger.info(f'Halt() from ClientID={get_request_field("ClientID", req, "??")}')
@@ -226,7 +226,7 @@ class Halt:
             rot_dev.Halt()
             # ------------
         except Exception as ex:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = MethodResponse(req).json
@@ -237,17 +237,19 @@ class Move:
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
         try:
             newpos = origpos = float(formdata['Position'])
         except:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
+        #
+        # TODO The following causes Conform to fail this operation
         # if newpos < 0.0 or newpos >= 360.0:
-        #     resp.text = MethodResponse(req, 
+        #     resp.text = MethodResponse(req,
         #                     InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
         #     return
         logger.debug(f'Move({newpos}) from ClientID={formdata["ClientID"]}')
@@ -263,7 +265,7 @@ class Move:
             rot_dev.Move(newpos)    # async
             # ------------------
         except Exception as ex:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = MethodResponse(req).json
@@ -273,17 +275,17 @@ class MoveAbsolute:
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
         try:
             newpos = float(formdata['Position'])
         except:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
         logger.info(f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
@@ -302,17 +304,17 @@ class MoveMechanical:
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
         try:
             newpos = float(formdata['Position'])
         except:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
         logger.info(f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
@@ -321,7 +323,7 @@ class MoveMechanical:
             rot_dev.MoveMechanical(newpos)    # async
             # ----------------------------
         except Exception as ex:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
             return
         resp.text = MethodResponse(req).json
@@ -331,23 +333,23 @@ class Sync:
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
         try:
             newpos = float(formdata['Position'])
         except:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
-            resp.text = MethodResponse(req, 
+            resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
         logger.info(f'Sync({newpos}) from ClientID={formdata["ClientID"]}')
         try:
             # ------------------
-            rot_dev.Sync(newpos) 
+            rot_dev.Sync(newpos)
             # ------------------
         except Exception as ex:
             resp.text = MethodResponse(req,
