@@ -2,7 +2,7 @@
 The config Module
 =================
 
-WTF why can't automodule find this?
+Blah blah
 
 .. module:: config
 

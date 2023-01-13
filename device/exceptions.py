@@ -108,9 +108,6 @@ class DriverException:
             exc:            Contents 'ex' of 'except Exception as ex:' If not included
                             then only message is included. If supplied, then a detailed
                             error message with traceback is created (see full parameter)
-            full (bool):    If True, a full traceback is included in the message.
-                            Defaulted True above with exc_verbose, may be overriden
-                            at construction time.
         """
         if number >= 0x500 and number <= 0xFFF:
             raise InvalidValueException('Programmer error, bad DriverException number')

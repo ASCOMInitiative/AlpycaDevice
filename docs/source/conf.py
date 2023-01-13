@@ -16,17 +16,23 @@ sys.path.insert(0, os.path.abspath('..//..//device'))
 # Prevent Python crash on infinite recursion
 sys.setrecursionlimit(1500)
 
+# -- Cleanup 
+
 
 # -- Project information -----------------------------------------------------
 
 project = 'Alpyca Device - Template/Sample Alpaca Server/Driver'
-copyright = '2022, ASCOM Initiative, MIT License'
+copyright = '2022-2023, ASCOM Initiative, MIT License'
 author = 'Bob Denny'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
+# 
+# Clean up ugly aspects of Read The Docs. See comments in the css
+#
+html_style = 'css/alpyca.css'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

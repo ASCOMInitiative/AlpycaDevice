@@ -1,0 +1,30 @@
+/*
+    These are adjustments to the Read The Docs Sphinx theme. The CSS that comes
+    with ReadTheDocs is theme.css, so it is imported and they overrides applied
+    here. https://docs.readthedocs.io/en/stable/guides/adding-custom-css.html
+    and using the Chrome Inspector to see what CSS is in effect.
+
+    Bob Denny    12-Jan-2023
+ */
+@import 'theme.css';
+
+    /* Make the extremely ugly ``xxx`` code literals look better */
+    .rst-content code.literal, .rst-content tt.literal {
+        color: #000;
+        white-space: normal;
+        border: none;
+        font-size: 95%;
+        padding: 0px;
+        font-family: Cascadia Code,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,Courier,monospace;
+    }
+
+    /*  Same with the module and class xrefs */
+    .rst-content code.xref, .rst-content tt.xref, a .rst-content code, a .rst-content tt {
+        font-weight: 600;
+        color: #2980b9 !important;
+        overflow-wrap: normal;
+        border: 1px solid;
+        padding: 2px 5px;
+        font-family: Cascadia Code,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,Courier,monospace;
+        font-size: 90%;
+    }
