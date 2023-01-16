@@ -346,7 +346,7 @@ class Move:
     the operation has *successfully* been started and the rotator is moving
     to a new position. If the rotator is already at the requested position
     then ``IsMoving`` may immediately return ``False``. See
-    :ref:`async-intro` and :ref:`async_faq`.
+    :ref:`async-intro`.
 
     Arguments:
         Position: The angular amount (degrees) to move relative to the
@@ -405,7 +405,7 @@ class MoveAbsolute:
     the operation has *successfully* been started and the rotator is moving
     to a new position. If the rotator is already at the requested position
     then ``IsMoving`` may immediately return ``False``. See
-    :ref:`async-intro` and :ref:`async_faq`.
+    :ref:`async-intro`.
 
     Arguments:
         Position:
@@ -460,7 +460,7 @@ class MoveMechanical:
     the operation has *successfully* been started and the rotator is moving
     to a new position. If the rotator is already at the requested position
     then ``IsMoving`` may immediately return ``False``. See
-    :ref:`async-intro` and :ref:`async_faq`.
+    :ref:`async-intro`.
 
     Arguments:
         Position:

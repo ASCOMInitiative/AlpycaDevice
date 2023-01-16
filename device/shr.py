@@ -39,13 +39,13 @@
 # 22-Dec-2022   rbd 0.1 DeviceMetadata
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
-# 26-Dec-2022   rbd 0.1 Refactor logging to config module. 
+# 26-Dec-2022   rbd 0.1 Refactor logging to config module.
 # 27-Dec-2022   rbd 0.1 Methods can return values. Common request
 #                       logging (before starting processing).
 #                       MIT license and module header. Logging cleanup.
 #                       Python 3.7 global restriction.
 # 28-Dec-2022   rbd 0.1 Rename conf.py to config.py to avoid conflict with sphinx
-# 29-Dec-2022   rbd 0.1 ProProcess() Falcon hook class for pre-logging and 
+# 29-Dec-2022   rbd 0.1 ProProcess() Falcon hook class for pre-logging and
 #                       common request validation (Client IDs for now).
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
 # 10-Jan-2023   rbd 0.1 Cleanups for documentation and add docstrings for Sphinx.
@@ -68,7 +68,7 @@ def set_shr_logger(lgr):
 # -----------
 # Static metadata not subject to configuration changes
 class DeviceMetadata:
-    """ Metadata describing the Rotator Device"""
+    """ Metadata describing the Rotator Device. Edit for your device"""
     Name = 'Sample Rotator'
     Version = '0.1'
     Description = 'Alpaca Sample Rotator '
@@ -106,7 +106,7 @@ def get_request_field(name: str, req: Request, default: str) -> str:
             return formdata[name]
         return default
 
-# 
+#
 # Log the request as soon as the resource handler gets it so subsequent
 # logged messages are in the right order. Logs PUT body as well.
 #
@@ -122,7 +122,12 @@ def log_request(req: Request):
 # Incoming Pre-Logging and Request Quality Control
 # ------------------------------------------------
 class PreProcessRequest():
+    """Decorator for responders that quality-checks an incoming request
 
+    If there is a problem, this causes a ``400 Bad Request`` to be returned
+    to the client, and logs the problem.
+
+    """
     #
     # Quality check of numerical value for trans IDs
     #
@@ -133,8 +138,8 @@ class PreProcessRequest():
             return test >= 0
         except ValueError:
             return False
-    
-    def check_request(self, req: Request, devnum: int):  # Raise on failure
+
+    def _check_request(self, req: Request, devnum: int):  # Raise on failure
         bad_title='Bad Alpaca Request'
         if devnum > DeviceMetadata.MaxDeviceNumber:
             msg = f'Device number {str(devnum)} does not exist'
@@ -161,7 +166,7 @@ class PreProcessRequest():
     #
     def __call__(self, req: Request, resp: Response, resource, params):
         log_request(req)                            # Log even a bad request
-        self.check_request(req, params['devnum'])   # Raises to 400 error on check failure
+        self._check_request(req, params['devnum'])   # Raises to 400 error on check failure
 
 # ------------------
 # PropertyResponse
@@ -169,20 +174,20 @@ class PreProcessRequest():
 class PropertyResponse():
     """JSON response for an Alpaca Property (GET) Request"""
     def __init__(self, value, req: Request, err = Success()):
-        """Initialize a PropertyResponse object.
-        
-        Attributes:
+        """Initialize a ``PropertyResponse`` object.
+
+        Args:
             value:  The value of the requested property, or None if there was an
                 exception.
             req: The Falcon Request property that was provided to the responder.
             err: An Alpaca exception class as defined in the exceptions
-                or defaults to :py:class:`~exceptions.Success` 
+                or defaults to :py:class:`~exceptions.Success`
 
         Notes:
             * Bumps the ServerTransactionID value and returns it in sequence
         """
         self.ServerTransactionID = getNextTransId()
-        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0)) 
+        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0))
         self.Value = value
         self.ErrorNumber = err.Number
         self.ErrorMessage = err.Message
@@ -202,12 +207,12 @@ class MethodResponse():
     def __init__(self, req: Request, err = Success(), value = None): # value useless unless Success
         """Initialize a MethodResponse object.
 
-        Attributes:
+        Args:
             req: The Falcon Request property that was provided to the responder.
             err: An Alpaca exception class as defined in the exceptions
-                or defaults to :py:class:`~exceptions.Success` 
+                or defaults to :py:class:`~exceptions.Success`
             value:  If method returns a value, or defaults to None
-        
+
         Notes:
             * Bumps the ServerTransactionID value and returns it in sequence
         """

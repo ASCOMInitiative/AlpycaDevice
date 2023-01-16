@@ -118,10 +118,15 @@ Asynchronous Operations
 
 All time-consuming device operations, such as slewing a mount, are implemented
 in Alpaca as **asynchronous operations**. While you may be familiar with async programming
-with an async/await type feature, the Alpaca model is one of explicit
+with an async/await type feature, the Alpaca base model is one of explicit
 endpoints acting as *initiators* and *completion
-properties*. Clients may choose to wrap these actions in async constructions for their
-languages, but we're on the other end. Please take a few minutes to read |async|.
+properties*.
+
+.. attention::
+    * Your device and the responders in the driver must return promptly to every call.
+    * This may surprise you, but if your device runs into trouble after
+      successfully starting an operation, you *must* raise an exception when
+      the client app later asks for the status of that operation. See |async|.
 
 Handling Exceptions
 -------------------
@@ -196,7 +201,7 @@ set of steps.
    followed by the time required to create the module containing the Alpaca endpoint
    responder classes (step 2 above).
 7. Wire up the device control code to the endpoint responder classes.
-8. Test and fix until your device passes the full Conform Universal test.
+8. Test and fix until your device passes the full |conformu| tool's test.
 9. Use the Alpaca Protocol Tester in ConformU to check your driver at the Alpaca
    protocol level (as opposed to the operational tests provided by the
    Conformance checker.)

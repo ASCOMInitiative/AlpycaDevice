@@ -52,12 +52,22 @@ def set_disc_logger(lgr) -> logger:
     logger = lgr
 
 class DiscoveryResponder(Thread):
+    """Alpaca device discovery responder """
+
     def __init__(self, ADDR, PORT):
+        """ The Alpaca Discovery responder runs in a separate thread and is invoked
+        by a 1-line call during app startup::
+
+            _DSC = DiscoveryResponder(ip_address, port)
+
+        where the ``ip_address`` and ``port`` come from the :doc:`/config`
+        ``Config`` object and ultimately from the config file ``config.toml``.
+        """
         Thread.__init__(self, name='Discovery')
         # TODO See https://stackoverflow.com/a/32372627/159508
         # It's a sledge hammer technique to bind to ' ' for sending multicast
         # The right way is to bind to the broadcast address for the current
-        # subnet. 
+        # subnet.
         self.device_address = (ADDR, 32227)    # Listen at multicast address, not ' '
         self.alpaca_response  = "{\"AlpacaPort\": " + str(PORT) + "}"
         self.rsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -82,11 +92,13 @@ class DiscoveryResponder(Thread):
             self.tsock.close()
             self.tsock = 0
             raise
-           
+
         # OK start the listener
         self.daemon = True
         self.start()
+
     def run(self):
+        """Discovery responder forever loop"""
         while True:
             data, addr = self.rsock.recvfrom(1024)
             datascii = str(data, 'ascii')

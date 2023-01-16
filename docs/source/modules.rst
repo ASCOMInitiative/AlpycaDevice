@@ -23,6 +23,7 @@ of the Alpaca API endpoints, and the Alpaca exception specs.
    common
    rotator
    exceptions
+   discovery
 
 Physical Device Implementation
 ------------------------------

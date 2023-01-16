@@ -34,27 +34,26 @@
 # Edit History:
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 More config items, separate logging section
-# 27-Dec-2022   rbd 0.1 Move shared logger construction and global 
+# 27-Dec-2022   rbd 0.1 Move shared logger construction and global
 #               var here. MIT license and module header. No mcast.
 #
 import sys
 import toml
 import logging
 
-
 #
 # This slimy hack is for Sphinx which, despite the toml.load() being
 # run only once on the first import, it can't deal with _dict not being
 # initialized or ?!?!?!?!? If you try to use getcwd() in the file name
-# here, it will also choke Sphinx. This cost me a day. 
+# here, it will also choke Sphinx. This cost me a day.
+#
 _dict = {}
-_dict = toml.load(f'{sys.path[0]}/config.toml')    # Errors here are fatal. 
+_dict = toml.load(f'{sys.path[0]}/config.toml')    # Errors here are fatal.
 def get_toml(sect: str, item: str):
     if not _dict is {}:
         return _dict[sect][item]
     else:
         return ''
-
 
 class Config:
     """Device configuration in ``config.toml``"""
