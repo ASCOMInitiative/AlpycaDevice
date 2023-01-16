@@ -83,7 +83,6 @@ the |supforum|.
 
     introduction
     roadmap
-    faq
     modules
 
 
