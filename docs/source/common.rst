@@ -1,6 +1,6 @@
 
-The common Module
-==================
+Common - Responders common to all Alpaca Devices
+================================================
 
 This module contains the responder classes for the Alpaca
 REST endpoints which represent ASCOM interface members that are common
@@ -30,7 +30,6 @@ template/sample.
 
 .. note::
 
-
     * The ``devno`` parameter carries the Alpaca device number. This is used
       only if your Alpaca device supports more than one ASCOM device (e.g.
       two or more Rotators).
@@ -38,8 +37,7 @@ template/sample.
       for returning an Alpaca exception. If omitted, it defaults to Success
       (no exception).
 
-Property (GET) Endpoint Responder
----------------------------------
+**Property (GET) Endpoint Responder**
 
 This returns a **Value** in the JSON response (``response.text``):
 
@@ -51,6 +49,14 @@ This returns a **Value** in the JSON response (``response.text``):
     class Description():
         def on_get(self, req: Request, resp: Response, devnum: int):
             resp.text = PropertyResponse(DeviceMetadata.Description, req).json
+
+
+API Responder Documentation
+---------------------------
+
+.. automodule:: common
+    :members:
+    :undoc-members:
 
 
 .. |falcweb| raw:: html

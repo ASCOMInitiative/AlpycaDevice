@@ -1,9 +1,3 @@
-..
-    The rinohtype PDF builder I use chokes on right-justified images
-    failing to wrap them with the text. It also chokes on the |xxx|
-    format hyperlinks to externals that I use for opening in a separate
-    tab. Therefore I have html and rinoh conditionals in these docs (typ)
-
 .. only:: html
 
     .. image:: alpaca128.png
@@ -11,9 +5,35 @@
         :width: 128px
         :align: right
 
-Alpaca-Device Module Descriptions
+Template/Sample Module Structure
 =================================
-These are the modules.
+
+The template/sample is organized into modules that implement the Alpaca API,
+those which implement the actual physical device (a simulated Rotator here),
+and support/boilerplate.
+
+Alpaca API Implementation Modules
+---------------------------------
+These are the modules that contain the Falcon responder classes for each
+of the Alpaca API endpoints, and the Alpaca exception specs.
+
+.. toctree::
+   :maxdepth: 1
+
+   common
+   rotator
+   exceptions
+
+Physical Device Implementation
+------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   rotatordevice
+
+App and Support Logic
+---------------------
 
 .. toctree::
    :maxdepth: 1
@@ -21,10 +41,5 @@ These are the modules.
    app
    config
    log
-   rotator
-   rotatordevice
    shr
-   common
-   exceptions
 
-This is a test.

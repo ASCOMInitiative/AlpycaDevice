@@ -84,7 +84,7 @@ Alpaca API *method* calls, those which do something, use the HTTP ``PUT`` method
 the responder code for :py:class:`~rotator.MoveAbsolute`:
 
 .. image:: moveabsolute.png
-    :height: 264px
+    :height: 375px
     :width: 700px
     :align: center
 
@@ -129,19 +129,25 @@ the response might be an Alpaca exception like this.
     providing specifics about the error, and even perhaps a suggestion on how
     to fix the problem.
 
-Alpaca DriverException - "Do it Right or Raise an Error"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _driver-exception:
 
-In the example above notice that the call into the device ``rot_dev.ismoving`` is guarded
-by a ``try/except``. The Alpaca :py:class:`~exceptions.DriverException` is specified
+Run-Time Errors - DriverException
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Alpaca :py:class:`~exceptions.DriverException` is specified
 for use by the device for any error or failure not covered by the other more specific
-Alpaca exceptions.
+Alpaca exceptions. In the example above notice that the call into the device
+``rot_dev.ismoving`` is guarded by a ``try/except``. The exception is passed to
+the ``DriverException`` class which creates a detailed report. Let's see how this
+works...
 
-.. caution::
+.. important::
     It's vital that *any* problem encountered by your device be telegraphed back to
     the app via one of the Alpaca exceptions. For most problems, this will be the
     ``DriverException``.
 
+Throughout the template/sample, the invocation of ``DriverException`` uses some
+Python magic to
 The :py:class:`~exceptions.DriverException` has unique enhancements. Look now.
 In the example above, note the construction of ``DriverException`` includes an
 error code, an automaticelly constructed
@@ -156,24 +162,48 @@ Also, since
 through ``0xFFF``, you can supply an error code. These codes are for you to
 use and have no specified meaning within Alpaca.
 
-.. note::
+Invocations of DriverException
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Throughout the template/sample, the invocation of ``DriverException`` uses some
+Python 'dunders' to help get the endpoint name into the error message, and also
+hand the caught Python runtime exception (``as ex``) to
+``DriverException`` for error reporting
+including possible traceback (see next section). You will see this pattern used
+throughout the template/sample and it is self-documenting thanks to the dunders.
+
+.. code-block:: python
+
+    except Exception as ex:
+        resp.text = MethodResponse(req, # Put is actually like a method :-(
+                        DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+        return
+
+
+.. attention::
     This may surprise you, but if your device runs into trouble after
     successfully starting an operation, you *must* raise an exception when
     the client app later asks for the status of that operation. See |async|.
 
-    So if your Rotator
-    accepts a request to move to a new angle, and then gets jammed up or
-    otherwise fails to successfully complete the move to the new angle,
-    then :py:class:`~rotator.IsMoving` must
-    raise a ``DriverException`` with a detailed error
-    message like
-    ``Rotator has failed, possible jam or cable wrap``.
-    In this case, even deep within
-    your device code, raise a Python ``RuntimeError`` exception with your
-    detailed message. The boiler plate will turn this into a useful Alpaca
-    ``DriverException``. The app should always check
-    :py:class:`~rotator.IsMoving`
+So if your Rotator
+accepts a request to move to a new angle, and then gets jammed up or
+otherwise fails to successfully complete the move to the new angle,
+then :py:class:`~rotator.IsMoving` must
+raise a ``DriverException`` with a detailed error
+message like
+``Rotator has failed, possible jam or cable wrap``. How would this
+be handled?
+
+In this case, even deep within
+your device code, raise any Python exception (e.g. ``RuntimeError``)
+with your detailed message. The boiler plate exception handling shown
+above and used in all of the responder classes
+will turn this into a useful Alpaca ``DriverException``.
+
+.. note::
+    The app must always check :py:class:`~rotator.IsMoving`
     to make sure that the move request completed successfully.
+
 
 Example of DriverException with Verbose and Concise Exceptions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

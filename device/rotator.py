@@ -45,6 +45,7 @@
 # 30-Dec-2022   rbd 0.1 Revamp request pre-processing, logging, and
 #               quality control. Device number from URI.
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
+# 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
 #
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
@@ -71,11 +72,24 @@ def start_rot_device(logger: logger):
 # --------------------
 @before(PreProcessRequest())
 class CanReverse:
+    """True if the rotator supports the ``Reverse`` method
+
+    Always True for IRotatorV3 (InterfaceVersion >= 3).
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(True, req).json    # IRotatorV3, CanReverse must be True
 
 @before(PreProcessRequest())
 class Connected:
+    """Retrieves or sets the connected state of the device
+
+    * Set True to connect to the device hardware. Set False to disconnect
+      from the device hardware. Client can also read the property to check
+      whether it is connected. This reports the current hardware state.
+    * Multiple calls setting Connected to true or false must not cause
+      an error.
+
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(rot_dev.connected, req).json
 
@@ -95,6 +109,23 @@ class Connected:
 
 @before(PreProcessRequest())
 class IsMoving:
+    """True if the rotator is currently moving to a new angle
+
+    Caution:
+        This must be true **immediately after** a return from calling
+        ``Move()``, ``MoveAbsolute()``, or ``MoveMechanical()`` *unless*
+        it is already at the requested position and is therefore not moving.
+        There must
+        be no possibility of seeing ``IsMoving = False`` even for an instant
+        after the app calls one of the (asynchronous) Move methods with
+        a *new* position. A driver must hide internal device states.
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req,
@@ -112,6 +143,16 @@ class IsMoving:
 
 @before(PreProcessRequest())
 class MechanicalPosition:
+    """The raw mechanical position (deg) of the rotator
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    * Value is in degrees counterclockwise from the rotator's mechanical index.
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req,
@@ -129,6 +170,19 @@ class MechanicalPosition:
 
 @before(PreProcessRequest())
 class Position:
+    """The virtual position (deg) of the rotator
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    * Value is in degrees counterclockwise from the rotator's virtual index.
+    * This angle includes offset between the mechanical index and the
+      effect of the last ``Sync()``
+
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req,
@@ -146,6 +200,20 @@ class Position:
 
 @before(PreProcessRequest())
 class Reverse:
+    """The direction of rotation CCW or CW
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    * Rotation is normally in degrees counterclockwise as viewed
+      from behind the rotator, looking toward the sky. This corresponds
+      to the direction of equatorial position angle. Set this property True
+      to cause rotation opposite to equatorial PositionAngle, i.e. clockwise.
+
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req,
@@ -181,6 +249,17 @@ class Reverse:
 
 @before(PreProcessRequest())
 class StepSize:
+    """Minimum rotation step size (deg)
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        NotImplementedException
+            if this is not available
+        DriverException
+            see :ref:`driver-exception`
+
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req,
@@ -198,6 +277,19 @@ class StepSize:
 
 @before(PreProcessRequest())
 class TargetPosition:
+    """The destination angle for ``Move()`` and ``MoveAbsolute()``
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    * This must contain the new Position, including any ``Sync()``
+      offset, immediately upon return from a call to ``Move()`` or
+      ``MoveAbsolute()``.
+
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = PropertyResponse(None, req,
@@ -215,6 +307,16 @@ class TargetPosition:
 
 @before(PreProcessRequest())
 class Halt:
+    """Halt rotator motion.
+
+    Raises:
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    * Halting the rotator must not cause an error on subsequent operations.
+    """
     def on_put(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
             resp.text = MethodResponse(req,
@@ -234,6 +336,31 @@ class Halt:
 
 @before(PreProcessRequest())
 class Move:
+    """Start rotation relative to the current position (degrees)
+
+    Must cause the ``TargetPosition`` property to change to the sum of the current
+    virtual position and the value of the Position argument (modulo 360 degrees),
+    then start rotation to ``TargetPosition``.
+
+    **Non-blocking**: Must return immediately with ``IsMoving = True`` if
+    the operation has *successfully* been started and the rotator is moving
+    to a new position. If the rotator is already at the requested position
+    then ``IsMoving`` may immediately return ``False``. See
+    :ref:`async-intro` and :ref:`async_faq`.
+
+    Arguments:
+        Position: The angular amount (degrees) to move relative to the
+            current position.
+
+    Raises:
+        InvalidValueException
+            if the Position argument is not a numeric value
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    """
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
@@ -246,12 +373,8 @@ class Move:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
             return
-        #
-        # TODO The following causes Conform to fail this operation
-        # if newpos < 0.0 or newpos >= 360.0:
-        #     resp.text = MethodResponse(req,
-        #                     InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
-        #     return
+        # The spec calls for "anything goes" requires you to range the
+        # final value modulo 360 degrees.
         logger.debug(f'Move({newpos}) from ClientID={formdata["ClientID"]}')
         if newpos >= 360.0:
             newpos -= 360.0
@@ -260,6 +383,7 @@ class Move:
             newpos += 360
             logger.debug('Result would be < 0, setting to {newpos}')
         logger.info(f'Move({origpos}) -> {str(newpos)} ClientID={formdata["ClientID"]}')
+        # TODO == end of fixit logic ==
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
@@ -272,6 +396,31 @@ class Move:
 
 @before(PreProcessRequest())
 class MoveAbsolute:
+    """Start rotation to the given new virtual position (degrees)
+
+    Must cause the (virtual) ``TargetPosition`` property to change to the
+    value of the Position argument then start rotation to ``TargetPosition``.
+
+    **Non-blocking**: Must return immediately with ``IsMoving = True`` if
+    the operation has *successfully* been started and the rotator is moving
+    to a new position. If the rotator is already at the requested position
+    then ``IsMoving`` may immediately return ``False``. See
+    :ref:`async-intro` and :ref:`async_faq`.
+
+    Arguments:
+        Position:
+            The new virtual position, taking into account ``Sync()`` offset.
+
+    Raises:
+        InvalidValueException
+            if the (virtual) Position argument is not a numeric value,
+            or is outside 0 <= position < 360.
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    """
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
@@ -301,6 +450,32 @@ class MoveAbsolute:
 
 @before(PreProcessRequest())
 class MoveMechanical:
+    """Start rotation to the given new mechanical position (degrees)
+
+    The Position is the mechanical angle, independent of any ``Sync()``
+    offset. This method is to address requirements that need a physical
+    rotation angle such as taking sky flats.
+
+    **Non-blocking**: Must return immediately with ``IsMoving = True`` if
+    the operation has *successfully* been started and the rotator is moving
+    to a new position. If the rotator is already at the requested position
+    then ``IsMoving`` may immediately return ``False``. See
+    :ref:`async-intro` and :ref:`async_faq`.
+
+    Arguments:
+        Position:
+            The new mechanical position, ignoring any ``Sync()`` offset.
+
+    Raises:
+        InvalidValueException
+            if the (virtual) Position argument is not a numeric value,
+            or is outside 0 <= position < 360.
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    """
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:
@@ -330,6 +505,28 @@ class MoveMechanical:
 
 @before(PreProcessRequest())
 class Sync:
+    """Syncs the rotator to the specified position angle (degrees) without moving it.
+
+    Once this method has been called and the sync offset determined, both the
+    ``MoveAbsolute()`` method and the ``Position`` property must function in synced
+    coordinates rather than mechanical coordinates.
+
+    Arguments:
+        Position: The requested angle, degrees.
+
+    Raises:
+        InvalidValueException
+            if the (virtual) Position argument is not a numeric value,
+            or is outside 0 <= position < 360.
+        NotConnectedException
+            if device not connected
+        DriverException
+            see :ref:`driver-exception`
+
+    Note:
+        The sync offset must persist across driver starts and device reboots.
+
+    """
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
         if not rot_dev.connected:

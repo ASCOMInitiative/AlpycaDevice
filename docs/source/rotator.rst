@@ -1,6 +1,6 @@
 
-The rotator Module
-==================
+Rotator - Device-Specific Responders
+====================================
 
 This module contains the Rotator device-specific responder classes for the Alpaca
 REST endpoints which represent ASCOM interface members.
@@ -27,8 +27,7 @@ template/sample.
       for returning an Alpaca exception. If omitted, it defaults to Success
       (no exception).
 
-Property (GET) Endpoint Responder
----------------------------------
+**Property (GET) Endpoint Responder**
 
 This returns a **Value** in the JSON response (``response.text``):
 
@@ -42,8 +41,7 @@ This returns a **Value** in the JSON response (``response.text``):
             value = #whatever your device says
             resp.text = PropertyResponse(value, req).json
 
-Method (PUT) Endpoint Responder
--------------------------------
+**Method (PUT) Endpoint Responder**
 
 Initiates an action. Normally returns no value. Parameters for the method
 are carried in the ``PUT`` request body, and are encoded as HTTP "form fields".
@@ -61,6 +59,20 @@ function.
             newpos = float(formdata['Position'])    # Position parameter
             # Whatever it takes to START the action
             resp.text = MethodResponse(req).json
+
+API Responder Documentation
+---------------------------
+
+Each class is a responder for that specific member (property or method) of
+the ASCOM IRotator specification.
+
+.. note::
+    Calls to ``on_get()`` and ``on_put()`` have the same arguments as described
+    above and in |falcweb| plus the Alpaca DeviceNumber as the last
+    argument.
+
+.. automodule:: rotator
+    :members:
 
 
 .. |falcweb| raw:: html

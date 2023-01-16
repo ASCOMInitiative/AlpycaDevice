@@ -41,21 +41,32 @@
 # -----------------------------------------------------------------------------
 # Edit History:
 # 16-Dec-2022   rbd 0.1 Initial edit for Alpaca sample/template
-# 18-Dec-2022   rbd 0.1 Type hints 
+# 18-Dec-2022   rbd 0.1 Type hints
 # 19-Dec-2022   rbd 0.1 Add logic for IRotatorV3 offsets
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 # 26-Dec-2022   rbd 0.1 Do not log within lock()ed sections
 # 27-Dec-2022   rbd 0.1 MIT license and module header
+# 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
 #
 from threading import Timer
 from threading import Lock
 from logging import Logger
 
 class RotatorDevice:
-    """
-        Implements a rotator device that runs in a separate thread
-        Debug tracing here via (commented out) print() to avoid locking issues
+    """Simulated rotator device that does moves in separate Timer threads.
+
+    Properties and  methods generally follow the Alpaca interface.
+    Debug tracing here via (commented out) print() to avoid locking issues.
+    Hopefully you are familiar with Python threading and the need to lock
+    shared data items.
+
+    **Mechanical vs Virtual Position**
+
+    In this code 'mech' refers to the raw mechanical position. Note the
+    conversions ``_pos_to_mech()`` and ``_mech_to_pos()``. This is where
+    the ``Sync()`` offset is applied.
+
     """
     #
     # Only override __init_()  and run() (pydoc 17.1.2)
@@ -93,7 +104,7 @@ class RotatorDevice:
         if mech < 0.0:
             mech += 360.0
         return mech
-    
+
     def _mech_to_pos(self, mech: float) -> float:
         pos = mech + self._pos_offset
         if pos >= 360.0:
@@ -168,7 +179,7 @@ class RotatorDevice:
     @property
     def can_reverse(self) -> bool:
         self._lock.acquire()
-        res =  self._can_reverse 
+        res =  self._can_reverse
         self._lock.release()
         return res
 

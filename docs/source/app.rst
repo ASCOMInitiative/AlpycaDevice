@@ -1,13 +1,9 @@
-..
-    The rinohtype PDF builder I use chokes on right-justified images
-    failing to wrap them with the text. It also chokes on the |xxx|
-    format hyperlinks to externals that I use for opening in a separate
-    tab. Therefore I have html and rinoh conditionals in these docs (typ)
 
-The app Module
-==============
+Application Startup and Exception Handling
+==========================================
 
-This module blah blah blah.
+Contains the application framework, utility functions, exception
+handler helper functions, and the app's ``main()`` entry point.
 
 .. automodule:: app
     :members:

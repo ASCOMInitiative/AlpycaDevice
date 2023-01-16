@@ -33,6 +33,7 @@
 # -----------------------------------------------------------------------------
 # Edit History:
 # 01-Jan-2023   rbd 0.1 Initial edit, moved from config.py
+# 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
 
 import logging
 import logging.handlers
@@ -44,16 +45,24 @@ global logger
 logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 def init_logging():
-    """ Create the logger - called at app startup 
+    """ Create the logger - called at app startup
 
         **MASTER LOGGER**
-        
+
         This single logger is used throughout. The module name (the param for get_logger())
         isn't needed and would be 'root' anyway, sort of useless. Also the default date-time
         is local time, and not ISO-8601. We log in UTC/ISO format, and with fractional seconds.
-        Finally our config options allow for suppression of logging to stdout, and for this 
-        we remove the default stdout handler. Thank heaven that Python logging is thread-safe! 
-        
+        Finally our config options allow for suppression of logging to stdout, and for this
+        we remove the default stdout handler. Thank heaven that Python logging is thread-safe!
+
+        This logger is passed around throughout the app and may be used throughout. The
+        :py:class:`config.Config` class has options to control the number of back generations
+        of logs to keep, as well as the max size (at which point the log will be rotated).
+        A new log is started each time the app is started.
+
+    Returns:
+        Customized Python logger.
+
     """
 
     logging.basicConfig(level=Config.log_level)
@@ -62,8 +71,8 @@ def init_logging():
     formatter.converter = time.gmtime           # UTC time
     logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above
     # Add a logfile handler, same formatter and level
-    handler = logging.handlers.RotatingFileHandler('rotator.log', 
-                                                    mode='w', 
+    handler = logging.handlers.RotatingFileHandler('rotator.log',
+                                                    mode='w',
                                                     delay=True,     # Prevent creation of empty logs
                                                     maxBytes=Config.max_size_mb * 1000000,
                                                     backupCount=Config.num_keep_logs)
@@ -74,7 +83,7 @@ def init_logging():
     if not Config.log_to_stdout:
         """
             This allows control of logging to stdout by simply
-            removing the stdout handler from the logger's 
+            removing the stdout handler from the logger's
             handler list. It's always handler[0] as created
             by logging.basicConfig()
         """

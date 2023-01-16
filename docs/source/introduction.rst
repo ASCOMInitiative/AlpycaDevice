@@ -111,6 +111,8 @@ Finally the ``setup`` endpoint simply displays a static web page. Configuration
 for this lightweight sample uses a config file in |toml|. Of course you can
 provide your own web pages, or get really fancy and use |falcjinja|.
 
+.. _async-intro:
+
 Asynchronous Operations
 -----------------------
 

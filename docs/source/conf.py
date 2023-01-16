@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath('..//..//device'))
 # Prevent Python crash on infinite recursion
 sys.setrecursionlimit(1500)
 
-# -- Cleanup 
+# -- Cleanup
 
 
 # -- Project information -----------------------------------------------------
@@ -29,7 +29,7 @@ author = 'Bob Denny'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
-# 
+#
 # Clean up ugly aspects of Read The Docs. See comments in the css
 #
 html_style = 'css/alpyca.css'
@@ -44,9 +44,7 @@ html_style = 'css/alpyca.css'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon',
-    # https://github.com/brechtm/rinohtype  Makes PDF
-    'rinoh.frontend.sphinx'    #Not found on Linux ?!?!?!?
+    'sphinx.ext.napoleon'
 ]
 
 # Autodoc settings (override defaults)
