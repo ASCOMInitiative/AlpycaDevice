@@ -1,6 +1,7 @@
 .git
 .pytest_cache
 .venv
+.venv2
 __pycache__
 device/__pycache__
 rotator.log*

@@ -45,7 +45,8 @@
 # 30-Dec-2022   rbd 0.1 Device number in /setup routing template. Last chance
 #               exception handler, Falcon responder uncaught exeption handler.
 # 01-Jan-2023   rbd 0.1 Docstring docs
-# 13-Jan-2023   rbd 0.1 More docstring docs
+# 13-Jan-2023   rbd 0.1 More docstring docs. Fix LoggingWSGIRequestHandler,
+#               log.logger needs explicit setting in main()
 #
 import sys
 import traceback
@@ -206,6 +207,7 @@ def main():
 
     logger = log.init_logging()
     # Share this logger throughout
+    log.logger = logger
     common.logger = logger
     rotator.logger = logger
     exceptions.logger = logger
