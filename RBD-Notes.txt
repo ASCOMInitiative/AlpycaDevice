@@ -94,17 +94,19 @@ that with pipmanager. It is there now.
 6. Update zope.interface to 5.5.2 (fron dev version)
 
 17-Jan-2023
-<<<<<<< HEAD
-===========
+-----------
 * Renamed the repo AlpycaDevice. Renamed root folders on Linux and Windows, adjusted the virtual environment activation scripts
 * Removed the messy .venv on Linux and renamed .venv2 from yesterday to .venv. Develop with .venv, do docs with global.
-=======
------------
 * Rename repo and project root directories to AlpycaDevice.
   + Rename repo on GitHub
   + Rename root on Windows, fix up .venv/Scripts/activate scripts (multiple).
   == Painless on Windows, the .venv activates as before and GitHub still OK ==
->>>>>>> 92c3ca660fc66867c4791b0c740aa7d8b23bee5d
+* At GitHub, the old repo path /alpyca-device still works but does a redirect to the real /AlpycaDevice.
+  I decided to update the git remote info on Linux and Windows to point to the new git remote. Under VSCode
+  Remote menu, remove origin. Then add remote from Git, my AlpycaDevice one. This was a snap on Linux,
+  Clicking the Publish To just fixed it up. On Windows I had to
+      git branch --set-upstream-to=origin/master master
+    to get it to work again. All OK in the end.
 
 * Ideas for writing:
 Three types of exceptions here:
