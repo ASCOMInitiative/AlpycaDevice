@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # conf.py - Device configuration file and shared logger construction
-# Part of the Alpyca-Device Alpaca skeleton/template device driver
+# Part of the AlpycaDevice Alpaca skeleton/template device driver
 #
 # Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
 #
 # Python Compatibility: Requires Python 3.7 or later
-# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+# GitHub: https://github.com/ASCOMInitiative/AlpycaDevice
 #
 # -----------------------------------------------------------------------------
 # MIT License
@@ -34,7 +34,7 @@
 # Edit History:
 # 24-Dec-2022   rbd 0.1 Logging
 # 25-Dec-2022   rbd 0.1 More config items, separate logging section
-# 27-Dec-2022   rbd 0.1 Move shared logger construction and global 
+# 27-Dec-2022   rbd 0.1 Move shared logger construction and global
 #               var here. MIT license and module header. No mcast.
 #
 import toml

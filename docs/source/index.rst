@@ -34,12 +34,12 @@ the |supforum|.
 
 .. |changes| raw:: html
 
-    <a href="https://github.com/BobDenny/alpyca-device/blob/master/CHANGES.rst" target="_blank">
+    <a href="https://github.com/BobDenny/AlpycaDevice/blob/master/CHANGES.rst" target="_blank">
     the CHANGES document</a> (external)
 
 .. |github| raw:: html
 
-    <a href="https://github.com/BobDenny/alpyca-device" target="_blank">
+    <a href="https://github.com/BobDenny/AlpycaDevice" target="_blank">
     Alpyca Device GitHub repository</a>
 
 .. |ascsite| raw:: html

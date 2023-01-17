@@ -35,8 +35,8 @@ you use |vscode| for Python development but it's cerainly not a requirement.
 
 .. |alpdev| raw:: html
 
-    <a href="https://github.com/BobDenny/alpyca-device" target="_blank">
-    alpyca-device repository</a>
+    <a href="https://github.com/BobDenny/AlpycaDevice" target="_blank">
+    AlpycaDevice repository</a>
 
 .. |conformu| raw:: html
 

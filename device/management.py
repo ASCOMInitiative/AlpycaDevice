@@ -2,12 +2,12 @@
 # -----------------------------------------------------------------------------
 # management.py - Management API for  ALpaca device
 #
-# Part of the Alpyca-Device Alpaca skeleton/template device driver
+# Part of the AlpycaDevice Alpaca skeleton/template device driver
 #
 # Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
 #
 # Python Compatibility: Requires Python 3.7 or later
-# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+# GitHub: https://github.com/ASCOMInitiative/AlpycaDevice
 #
 # -----------------------------------------------------------------------------
 # MIT License
@@ -79,10 +79,10 @@ class configureddevices():
     def on_get(self, req: Request, resp: Response):
         confarray = [                          # TODO ADD ONE FOR EACH DEVICE (ANY TYPE) SERVED
             {
-            'DeviceName'    : DeviceMetadata.Name, 
+            'DeviceName'    : DeviceMetadata.Name,
             'DeviceType'    : DeviceMetadata.Type,
             'DeviceNumber'  : 0,
-            'UniqueID'      : DeviceMetadata.ID 
+            'UniqueID'      : DeviceMetadata.ID
             }
         ]
         resp.text = PropertyResponse(confarray, req).json

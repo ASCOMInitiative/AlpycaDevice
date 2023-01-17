@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 # rotatordevice.py - Poor-man's simulation of a rotator
 #
-# Part of the Alpyca-Device Alpaca skeleton/template device driver
+# Part of the AlpycaDevice Alpaca skeleton/template device driver
 #
 # This is only for demo purposes. It's extremely fragile, and should
 # not be used as an example of a real device. Settings not remembered.
@@ -14,7 +14,7 @@
 # Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
 #
 # Python Compatibility: Requires Python 3.7 or later
-# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+# GitHub: https://github.com/ASCOMInitiative/AlpycaDevice
 #
 # -----------------------------------------------------------------------------
 # MIT License

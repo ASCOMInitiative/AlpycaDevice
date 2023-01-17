@@ -1,4 +1,4 @@
-# alpyca-device (0.1)
+# AlpycaDevice (0.1)
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
 

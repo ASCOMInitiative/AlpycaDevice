@@ -74,7 +74,7 @@ that with pipmanager. It is there now.
 **************************************
 ** RESET ON VENV VS GLOBAL ON LINUX **
 **************************************
-* Create new .venv2, then activate in VSCode. NOTE: The only way to get this to sork with the 'select interpreter' on the status bar is to first pick "alpyca-device ~/Documents" then in the new Select Interpreter list select the one you want!
+* Create new .venv2, then activate in VSCode. NOTE: The only way to get this to sork with the 'select interpreter' on the status bar is to first pick "AlpycaDevice ~/Documents" then in the new Select Interpreter list select the one you want!
   + Install only falcon and toml, update pip and setuptools.
   + DEVELOP WITH .venv2
   + When documenting, in VSCode select the global environment which has all of the shit. THIS WORKS including linting.

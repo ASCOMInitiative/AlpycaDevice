@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # logging.py - Shared global logging object
-# Part of the Alpyca-Device Alpaca skeleton/template device driver
+# Part of the AlpycaDevice Alpaca skeleton/template device driver
 #
 # Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
 #
 # Python Compatibility: Requires Python 3.7 or later
-# GitHub: https://github.com/ASCOMInitiative/alpyca-device
+# GitHub: https://github.com/ASCOMInitiative/AlpycaDevice
 #
 # -----------------------------------------------------------------------------
 # MIT License
