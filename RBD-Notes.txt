@@ -10,16 +10,16 @@ save myself from a fresh round of (repeat) frustrations.
 
 So starting with the RBD-Notes from the Alpyca project and using VSCode for RST writing:
 
-* (21-Jul-2022) Install the Sphinx-related packages into the .venv get all of the sphinx and 
-rinoh pieces into the .venv because the reStructuredText extension depends on the esbonio 
-language server, and that is actually real-time rendering the document at design time! 
+* (21-Jul-2022) Install the Sphinx-related packages into the .venv get all of the sphinx and
+rinoh pieces into the .venv because the reStructuredText extension depends on the esbonio
+language server, and that is actually real-time rendering the document at design time!
 This led to several hours of installing shit.
   ==== AHHHH ====
-  Look at the docs/source/conf.py and those things are in the extensions. REDO THE VENV... AGAIN!!! 
+  Look at the docs/source/conf.py and those things are in the extensions. REDO THE VENV... AGAIN!!!
 * This time I created the venv python -m venv .venv and restarted VSCode. It found the .venv OK. Then I followed
   the prompts to install docutils and esbonio, RESTART, then again via "Problems" to install rinohtype RESTART
   then again to get sphinx_rtd_theme, which BACK-REVVED DOCUTILS to 0.17.1. Damn. These things are in the Sphinx
-  conf.py file, which was getting confused with mine before I renamed it. 
+  conf.py file, which was getting confused with mine before I renamed it.
 * ==== HOORAY ==== The reStructruredText extension is working!! It found the junk .rst files I put there as place
   holders.  Now I need to clean up the Sphinx conf.py ... done.
 * Moved over to the RPi. I installed Sphinx, the rsStructuredText VSCode plugin popped up installs for docutils,
@@ -27,13 +27,13 @@ This led to several hours of installing shit.
   pip install rinohtype. No luck even after starting VSCode. So I went to https://github.com/brechtm/rinohtype
   and found how to install the latest version via pip/GitHub:
     https://github.com/brechtm/rinohtype
-  This installed markdown-it-py-2.1.0 mdit-py-plugins-0.3.3 mdurl-0.1.2 myst-parser-0.18.1 pyyaml-6.0 
-  rinohtype-0.5.5, and removed rinohtype-0.5.3. No luck. wtf. It's not showing on the pip list either. 
+  This installed markdown-it-py-2.1.0 mdit-py-plugins-0.3.3 mdurl-0.1.2 myst-parser-0.18.1 pyyaml-6.0
+  rinohtype-0.5.5, and removed rinohtype-0.5.3. No luck. wtf. It's not showing on the pip list either.
   HOW WEIRD - Now same deal with sphinx_rtd_theme. So I used the Pip Manager to install them. Well now
   rinoh stuff shows in pip manager but not in the pip list????? Now Esbonio/pip succeeds but without
 * Making HTML docs!!! I wanted to disable the "hyperlink not referenced" errors from rstcheck, but
-trying to follow the directions in the manual I added a setting "--ignore-errors REGEX_STRING" but no 
-luck. So I want back into settings restructuredtext: Linters: Disabled-linters, and disabled rstcheck. 
+trying to follow the directions in the manual I added a setting "--ignore-errors REGEX_STRING" but no
+luck. So I want back into settings restructuredtext: Linters: Disabled-linters, and disabled rstcheck.
 This caused restructuedtext to start asking to load the restructuredtext_lint package, so I installed
 that with pipmanager. It is there now.
 * DAMN - Now it is using rst-lint, a brain damaged linter that doesn't know some of the directives
@@ -41,7 +41,7 @@ that with pipmanager. It is there now.
   HOORAY!!! It is using doc8. This one has ways of controlling the errors and other  stuff. See the
   VSCode settings restructuredtext.linter.doc8.extraArgs and remove the rstcheck shit. Right below
   in the JSON are the disabling items. I must hve done this before (dump rstcheck and rst-lint).
-  Anyway doc8 is finding my errors in real time. 
+  Anyway doc8 is finding my errors in real time.
 
 03-Jan-2023
 -----------
@@ -55,11 +55,11 @@ that with pipmanager. It is there now.
   		"esbonio.sphinx.confDir": "${workspaceFolder}/docs/source",
   This makes me realize that esbonio can benefit from not guessing, and that this is project-specific,
   so now I will commit the alpaca-device.code-workspace to the Git repo, along with the thunder-tests
-  in order to create a portable dev environment. 
-* Shit, esbonio is now building into docs/source/_build instead of docs/build. This is with the 
+  in order to create a portable dev environment.
+* Shit, esbonio is now building into docs/source/_build instead of docs/build. This is with the
   .venv deactivated. Is there no end to the surprises and side effects?
-  + OK, I have now set up the workspace settings so that esbonio builds into 
-    docs/build/_esbonio/ (doctrees and html), and also Sphinx builds into docs/build 
+  + OK, I have now set up the workspace settings so that esbonio builds into
+    docs/build/_esbonio/ (doctrees and html), and also Sphinx builds into docs/build
     (doctrees and html).
       "settings": {
         "esbonio.sphinx.confDir": "${workspaceFolder}/docs/source",
@@ -71,8 +71,8 @@ that with pipmanager. It is there now.
 **************************************
 ** RESET ON VENV VS GLOBAL ON LINUX **
 **************************************
-* Create new .venv2, then activate in VSCode. NOTE: The only way to get this to sork with the 'select interpreter' on the status bar is to first pick "alpyca-device ~/Documents" then in the new Select Interpreter list select the one you want! 
-  + Install only falcon and toml, update pip and setuptools. 
+* Create new .venv2, then activate in VSCode. NOTE: The only way to get this to sork with the 'select interpreter' on the status bar is to first pick "alpyca-device ~/Documents" then in the new Select Interpreter list select the one you want!
+  + Install only falcon and toml, update pip and setuptools.
   + DEVELOP WITH .venv2
   + When documenting, in VSCode select the global environment which has all of the shit. THIS WORKS including linting.
   + Simply deactivating in the terminal DOES NOT WORK if VSCode is set to .venv2, since the linters etc. aren't instaled.
@@ -81,11 +81,17 @@ that with pipmanager. It is there now.
 ================
 * Coding and testing, have VSCode set for .venv2
 * Working on docs, have VSCode set for Global site-packages
+-- Update Sphinx and linters --
+1. PipMgr Update Sphinx to 6.1.3 - Build OK after removing contents of /build folder (old pickled). esbonio OK 6.1.3
+2. PipMgr Update Doc8 to 1.1.1
+3. PipMgr update rstcheck -> 6.1.1 and rstcheck-core to 1.0.3
+4. PipMgr Update sphinx-autodoc-typehints to 1.21.1, sphinx jinja-compat to 0.2.0, sphinx-rtd-theme to 1.1.1
+   sphinx-tabs to 3.4.1, sphinx-toolbox to 3.3.0 -->> SHIT SPHINX IS NOW BACK AT 4.5.0 ?!?!?!?!?
+5. PipMgr Refresh, Update Sphinx to 6.1.3, and again sphinx-autodoc-typehints to 1.21.1, DOCS OK.
+6. Update zope.interface to 5.5.2 (fron dev version)
 
-  
-
-Ideas for writing:
-* Three types of exceptions here:
+* Ideas for writing:
+Three types of exceptions here:
   1. Errors in the HTTP request itself -> 400 or 404
   2. Device operational errors RunTimeError -> Alpaca DeviceException and detailed message with -> 200 -> logged also
   3. Python uncaught exception in the Falcon responder class -> 500 -> Logged also
