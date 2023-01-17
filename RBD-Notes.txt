@@ -68,6 +68,9 @@ that with pipmanager. It is there now.
     This makes it easy to .gitignore the esbonio output while keeping it separate from the
     actual Sphinx final build output for HTML and rinoh/PDF.
 
+16-Jan-2023
+-----------
+
 **************************************
 ** RESET ON VENV VS GLOBAL ON LINUX **
 **************************************
@@ -91,9 +94,17 @@ that with pipmanager. It is there now.
 6. Update zope.interface to 5.5.2 (fron dev version)
 
 17-Jan-2023
+<<<<<<< HEAD
 ===========
 * Renamed the repo AlpycaDevice. Renamed root folders on Linux and Windows, adjusted the virtual environment activation scripts
 * Removed the messy .venv on Linux and renamed .venv2 from yesterday to .venv. Develop with .venv, do docs with global.
+=======
+-----------
+* Rename repo and project root directories to AlpycaDevice.
+  + Rename repo on GitHub
+  + Rename root on Windows, fix up .venv/Scripts/activate scripts (multiple).
+  == Painless on Windows, the .venv activates as before and GitHub still OK ==
+>>>>>>> 92c3ca660fc66867c4791b0c740aa7d8b23bee5d
 
 * Ideas for writing:
 Three types of exceptions here:
