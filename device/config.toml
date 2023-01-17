@@ -5,8 +5,8 @@ ip_address = ''             # Any address
 port = 5555
 
 [server]
-location = 'Alvord Desert'  # Anything you want here
-verbose_driver_exceptions = false
+location = 'Anywhere on Earth'  # Anything you want here
+verbose_driver_exceptions = true
 
 [device]
 can_reverse = true

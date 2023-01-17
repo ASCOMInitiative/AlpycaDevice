@@ -68,6 +68,9 @@ that with pipmanager. It is there now.
     This makes it easy to .gitignore the esbonio output while keeping it separate from the
     actual Sphinx final build output for HTML and rinoh/PDF.
 
+16-Jan-2023
+-----------
+
 **************************************
 ** RESET ON VENV VS GLOBAL ON LINUX **
 **************************************
@@ -89,6 +92,13 @@ that with pipmanager. It is there now.
    sphinx-tabs to 3.4.1, sphinx-toolbox to 3.3.0 -->> SHIT SPHINX IS NOW BACK AT 4.5.0 ?!?!?!?!?
 5. PipMgr Refresh, Update Sphinx to 6.1.3, and again sphinx-autodoc-typehints to 1.21.1, DOCS OK.
 6. Update zope.interface to 5.5.2 (fron dev version)
+
+17-Jan-2023
+-----------
+* Rename repo and project root directories to AlpycaDevice.
+  + Rename repo on GitHub
+  + Rename root on Windows, fix up .venv/Scripts/activate scripts (multiple).
+  == Painless on Windows, the .venv activates as before and GitHub still OK ==
 
 * Ideas for writing:
 Three types of exceptions here:

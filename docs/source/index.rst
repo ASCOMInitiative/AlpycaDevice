@@ -81,6 +81,7 @@ the |supforum|.
 .. toctree::
     :maxdepth: 2
 
+    quickstart
     introduction
     roadmap
     modules
