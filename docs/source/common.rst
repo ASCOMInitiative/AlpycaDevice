@@ -62,5 +62,5 @@ API Responder Documentation
 .. |falcweb| raw:: html
 
     <a href="https://falcon.readthedocs.io/en/stable/" target="_blank">
-    The Falcon Web Framework</a> (external)
+    The Falcon Web Framework</a>
 

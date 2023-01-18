@@ -20,4 +20,4 @@ Of course you can alter these config items, making changes to the
 .. |toml| raw:: html
 
      <a href="https://toml.io/en/" target="_blank">
-    Tom's Obvious Minimal Language</a> (external)
+    Tom's Obvious Minimal Language</a>

@@ -102,15 +102,17 @@ that with pipmanager. It is there now.
   + Rename root on Windows, fix up .venv/Scripts/activate scripts (multiple).
   == Painless on Windows, the .venv activates as before and GitHub still OK ==
 * At GitHub, the old repo path /alpyca-device still works but does a redirect to the real /AlpycaDevice.
-  I decided to update the git remote info on Linux and Windows to point to the new git remote. Under VSCode
-  Remote menu, remove origin. Then add remote from Git, my AlpycaDevice one. This was a snap on Linux,
-  Clicking the Publish To just fixed it up. On Windows I had to
+  I decided to update the git remote info on Linux and Windows to point to the
+  new git remote. Under VSCode Remote menu, remove origin. Then add remote from
+  Git, my AlpycaDevice one. This was a snap on Linux, Clicking the Publish To
+  just fixed it up. On Windows I had to
       git branch --set-upstream-to=origin/master master
     to get it to work again. All OK in the end.
 * Well one remaining issue - On Windows, in the .venv (the original), the sphinx-build.exe has embedded in it
-  the old path alpyca-device. WTF? So renaming the project root to AlpycaDevice caused this. How did that
-  venv path get into Scripts\sphinx-build.exe? Guess: when installed into .venv. Well this is even worse.
-  pip doesn't even work. ooks like the end of the .venv on Windows too. Forget this venv too!!!
+  the old path alpyca-device. WTF? So renaming the project root to AlpycaDevice
+  caused this. How did that venv path get into Scripts\sphinx-build.exe? Guess:
+  when installed into .venv. Well this is even worse. pip doesn't even work.
+  ooks like the end of the .venv on Windows too. Forget this venv too!!!
 * WINDOWS == Same usage of .venv for dev, global for doc. Killed the old messy .venv, created a new one
   with just pip, setuptools, falcon, and toml. If you select that interpreter the doc tools will croak.
   That's fine. Don't open a .rst doc when running on the .venv.
@@ -118,7 +120,11 @@ that with pipmanager. It is there now.
   were updated. Sphinx is limited to 5.3.0 owing to the Python on this system being limited to 3.7.
   After this esbonioneeded to be updated too. Done.
 
-
+18-Jan-2022
+-----------
+* Holy smokes! The Rewrap plugin (by stkb) is the BOMB! Alt-q and it is smart enough to wrap
+  a lot of the structures use by reST. I love it. Just write, and when the paragraph is finished
+  or edited chopped up, alt-q :-) :-)
 
 * Ideas for writing:
 Three types of exceptions here:

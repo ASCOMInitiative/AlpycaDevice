@@ -1,4 +1,4 @@
-# AlpycaDevice (0.1) Python 3.7+ Alpaca Device Framework
+# AlpycaDevice (0.1.0) Python 3.7+ Alpaca Device Framework
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
 This project is a  lightweight framework for a device
@@ -7,6 +7,8 @@ a basic Rotator device that is structured in a way that the
 Rotator-specific API endpoint implementations can be easily replaced with an
 API endpoints implementation for any ASCOM device. The "boiler plate" logic
 remains the same.
+
+## [Alpyca Device Full Documentation](https://ascom-standards.org/alpycadevice/)
 
 ## Quick Start
 
@@ -30,13 +32,15 @@ Linux, Windows) for Python development but it's certainly not a requirement.
 8. Start ConformU and click Select Device. The sample should be discovered. If your
    dev system is on multiple IP addresses, you'll see it listed multiple times.
    Pick any one.
-9. Click Start and watch it exercise the sample device. After a while it  should
+9. Click Start and watch it exercise this sample device. After a while it should
    complete successfully.
 
-## Status (Jan 2023)
+## Status (Jan 2023) *Experimental - Limited Distribution*
 
-Ready for initial testing by others. Passes Conform for Rotator device,
-docstrings and Sphinx build to HTML completed.
+Ready for initial testing by others. Passes [Conform
+Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) for
+Rotator device, docstrings and [Sphinx build to
+HTML](https://ascom-standards.org/alpycadevice/) completed.
 
 ## Potential Applications
 

@@ -11,22 +11,28 @@ Here's how to get this sample running on your development system. We recommended
 you use |vscode| for Python development but it's cerainly not a requirement.
 
 1. Clone the |alpdev| from GitHub
-2. The ``device`` folder has all of the driver app files, ``app.py`` is the startup
-3. Look at ``config.toml`` and if port 5555 is ok, you can leave everything else for now.
+2. The ``device`` folder has all of the driver app files, ``app.py`` is the
+   startup
+3. Look at ``config.toml`` and if port 5555 is ok, you can leave everything else
+   for now.
 4. Recommend you create (and activate) a separate Python virtual environment.
-   You do not need Conda or any fancy virtual environment tools.
-5. Use ``pip`` to install ``falcon`` and ``toml``. These are the only two packages
-   needed by the driver sample.
+   You do not need Conda or any fancy virtual environment tools, just use an
+   ``venv`` type.
+5. Use ``pip`` to install ``falcon`` and ``toml``. These are the only two
+   packages needed by the driver sample.
 6. If you don't have the |conformu|, get it now.
-7. Start the sample/template from the ``device`` folder ``python app.py``. It will
-   not write to the shell/stdout. See the rotator.log file created in the ``device``
-   folder.
-8. Start ConformU and click Select Device. The sample should be discovered. If your
-   dev system is on multiple IP addresses, you'll see it listed multiple times.
-   Pick any one.
+7. Start the sample/template from the ``device`` folder ``python app.py``. It
+   will not write to the shell/stdout. See the rotator.log file created in the
+   ``device`` folder.
+8. Start ConformU and click Select Device. The sample should be discovered. If
+   your dev system is on multiple IP addresses, you'll see it listed multiple
+   times. Pick any one.
 9. Click Start and watch it exercise the sample device. After a while it  should
    complete successfully.
 
+Have a look through the code, step through it with the debugger, etc. If you
+need more context have a look through the :doc:`/introduction`. Also keep in
+mind that there are many resources at |devhelp| and the |supforum|
 
 .. |vscode| raw:: html
 
@@ -42,3 +48,15 @@ you use |vscode| for Python development but it's cerainly not a requirement.
 
     <a href="https://github.com/ASCOMInitiative/ConformU/releases" target="_blank">
     Conform Universal Test Tool</a>
+
+.. |supforum| raw:: html
+
+    <a href="https://ascomtalk.groups.io/g/Developer" target="_blank">
+    ASCOM Driver and Application Development Support Forum</a>
+
+.. |devhelp| raw:: html
+
+    <a href="https://ascom-standards.org/AlpacaDeveloper/Index.htm" target="_blank">
+    Alpaca Developers Info</a>
+
+
