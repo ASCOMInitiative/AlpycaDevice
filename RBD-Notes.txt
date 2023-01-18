@@ -107,6 +107,18 @@ that with pipmanager. It is there now.
   Clicking the Publish To just fixed it up. On Windows I had to
       git branch --set-upstream-to=origin/master master
     to get it to work again. All OK in the end.
+* Well one remaining issue - On Windows, in the .venv (the original), the sphinx-build.exe has embedded in it
+  the old path alpyca-device. WTF? So renaming the project root to AlpycaDevice caused this. How did that
+  venv path get into Scripts\sphinx-build.exe? Guess: when installed into .venv. Well this is even worse.
+  pip doesn't even work. ooks like the end of the .venv on Windows too. Forget this venv too!!!
+* WINDOWS == Same usage of .venv for dev, global for doc. Killed the old messy .venv, created a new one
+  with just pip, setuptools, falcon, and toml. If you select that interpreter the doc tools will croak.
+  That's fine. Don't open a .rst doc when running on the .venv.
+* In global, many packaes updated using pip-manager in VSCode. Specifically the sphinx-related ones
+  were updated. Sphinx is limited to 5.3.0 owing to the Python on this system being limited to 3.7.
+  After this esbonioneeded to be updated too. Done.
+
+
 
 * Ideas for writing:
 Three types of exceptions here:
