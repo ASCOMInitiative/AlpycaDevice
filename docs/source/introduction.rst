@@ -18,6 +18,7 @@ development.
 2. |devhelp| See the Design Principles sections: General Principles,
    Asynchronous APIs, and  Exceptions.
 3. |apiref| General specifications for Alpaca network protocol and API
+4. |ascspecs|
 
 Alpaca Device and Driver Architecture
 -------------------------------------
@@ -178,6 +179,11 @@ Making this sample into your driver
 When using this sample to make your own Alpaca device driver, follow this
 general set of steps.
 
+.. important::
+    The |ascspecs| are the final word in interface definition, data types,
+    exceptions, and behavior. Experiment with the |omnisim| OpenAPI interface
+    to see how each endpoint is supposed to work.
+
 1. Familiarize yourself with |falcweb| specifically how incoming REST requests
    are routed to *responders* with the Request and Response objects.
 2. Run this sample, using the |conformu| tool to generate traffic to all of the
@@ -190,10 +196,11 @@ general set of steps.
    separate class. Observe how locks are used to prevent conflicts in accesses
    between threads. In short, become very familiar with how this simulated
    device works.
-3. Using :doc:`/rotator` as a guide, and the responder classes within as a
-   template, create a module containing responder classes for each Alpaca
-   endpoint of *your* device. Of course, if you're making a Rotator driver you
-   can use :doc:`/rotator` as a starting point.
+3. Using :doc:`/rotator` as a guide, and one of the :doc:`/templates` provided
+   create a module containing responder classes for each Alpaca endpoint of
+   *your* device.  Using the one for your device will be a big time saver!! Of
+   course, if you're making a Rotator driver you can use :doc:`/rotator` as a
+   starting point.
 4. Look in :doc:`shr` for the :py:class:`~shr.DeviceMetadata` static class. Edit
    the fields for your device. Generate your own unique **ID** using the
    |guidgen|.
@@ -214,6 +221,11 @@ general set of steps.
 
     <a href="https://ascom-standards.org/index.htm" target="_blank">
     ASCOM Initiative web site</a>
+
+.. |ascspecs| raw:: html
+
+    <a href="https://ascom-standards.org/Help/Platform/html/N_ASCOM_DeviceInterface.htm" target="_blank">
+    Master Official ASCOM Device Interface Specifications</a>
 
 .. |devhelp| raw:: html
 

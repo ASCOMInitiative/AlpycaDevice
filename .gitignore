@@ -8,4 +8,4 @@ rotator.log*
 docs/build
 docs/refs
 alpycadevice.code-workspace
-dev-skeletons/AlpycaDeviceSkeletons.code-workspace
+skeletons/AlpycaDeviceSkeletons.code-workspace

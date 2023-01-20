@@ -91,12 +91,9 @@ developer wanting to use Alpaca, we suggest you look over |devhelp| and join the
     roadmap
     modules
 
+Indices and tables
+==================
 
-.. only:: html
-
-    Indices and tables
-    ==================
-
-    * :ref:`genindex`
-    * :ref:`modindex`
-    * :ref:`search`
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

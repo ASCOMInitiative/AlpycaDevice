@@ -1,12 +1,12 @@
-# AlpycaDevice (0.1.0) Python 3.7+ Alpaca Device Framework
+# AlpycaDevice - Python 3.7+ Alpaca Device Framework and Templates
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
 This project is a  lightweight framework for a device
 driver that supports the Alpaca protocol and ASCOM Standards. It implements
 a basic Rotator device that is structured in a way that the
 Rotator-specific API endpoint implementations can be easily replaced with an
-API endpoints implementation for any ASCOM device. The "boiler plate" logic
-remains the same.
+API endpoints implementation for any ASCOM device. Templates for all ASCOM device
+types are provided. The "boiler plate" logic remains the same for any device.
 
 ## [Alpyca Device Full Documentation](https://ascom-standards.org/alpycadevice/)
 

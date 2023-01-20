@@ -1,9 +1,8 @@
-.. only:: html
 
-    .. image:: alpaca128.png
-        :height: 92px
-        :width: 128px
-        :align: right
+   .. image:: alpaca128.png
+      :height: 92px
+      :width: 128px
+      :align: right
 
 Template/Sample Module Structure
 =================================
@@ -24,6 +23,7 @@ of the Alpaca API endpoints, and the Alpaca exception specs.
    rotator
    exceptions
    discovery
+   templates
 
 Physical Device Implementation
 ------------------------------
