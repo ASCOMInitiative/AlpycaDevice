@@ -1,5 +1,7 @@
-Version 0.1.0 (2022-12-28)
-==============================
+Version 0.1.0 Experimental (2023-02-03)
+=======================================
 
-- Under development
+Getting ready for limited private test and evaluation. Logic is complete,
+ConformU passes, docs are extensive, and there are templates for all
+ASCOM device types. No end to documentation though ha ha.
 

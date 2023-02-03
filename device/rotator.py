@@ -46,6 +46,7 @@
 #               quality control. Device number from URI.
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
 # 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
+# 20-Jan-2023   rbd 0.1 Refactor for clarity
 #
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
@@ -100,12 +101,11 @@ class Connected:
             # ----------------------
             rot_dev.connected = conn
             # ----------------------
+            logger.info(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        logger.info(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
-        resp.text = MethodResponse(req).json
 
 @before(PreProcessRequest())
 class IsMoving:
@@ -135,11 +135,10 @@ class IsMoving:
             # ---------------------
             moving = rot_dev.is_moving
             # ---------------------
+            resp.text = PropertyResponse(moving, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = PropertyResponse(moving, req).json
 
 @before(PreProcessRequest())
 class MechanicalPosition:
@@ -162,11 +161,10 @@ class MechanicalPosition:
             # -------------------------------
             pos = rot_dev.mechanical_position
             # -------------------------------
+            resp.text = PropertyResponse(pos, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = PropertyResponse(pos, req).json
 
 @before(PreProcessRequest())
 class Position:
@@ -192,11 +190,10 @@ class Position:
             # -------------------------------
             pos = rot_dev.position
             # -------------------------------
+            resp.text = PropertyResponse(pos, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = PropertyResponse(pos, req).json
 
 @before(PreProcessRequest())
 class Reverse:
@@ -223,11 +220,10 @@ class Reverse:
             # -------------------
             rev = rot_dev.reverse
             # -------------------
+            resp.text = PropertyResponse(rev, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = PropertyResponse(rev, req).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
@@ -240,12 +236,11 @@ class Reverse:
             # ----------------------
             rot_dev.reverse = rev
             # ----------------------
+            logger.info(f'(reverse = {str(rev)}) from ClientID={formdata["ClientID"]}')
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        logger.info(f'(reverse = {str(rev)}) from ClientID={formdata["ClientID"]}')
-        resp.text = MethodResponse(req).json
 
 @before(PreProcessRequest())
 class StepSize:
@@ -269,11 +264,10 @@ class StepSize:
             # ---------------------
             steps = rot_dev.step_size
             # ---------------------
+            resp.text = PropertyResponse(steps, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = PropertyResponse(steps, req).json
 
 @before(PreProcessRequest())
 class TargetPosition:
@@ -299,11 +293,10 @@ class TargetPosition:
             # ---------------------------
             pos = rot_dev.target_position
             # ---------------------------
+            resp.text = PropertyResponse(pos, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = PropertyResponse(pos, req).json
 
 @before(PreProcessRequest())
 class Halt:
@@ -327,11 +320,10 @@ class Halt:
             # ------------
             rot_dev.Halt()
             # ------------
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = MethodResponse(req).json
 
 
 @before(PreProcessRequest())
@@ -383,16 +375,14 @@ class Move:
             newpos += 360
             logger.debug('Result would be < 0, setting to {newpos}')
         logger.info(f'Move({origpos}) -> {str(newpos)} ClientID={formdata["ClientID"]}')
-        # TODO == end of fixit logic ==
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
             # ------------------
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = MethodResponse(req).json
 
 @before(PreProcessRequest())
 class MoveAbsolute:
@@ -442,11 +432,10 @@ class MoveAbsolute:
             # --------------------------
             rot_dev.MoveAbsolute(newpos)    # async
             # --------------------------
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = MethodResponse(req).json
 
 @before(PreProcessRequest())
 class MoveMechanical:
@@ -497,11 +486,10 @@ class MoveMechanical:
             # ----------------------------
             rot_dev.MoveMechanical(newpos)    # async
             # ----------------------------
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = MethodResponse(req).json
 
 @before(PreProcessRequest())
 class Sync:
@@ -548,8 +536,7 @@ class Sync:
             # ------------------
             rot_dev.Sync(newpos)
             # ------------------
+            resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
-            return
-        resp.text = MethodResponse(req).json
