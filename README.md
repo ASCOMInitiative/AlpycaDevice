@@ -35,7 +35,7 @@ Linux, Windows) for Python development but it's certainly not a requirement.
 9. Click Start and watch it exercise this sample device. After a while it should
    complete successfully.
 
-## Status (Jan 2023) *Experimental - Limited Distribution*
+## Status (Mar 2023) *Experimental - Limited Distribution*
 
 Ready for initial testing by others. Passes [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) for
