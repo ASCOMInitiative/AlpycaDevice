@@ -10,7 +10,7 @@ types are provided. The "boiler plate" logic remains the same for any device.
 
 ## [Alpyca Device Full Documentation](https://ascom-standards.org/alpycadevice/)
 
-## [Quick Start Video Introduction](https://www.youtube.com/embed/bJ-1TJBfe0c")
+## [Quick Start Video Introduction](https://www.youtube.com/watch?v=bJ-1TJBfe0c")
 
 ## Quick Start
 
