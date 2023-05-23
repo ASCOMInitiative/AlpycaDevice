@@ -47,6 +47,8 @@
 # 01-Jan-2023   rbd 0.1 Docstring docs
 # 13-Jan-2023   rbd 0.1 More docstring docs. Fix LoggingWSGIRequestHandler,
 #               log.logger needs explicit setting in main()
+# 23-May-2023   rbd 0.2 GitHub Issue #3 https://github.com/BobDenny/AlpycaDevice/issues/3
+#               Corect routing device number capture spelling.
 #
 import sys
 import traceback
@@ -239,7 +241,7 @@ def main():
     falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
     falc_app.add_route(f'/management/v{API_VERSION}/configureddevices', management.configureddevices())
     falc_app.add_route('/setup', setup.svrsetup())
-    falc_app.add_route(f'/setup/v{API_VERSION}/rotator/{{devno}}/setup', setup.devsetup())
+    falc_app.add_route(f'/setup/v{API_VERSION}/rotator/{{devnum}}/setup', setup.devsetup())
 
     #
     # Install the unhandled exception processor. See above,
