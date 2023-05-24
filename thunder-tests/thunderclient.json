@@ -29,11 +29,11 @@
     "colId": "81596e36-20ed-4044-a647-e4309ec97c2d",
     "containerId": "",
     "name": "Management Description",
-    "url": "http://192.168.0.42:5555/management/v1/description?ClientId=123&ClientTransactionID=321",
+    "url": "http://192.168.0.50:5555/management/v1/description?ClientId=123&ClientTransactionID=321",
     "method": "GET",
     "sortNum": 20000,
     "created": "2022-12-17T20:50:44.080Z",
-    "modified": "2022-12-20T18:50:14.199Z",
+    "modified": "2023-05-23T22:00:43.666Z",
     "headers": [],
     "params": [
       {
@@ -54,11 +54,11 @@
     "colId": "81596e36-20ed-4044-a647-e4309ec97c2d",
     "containerId": "",
     "name": "Management Configured Devices",
-    "url": "http://192.168.0.42:5555/management/v1/configureddevices?ClientId=123&ClientTransactionID=321",
+    "url": "http://192.168.0.50:5555/management/v1/configureddevices?ClientId=123&ClientTransactionID=321",
     "method": "GET",
     "sortNum": 30000,
     "created": "2022-12-17T20:58:35.601Z",
-    "modified": "2022-12-20T18:50:19.588Z",
+    "modified": "2023-05-23T22:01:01.299Z",
     "headers": [],
     "params": [
       {

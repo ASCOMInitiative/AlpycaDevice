@@ -49,6 +49,8 @@
 #                       common request validation (Client IDs for now).
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
 # 10-Jan-2023   rbd 0.1 Cleanups for documentation and add docstrings for Sphinx.
+# 23-May-2023   rbd 0.2 Refactoring for multiple ASCOM device type support
+#               GitHub issue #1. Improve error  messages in PreProcessRequest().
 
 from threading import Lock
 from exceptions import Success
@@ -63,21 +65,15 @@ def set_shr_logger(lgr):
     global logger
     logger = lgr
 
-# -----------
-# Device Info
-# -----------
+# --------------------------
+# Alpaca Device/Server Info
+# --------------------------
 # Static metadata not subject to configuration changes
 class DeviceMetadata:
-    """ Metadata describing the Rotator Device. Edit for your device"""
-    Name = 'Sample Rotator'
-    Version = '0.1'
+    """ Metadata describing the Alpaca Device/Server """
+    Version = '0.2'
     Description = 'Alpaca Sample Rotator '
-    Type = 'Rotator'
-    ID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
-    Info = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
     Manufacturer = 'ASCOM Initiative'
-    MaxDeviceNumber = 0
-    InterfaceVersion = 3        # IRotatorV3
 
 
 # ---------------
@@ -128,6 +124,18 @@ class PreProcessRequest():
     to the client, and logs the problem.
 
     """
+    def __init__(self, maxdev):
+        self.maxdev = maxdev
+        """Initialize a ``PreProcessRequest`` decorator object.
+
+        Args:
+            maxdev: The maximun device number. If multiple instances of this device
+                type are supported, this will be > 0.
+
+        Notes:
+            * Bumps the ServerTransactionID value and returns it in sequence
+        """
+
     #
     # Quality check of numerical value for trans IDs
     #
@@ -141,8 +149,8 @@ class PreProcessRequest():
 
     def _check_request(self, req: Request, devnum: int):  # Raise on failure
         bad_title='Bad Alpaca Request'
-        if devnum > DeviceMetadata.MaxDeviceNumber:
-            msg = f'Device number {str(devnum)} does not exist'
+        if devnum > self.maxdev:
+            msg = f'Device number {str(devnum)} does not exist. Maximum device number is {self.maxdev}.'
             logger.error(msg)
             raise HTTPBadRequest(title=bad_title, description=msg)
         test: str = get_request_field('ClientID', req, None)
@@ -151,12 +159,12 @@ class PreProcessRequest():
             logger.error(msg)
             raise HTTPBadRequest(title=bad_title, description=msg)
         if not self._pos_or_zero(test):
-            msg = 'Request has bad Alpaca ClientID value'
+            msg = f'Request has bad Alpaca ClientID value {test}'
             logger.error(msg)
             raise HTTPBadRequest(title=bad_title, description=msg)
         test: str = get_request_field('ClientTransactionID', req, '0')    # Missing allowed by Alpaca
         if not self._pos_or_zero(test):
-            msg = 'Request has bad Alpaca ClientTransactionID value'
+            msg = f'Request has bad Alpaca ClientTransactionID value {test}'
             logger.error(msg)
             raise HTTPBadRequest(title=bad_title, description=msg)
 

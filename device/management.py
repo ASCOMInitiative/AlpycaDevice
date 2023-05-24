@@ -39,11 +39,14 @@
 # 25-Dec-2022   rbd 0.1 Logging typing for intellisense
 # 27-Dec-2022   rbd 0.1 Minimize imports. MIT license and module header.
 #               Enhanced logging.
+# 23-May-2023   rbd 0.2 Refactoring for  multiple ASCOM device type support
+#               GitHub issue #1
 #
 from falcon import Request, Response
 from shr import PropertyResponse, DeviceMetadata
 from config import Config
-from logging import Logger
+# For each *type* of device served
+from rotator import RotatorMetadata
 
 #logger: Logger = None
 logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
@@ -59,9 +62,9 @@ class apiversions:
         apis = [ 1 ]                            # TODO MAKE CONFIG OR GLOBAL
         resp.text = PropertyResponse(apis, req).json
 
-# -----------
-# Description
-# -----------
+# -------------------------
+# Alpaca Server Description
+# -------------------------
 class description:
     def on_get(self, req: Request, resp: Response):
         desc = {
@@ -77,12 +80,12 @@ class description:
 # -----------------
 class configureddevices():
     def on_get(self, req: Request, resp: Response):
-        confarray = [                          # TODO ADD ONE FOR EACH DEVICE (ANY TYPE) SERVED
+        confarray = [                          # TODO ADD ONE FOR EACH DEVICE TYPE AND INSTANCE SERVED
             {
-            'DeviceName'    : DeviceMetadata.Name,
-            'DeviceType'    : DeviceMetadata.Type,
+            'DeviceName'    : RotatorMetadata.Name,
+            'DeviceType'    : RotatorMetadata.DeviceType,
             'DeviceNumber'  : 0,
-            'UniqueID'      : DeviceMetadata.ID
+            'UniqueID'      : RotatorMetadata.DeviceID
             }
         ]
         resp.text = PropertyResponse(confarray, req).json

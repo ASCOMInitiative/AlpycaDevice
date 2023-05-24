@@ -49,6 +49,8 @@
 #               log.logger needs explicit setting in main()
 # 23-May-2023   rbd 0.2 GitHub Issue #3 https://github.com/BobDenny/AlpycaDevice/issues/3
 #               Corect routing device number capture spelling.
+# 23-May-2023   rbd 0.2 Refactoring for  multiple ASCOM device type support
+#               GitHub issue #1
 #
 import sys
 import traceback
@@ -57,8 +59,6 @@ from wsgiref.simple_server import WSGIRequestHandler, make_server
 
 # -- isort wants the above line to be blank --
 # Controller classes (for routing)
-import common
-import config
 import discovery
 import exceptions
 from falcon import Request, Response, App, HTTPInternalServerError
@@ -210,7 +210,6 @@ def main():
     logger = log.init_logging()
     # Share this logger throughout
     log.logger = logger
-    common.logger = logger
     rotator.logger = logger
     exceptions.logger = logger
     rotator.start_rot_device(logger)
@@ -235,7 +234,6 @@ def main():
     #
     # Initialize routes for each endpoint the magic way
     #
-    init_routes(falc_app, 'rotator', common)
     init_routes(falc_app, 'rotator', rotator)
     falc_app.add_route('/management/apiversions', management.apiversions())
     falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
