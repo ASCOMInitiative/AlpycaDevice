@@ -19,7 +19,6 @@ of the Alpaca API endpoints, and the Alpaca exception specs.
 .. toctree::
    :maxdepth: 1
 
-   common
    rotator
    exceptions
    discovery
@@ -43,4 +42,3 @@ App and Support Logic
    config
    log
    shr
-

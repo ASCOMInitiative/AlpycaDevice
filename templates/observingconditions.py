@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # -----------------------------------------------------------------------------
-# observingconditions.py - Alpaca API responders for observingconditions
+# observingconditions.py - Alpaca API responders for Observingconditions
 #
 # Author:   Your R. Name <your@email.org> (abc)
 #
@@ -20,7 +20,87 @@ from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
 
-@before(PreProcessRequest())
+# ----------------------
+# MULTI-INSTANCE SUPPORT
+# ----------------------
+# If this is > 0 then it means that multiple devices of this type are supported.
+# Each responder on_get() and on_put() is called with a devnum parameter to indicate
+# which instance of the device (0-based) is being called by the client. Leave this
+# set to 0 for the simple case of controlling only one instance of this device type.
+#
+maxdev = 0                      # Single instance
+
+# -----------
+# DEVICE INFO
+# -----------
+# Static metadata not subject to configuration changes
+## EDIT FOR YOUR DEVICE ##
+class ObservingconditionsMetadata:
+    """ Metadata describing the Observingconditions Device. Edit for your device"""
+    Name = 'Sample Observingconditions'
+    Version = '##DRIVER VERSION AS STRING##'
+    Description = 'My ASCOM Observingconditions'
+    DeviceType = 'Observingconditions'
+    DeviceID = '##GENERATE A NEW GUID AND PASTE HERE##' # https://guidgenerator.com/online-guid-generator.aspx
+    Info = 'Alpaca Sample Device\nImplements IObservingconditions\nASCOM Initiative'
+    MaxDeviceNumber = maxdev
+    InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # IObservingconditionsVxxx
+
+# --------------------
+# RESOURCE CONTROLLERS
+# --------------------
+
+@before(PreProcessRequest(maxdev))
+class Action:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBlind:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBool:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandString():
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class Description():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(ObservingconditionsMetadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverInfo():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(ObservingconditionsMetadata.Info, req).json
+
+@before(PreProcessRequest(maxdev))
+class InterfaceVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(ObservingconditionsMetadata.InterfaceVersion, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(ObservingconditionsMetadata.Version, req).json
+
+@before(PreProcessRequest(maxdev))
+class Name():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(ObservingconditionsMetadata.Name, req).json
+
+@before(PreProcessRequest(maxdev))
+class SupportedActions():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
+
+@before(PreProcessRequest(maxdev))
 class averageperiod:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -45,7 +125,7 @@ class averageperiod:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class cloudcover:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -58,7 +138,7 @@ class cloudcover:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class dewpoint:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -71,7 +151,7 @@ class dewpoint:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class humidity:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -84,7 +164,7 @@ class humidity:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class pressure:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -97,7 +177,7 @@ class pressure:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class rainrate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -110,7 +190,7 @@ class rainrate:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class skybrightness:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -123,7 +203,7 @@ class skybrightness:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class skyquality:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -136,7 +216,7 @@ class skyquality:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class skytemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -149,7 +229,7 @@ class skytemperature:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class starfwhm:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -162,7 +242,7 @@ class starfwhm:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class temperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -175,7 +255,7 @@ class temperature:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class winddirection:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -188,7 +268,7 @@ class winddirection:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class windgust:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -201,7 +281,7 @@ class windgust:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class windspeed:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -214,7 +294,7 @@ class windspeed:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class refresh:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -229,7 +309,7 @@ class refresh:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class sensordescription:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -242,7 +322,7 @@ class sensordescription:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class timesincelastupdate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):

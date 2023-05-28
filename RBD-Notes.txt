@@ -132,3 +132,9 @@ Three types of exceptions here:
   2. Device operational errors RunTimeError -> Alpaca DeviceException and detailed message with -> 200 -> logged also
   3. Python uncaught exception in the Falcon responder class -> 500 -> Logged also
   4. Python uncaught exception in the app outside Falcon -> Logged and possible app death.
+  
+28-May-2023
+-----------
+* MF!! On the W10 system, running from global environment, the RST extension is failing to start esbonio for a space in the command line. The author doesn't give a shit per the GitHub traffic. NOW WHAT? GOD ALMIGHTY THIS STUFF IS SOOOOOO FRAGILE. I seem to recall that I needed to revert to 189.1.0..... I did it and now it works. DAMN! I opened the  Extension page and the "Update to 189.3.0 dropdown has an option "Ignore Updates". I did it.
+
+

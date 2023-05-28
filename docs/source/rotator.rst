@@ -27,6 +27,13 @@ template/sample.
       for returning an Alpaca exception. If omitted, it defaults to Success
       (no exception).
 
+**The maxdev = 1 Constant**
+
+This constant is passed as a parameter to all ``PreProcessRequest()`` decorators.
+It is used to range check the device number in requests. It should be 1 unless
+your Alpaca device supports more than one ASCOM device of this type (e.g. two
+or more rotators).
+
 **Property (GET) Endpoint Responder**
 
 This returns a **Value** in the JSON response (``response.text``):
@@ -35,7 +42,7 @@ This returns a **Value** in the JSON response (``response.text``):
     :emphasize-lines: 4
     :caption: Sample GET responder (for a property)
 
-    @before(PreProcessRequest())
+    @before(PreProcessRequest(maxdev))
     class IsMoving:
         def on_get(self, req: Request, resp: Response, devnum: int):
             value = #whatever your device says
@@ -52,7 +59,7 @@ function.
     :emphasize-lines: 5
     :caption: Sample PUT responder (for a method)
 
-    @before(PreProcessRequest())
+    @before(PreProcessRequest(maxdev))
     class MoveAbsolute:
         def on_put(self, req: Request, resp: Response, devnum: int):
             formdata = req.get_media()
@@ -70,6 +77,13 @@ the ASCOM IRotator specification.
     Calls to ``on_get()`` and ``on_put()`` have the same arguments as described
     above and in |falcweb| plus the Alpaca DeviceNumber as the last
     argument.
+
+.. attention::
+
+    The ``CommandXxx()`` methods are deprecated. These are left over from
+    the distant past. If you want to implement unique non-standard
+    commands for your device, use the ``Action()`` and ``SupportedActions``
+    members. In this sample all of these are marked as not implemented.
 
 .. automodule:: rotator
     :members:

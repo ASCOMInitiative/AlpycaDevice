@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # -----------------------------------------------------------------------------
-# rotator.py - Alpaca API responders for rotator
+# rotator.py - Alpaca API responders for Rotator
 #
 # Author:   Your R. Name <your@email.org> (abc)
 #
@@ -20,7 +20,87 @@ from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
 
-@before(PreProcessRequest())
+# ----------------------
+# MULTI-INSTANCE SUPPORT
+# ----------------------
+# If this is > 0 then it means that multiple devices of this type are supported.
+# Each responder on_get() and on_put() is called with a devnum parameter to indicate
+# which instance of the device (0-based) is being called by the client. Leave this
+# set to 0 for the simple case of controlling only one instance of this device type.
+#
+maxdev = 0                      # Single instance
+
+# -----------
+# DEVICE INFO
+# -----------
+# Static metadata not subject to configuration changes
+## EDIT FOR YOUR DEVICE ##
+class RotatorMetadata:
+    """ Metadata describing the Rotator Device. Edit for your device"""
+    Name = 'Sample Rotator'
+    Version = '##DRIVER VERSION AS STRING##'
+    Description = 'My ASCOM Rotator'
+    DeviceType = 'Rotator'
+    DeviceID = '##GENERATE A NEW GUID AND PASTE HERE##' # https://guidgenerator.com/online-guid-generator.aspx
+    Info = 'Alpaca Sample Device\nImplements IRotator\nASCOM Initiative'
+    MaxDeviceNumber = maxdev
+    InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # IRotatorVxxx
+
+# --------------------
+# RESOURCE CONTROLLERS
+# --------------------
+
+@before(PreProcessRequest(maxdev))
+class Action:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBlind:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBool:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandString():
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class Description():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(RotatorMetadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverInfo():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(RotatorMetadata.Info, req).json
+
+@before(PreProcessRequest(maxdev))
+class InterfaceVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(RotatorMetadata.InterfaceVersion, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(RotatorMetadata.Version, req).json
+
+@before(PreProcessRequest(maxdev))
+class Name():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(RotatorMetadata.Name, req).json
+
+@before(PreProcessRequest(maxdev))
+class SupportedActions():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
+
+@before(PreProcessRequest(maxdev))
 class canreverse:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -33,7 +113,7 @@ class canreverse:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class ismoving:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -46,7 +126,7 @@ class ismoving:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class mechanicalposition:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -59,7 +139,7 @@ class mechanicalposition:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class position:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -72,7 +152,7 @@ class position:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class reverse:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -97,7 +177,7 @@ class reverse:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class stepsize:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -110,7 +190,7 @@ class stepsize:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class targetposition:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -123,7 +203,7 @@ class targetposition:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class halt:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -138,7 +218,7 @@ class halt:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class move:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -153,7 +233,7 @@ class move:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class moveabsolute:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -168,7 +248,7 @@ class moveabsolute:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class movemechanical:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -183,7 +263,7 @@ class movemechanical:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class sync:
 
     def on_put(self, req: Request, resp: Response, devnum: int):

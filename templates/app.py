@@ -15,7 +15,7 @@
 # -----------------------------------------------------------------------------
 # MIT License
 #
-# Copyright (c) 2023 Bob Denny
+# Copyright (c) 2022-2023 Bob Denny
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,17 +37,18 @@
 # -----------------------------------------------------------------------------
 # Edit History:
 # 19-Jan-2023   rbd Initial edit
+# 24-May-2023   rbd For upgraded templates with multi-device support
 
 import yaml
 
-cls_tmpl = '''@before(PreProcessRequest())
+cls_tmpl = '''@before(PreProcessRequest(maxdev))
 class {mname}'''
 
 mod_hdr = '''
 # -*- coding: utf-8 -*-
 #
 # -----------------------------------------------------------------------------
-# {devname}.py - Alpaca API responders for {devname}
+# {devname}.py - Alpaca API responders for {Devname}
 #
 # Author:   Your R. Name <your@email.org> (abc)
 #
@@ -65,8 +66,88 @@ from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
 
+# ----------------------
+# MULTI-INSTANCE SUPPORT
+# ----------------------
+# If this is > 0 then it means that multiple devices of this type are supported.
+# Each responder on_get() and on_put() is called with a devnum parameter to indicate
+# which instance of the device (0-based) is being called by the client. Leave this
+# set to 0 for the simple case of controlling only one instance of this device type.
+#
+maxdev = 0                      # Single instance
+
+# -----------
+# DEVICE INFO
+# -----------
+# Static metadata not subject to configuration changes
+## EDIT FOR YOUR DEVICE ##
+class {Devname}Metadata:
+    """ Metadata describing the {Devname} Device. Edit for your device"""
+    Name = 'Sample {Devname}'
+    Version = '##DRIVER VERSION AS STRING##'
+    Description = 'My ASCOM {Devname}'
+    DeviceType = '{Devname}'
+    DeviceID = '##GENERATE A NEW GUID AND PASTE HERE##' # https://guidgenerator.com/online-guid-generator.aspx
+    Info = 'Alpaca Sample Device\\nImplements I{Devname}\\nASCOM Initiative'
+    MaxDeviceNumber = maxdev
+    InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # I{Devname}Vxxx
+
+# --------------------
+# RESOURCE CONTROLLERS
+# --------------------
+
+@before(PreProcessRequest(maxdev))
+class Action:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBlind:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBool:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandString():
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class Description():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse({Devname}Metadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverInfo():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse({Devname}Metadata.Info, req).json
+
+@before(PreProcessRequest(maxdev))
+class InterfaceVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse({Devname}Metadata.InterfaceVersion, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse({Devname}Metadata.Version, req).json
+
+@before(PreProcessRequest(maxdev))
+class Name():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse({Devname}Metadata.Name, req).json
+
+@before(PreProcessRequest(maxdev))
+class SupportedActions():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
+
 '''
-cls_tmpl = '''@before(PreProcessRequest())
+cls_tmpl = '''@before(PreProcessRequest(maxdev))
 class {mname}:
 
 '''
@@ -113,7 +194,8 @@ def main():
             if not mf is None and not mf.closed:
                 mf.close
             mf = open(f'{devname}.py', 'w')
-            mf.write(mod_hdr.replace('{devname}', devname))
+            temp = mod_hdr.replace('{devname}', devname)
+            mf.write(temp.replace('{Devname}', devname.title()))
             seendevs.append(devname)
         mname = bits[3]
         mf.write(cls_tmpl.replace('{mname}', mname))

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # -----------------------------------------------------------------------------
-# camera.py - Alpaca API responders for camera
+# camera.py - Alpaca API responders for Camera
 #
 # Author:   Your R. Name <your@email.org> (abc)
 #
@@ -20,7 +20,87 @@ from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
 
-@before(PreProcessRequest())
+# ----------------------
+# MULTI-INSTANCE SUPPORT
+# ----------------------
+# If this is > 0 then it means that multiple devices of this type are supported.
+# Each responder on_get() and on_put() is called with a devnum parameter to indicate
+# which instance of the device (0-based) is being called by the client. Leave this
+# set to 0 for the simple case of controlling only one instance of this device type.
+#
+maxdev = 0                      # Single instance
+
+# -----------
+# DEVICE INFO
+# -----------
+# Static metadata not subject to configuration changes
+## EDIT FOR YOUR DEVICE ##
+class CameraMetadata:
+    """ Metadata describing the Camera Device. Edit for your device"""
+    Name = 'Sample Camera'
+    Version = '##DRIVER VERSION AS STRING##'
+    Description = 'My ASCOM Camera'
+    DeviceType = 'Camera'
+    DeviceID = '##GENERATE A NEW GUID AND PASTE HERE##' # https://guidgenerator.com/online-guid-generator.aspx
+    Info = 'Alpaca Sample Device\nImplements ICamera\nASCOM Initiative'
+    MaxDeviceNumber = maxdev
+    InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # ICameraVxxx
+
+# --------------------
+# RESOURCE CONTROLLERS
+# --------------------
+
+@before(PreProcessRequest(maxdev))
+class Action:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBlind:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandBool:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class CommandString():
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        resp.text = MethodResponse(req, NotImplementedException()).json
+
+@before(PreProcessRequest(maxdev))
+class Description():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(CameraMetadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverInfo():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(CameraMetadata.Info, req).json
+
+@before(PreProcessRequest(maxdev))
+class InterfaceVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(CameraMetadata.InterfaceVersion, req).json
+
+@before(PreProcessRequest(maxdev))
+class DriverVersion():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(CameraMetadata.Version, req).json
+
+@before(PreProcessRequest(maxdev))
+class Name():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse(CameraMetadata.Name, req).json
+
+@before(PreProcessRequest(maxdev))
+class SupportedActions():
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
+
+@before(PreProcessRequest(maxdev))
 class bayeroffsetx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -33,7 +113,7 @@ class bayeroffsetx:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class bayeroffsety:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -46,7 +126,7 @@ class bayeroffsety:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class binx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -71,7 +151,7 @@ class binx:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class biny:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -96,7 +176,7 @@ class biny:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class camerastate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -109,7 +189,7 @@ class camerastate:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class cameraxsize:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -122,7 +202,7 @@ class cameraxsize:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class cameraysize:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -135,7 +215,7 @@ class cameraysize:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class canabortexposure:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -148,7 +228,7 @@ class canabortexposure:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class canasymmetricbin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -161,7 +241,7 @@ class canasymmetricbin:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class canfastreadout:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -174,7 +254,7 @@ class canfastreadout:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class cangetcoolerpower:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -187,7 +267,7 @@ class cangetcoolerpower:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class canpulseguide:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -200,7 +280,7 @@ class canpulseguide:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class cansetccdtemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -213,7 +293,7 @@ class cansetccdtemperature:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class canstopexposure:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -226,7 +306,7 @@ class canstopexposure:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class ccdtemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -239,7 +319,7 @@ class ccdtemperature:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class cooleron:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -264,7 +344,7 @@ class cooleron:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class coolerpower:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -277,7 +357,7 @@ class coolerpower:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class electronsperadu:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -290,7 +370,7 @@ class electronsperadu:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class exposuremax:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -303,7 +383,7 @@ class exposuremax:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class exposuremin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -316,7 +396,7 @@ class exposuremin:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class exposureresolution:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -329,7 +409,7 @@ class exposureresolution:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class fastreadout:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -354,7 +434,7 @@ class fastreadout:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class fullwellcapacity:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -367,7 +447,7 @@ class fullwellcapacity:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class gain:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -392,7 +472,7 @@ class gain:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class gainmax:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -405,7 +485,7 @@ class gainmax:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class gainmin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -418,7 +498,7 @@ class gainmin:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class gains:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -431,7 +511,7 @@ class gains:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class hasshutter:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -444,7 +524,7 @@ class hasshutter:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class heatsinktemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -457,7 +537,7 @@ class heatsinktemperature:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class imagearray:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -470,7 +550,7 @@ class imagearray:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class imagearrayvariant:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -483,7 +563,7 @@ class imagearrayvariant:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class imageready:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -496,7 +576,7 @@ class imageready:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class ispulseguiding:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -509,7 +589,7 @@ class ispulseguiding:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class lastexposureduration:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -522,7 +602,7 @@ class lastexposureduration:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class lastexposurestarttime:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -535,7 +615,7 @@ class lastexposurestarttime:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class maxadu:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -548,7 +628,7 @@ class maxadu:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class maxbinx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -561,7 +641,7 @@ class maxbinx:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class maxbiny:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -574,7 +654,7 @@ class maxbiny:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class numx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -599,7 +679,7 @@ class numx:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class numy:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -624,7 +704,7 @@ class numy:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class offset:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -649,7 +729,7 @@ class offset:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class offsetmax:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -662,7 +742,7 @@ class offsetmax:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class offsetmin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -675,7 +755,7 @@ class offsetmin:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class offsets:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -688,7 +768,7 @@ class offsets:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class percentcompleted:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -701,7 +781,7 @@ class percentcompleted:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class pixelsizex:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -714,7 +794,7 @@ class pixelsizex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class pixelsizey:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -727,7 +807,7 @@ class pixelsizey:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class readoutmode:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -752,7 +832,7 @@ class readoutmode:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class readoutmodes:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -765,7 +845,7 @@ class readoutmodes:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class sensorname:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -778,7 +858,7 @@ class sensorname:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class sensortype:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -791,7 +871,7 @@ class sensortype:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class setccdtemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -816,7 +896,7 @@ class setccdtemperature:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class startx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -841,7 +921,7 @@ class startx:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class starty:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -866,7 +946,7 @@ class starty:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class subexposureduration:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -891,7 +971,7 @@ class subexposureduration:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class abortexposure:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -906,7 +986,7 @@ class abortexposure:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class pulseguide:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -921,7 +1001,7 @@ class pulseguide:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class startexposure:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -936,7 +1016,7 @@ class startexposure:
             resp.text = MethodResponse(req,
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
-@before(PreProcessRequest())
+@before(PreProcessRequest(maxdev))
 class stopexposure:
 
     def on_put(self, req: Request, resp: Response, devnum: int):

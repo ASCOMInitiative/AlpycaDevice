@@ -50,7 +50,7 @@
 # 31-Dec-2022   rbd 0.1 Bad boolean values return 400 Bad Request
 # 10-Jan-2023   rbd 0.1 Cleanups for documentation and add docstrings for Sphinx.
 # 23-May-2023   rbd 0.2 Refactoring for multiple ASCOM device type support
-#               GitHub issue #1. Improve error  messages in PreProcessRequest().
+#               GitHub issue #1. Improve error messages in PreProcessRequest().
 
 from threading import Lock
 from exceptions import Success
@@ -58,8 +58,8 @@ import json
 from falcon import Request, Response, HTTPBadRequest
 from logging import Logger
 
-#logger: Logger = None
-logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
+logger: Logger = None
+#logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 def set_shr_logger(lgr):
     global logger
