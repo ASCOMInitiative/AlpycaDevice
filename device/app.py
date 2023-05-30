@@ -101,13 +101,15 @@ class LoggingWSGIRequestHandler(WSGIRequestHandler):
         Notes:
             * Logs using :py:mod:`log`, our rotating file logger ,
               rather than using stdout.
-            * The **format** argument is unused. It is an old C-style format
+            * The **format** argument is an old C-style format for
               for producing NCSA Commmon Log Format web server logging.
 
         """
 
-        if args[1] != '200':  # Log this only on non-200 responses
-            log.logger.info(f'{self.client_address[0]} <- {format%args}')
+        ##TODO## If I enable this, the server occasionally fails to respond
+        ##TODO## on non-200s, per Wireshark. So crazy!
+        #if args[1] != '200':  # Log this only on non-200 responses
+        #    log.logger.info(f'{self.client_address[0]} <- {format%args}')
 
 #-----------------------
 # Magic routing function
@@ -253,7 +255,6 @@ def main():
     with make_server(Config.ip_address, Config.port, falc_app, handler_class=LoggingWSGIRequestHandler) as httpd:
         logger.info(f'==STARTUP== Serving on {Config.ip_address}:{Config.port}. Time stamps are UTC.')
         # Serve until process is killed
-
         httpd.serve_forever()
 
 # ========================

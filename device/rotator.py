@@ -49,6 +49,7 @@
 # 20-Jan-2023   rbd 0.1 Refactor for clarity
 # 23-May-2023   rbd 0.2 Refactoring for  multiple ASCOM device type support
 #               GitHub issue #1
+# 30-May-2023   rbd 0.2 Remove redundant logging from PUT responders
 #
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
@@ -180,7 +181,6 @@ class Connected:
             # ----------------------
             rot_dev.connected = conn
             # ----------------------
-            logger.info(f'(Connected = {conn}) from ClientID={get_request_field("ClientID", req, "??")}')
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
@@ -315,7 +315,6 @@ class Reverse:
             # ----------------------
             rot_dev.reverse = rev
             # ----------------------
-            logger.info(f'(reverse = {str(rev)}) from ClientID={get_request_field("ClientID", req, "??")}')
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
@@ -394,7 +393,6 @@ class Halt:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
-        logger.info(f'Halt() from ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # ------------
             rot_dev.Halt()
@@ -446,14 +444,12 @@ class Move:
             return
         # The spec calls for "anything goes" requires you to range the
         # final value modulo 360 degrees.
-        logger.debug(f'Move({newpos}) from ClientID={get_request_field("ClientID", req, "??")}')
         if newpos >= 360.0:
             newpos -= 360.0
             logger.debug('Result would be >= 360, setting to {newpos}')
         if newpos < 0:
             newpos += 360
             logger.debug('Result would be < 0, setting to {newpos}')
-        logger.info(f'Move({origpos}) -> {str(newpos)} ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
@@ -506,7 +502,6 @@ class MoveAbsolute:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.info(f'MoveAbsolute({newpos}) from ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # --------------------------
             rot_dev.MoveAbsolute(newpos)    # async
@@ -561,7 +556,6 @@ class MoveMechanical:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.info(f'MoveMechanical({newpos}) from ClientID={get_request_field("ClientID", req)}')
         try:
             # ----------------------------
             rot_dev.MoveMechanical(newpos)    # async
@@ -612,7 +606,6 @@ class Sync:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.info(f'Sync({newpos}) from ClientID={get_request_field("ClientID", req)}')
         try:
             # ------------------
             rot_dev.Sync(newpos)

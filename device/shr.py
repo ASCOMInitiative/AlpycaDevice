@@ -52,7 +52,9 @@
 # 23-May-2023   rbd 0.2 Refactoring for multiple ASCOM device type support
 #               GitHub issue #1. Improve error messages in PreProcessRequest().
 # 29-May-2023   rbd 0.2 Enhance get_request_field() so empty string for default
-#               value means mandatory field.
+#               value means mandatory field. Add title and description info
+#               to raised HTTP BAD_REQUEST.
+# 30-May-2023   rbd 0.2 Improve request logging at time of arrival
 
 from threading import Lock
 from exceptions import Success
@@ -62,6 +64,8 @@ from logging import Logger
 
 logger: Logger = None
 #logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
+
+_bad_title = 'Bad Alpaca Request'
 
 def set_shr_logger(lgr):
     global logger
@@ -81,34 +85,41 @@ class DeviceMetadata:
 # ---------------
 # Data Validation
 # ---------------
-bools = ['true', 'false']                               # Only valid JSON bools allowed
+_bools = ['true', 'false']                               # Only valid JSON bools allowed
 def to_bool(str: str) -> bool:
     val = str.lower()
-    if val not in bools:
-        raise HTTPBadRequest(description=f'Bad boolean value "{val}"') # Always a bad request
-    return val == bools[0]
+    if val not in _bools:
+        raise HTTPBadRequest(title=_bad_title, description=f'Bad boolean value "{val}"') # Always a bad request
+    return val == _bools[0]
 
 # ---------------------------------------------------------
 # Get parameter/field from query string or body "form" data
 # If default is missing then the field is required. Maybe the
 # field name is smisspelled, or mis-cased (for PUT), or
-# missing. In any case, raise a 400 BAD REQUEST.
+# missing. In any case, raise a 400 BAD REQUEST. Optional
+# caseless (mostly for the ClientID and ClientTransactionID)
 # ---------------------------------------------------------
-def get_request_field(name: str, req: Request, default: str = None) -> str:
+def get_request_field(name: str, req: Request, caseless: bool = False, default: str = None) -> str:
+    bad_desc = f'Missing, empty, or misspelled parameter "{name}"'
+    lcName = name.lower()
     if req.method == 'GET':
-        lcName = name.lower()
         for param in req.params.items():        # [name,value] tuples
             if param[0].lower() == lcName:
                 return param[1]
         if default == None:
-            raise HTTPBadRequest(description='Missing, empty, or misspelled parameter "{name}"')                # Missing or incorrect casing
+            raise HTTPBadRequest(title=_bad_title, description=bad_desc)                # Missing or incorrect casing
         return default                          # not in args, return default
     else:                                       # Assume PUT since we never route other methods
-        formdata= req.get_media()
-        if name in formdata and formdata[name] != '':
-            return formdata[name]
+        formdata = req.get_media()
+        if caseless:
+            for fn in formdata.keys():
+                if fn.lower() == lcName:
+                    return formdata[fn]
+        else:
+            if name in formdata and formdata[name] != '':
+                return formdata[name]
         if default == None:
-            raise HTTPBadRequest(description='Missing, empty, or misspelled parameter "{name}"')                # Missing or incorrect casing
+            raise HTTPBadRequest(title=_bad_title, description=bad_desc)                # Missing or incorrect casing
         return default
 
 #
@@ -116,11 +127,11 @@ def get_request_field(name: str, req: Request, default: str = None) -> str:
 # logged messages are in the right order. Logs PUT body as well.
 #
 def log_request(req: Request):
-    msg = f'{req.remote_addr} {req.method} {req.path}'
-    if not req.query_string is None:
+    msg = f'{req.remote_addr} -> {req.method} {req.path}'
+    if req.query_string != '':
         msg += f'?{req.query_string}'
     logger.info(msg)
-    if req.method == 'PUT' and req.content_length != None:
+    if req.method == 'PUT' and req.content_length != 0:
         logger.info(f'{req.remote_addr} -> {req.media}')
 
 # ------------------------------------------------
@@ -157,25 +168,24 @@ class PreProcessRequest():
             return False
 
     def _check_request(self, req: Request, devnum: int):  # Raise on failure
-        bad_title='Bad Alpaca Request'
         if devnum > self.maxdev:
             msg = f'Device number {str(devnum)} does not exist. Maximum device number is {self.maxdev}.'
             logger.error(msg)
-            raise HTTPBadRequest(title=bad_title, description=msg)
-        test: str = get_request_field('ClientID', req, None)
+            raise HTTPBadRequest(title=_bad_title, description=msg)
+        test: str = get_request_field('ClientID', req, True)        # Caseless
         if test is None:
             msg = 'Request has missing Alpaca ClientID value'
             logger.error(msg)
-            raise HTTPBadRequest(title=bad_title, description=msg)
+            raise HTTPBadRequest(title=_bad_title, description=msg)
         if not self._pos_or_zero(test):
             msg = f'Request has bad Alpaca ClientID value {test}'
             logger.error(msg)
-            raise HTTPBadRequest(title=bad_title, description=msg)
-        test: str = get_request_field('ClientTransactionID', req, '0')    # Missing allowed by Alpaca
+            raise HTTPBadRequest(title=_bad_title, description=msg)
+        test: str = get_request_field('ClientTransactionID', req, True)
         if not self._pos_or_zero(test):
             msg = f'Request has bad Alpaca ClientTransactionID value {test}'
             logger.error(msg)
-            raise HTTPBadRequest(title=bad_title, description=msg)
+            raise HTTPBadRequest(title=_bad_title, description=msg)
 
     #
     # params contains {'devnum': n } from the URI template matcher
@@ -204,7 +214,7 @@ class PropertyResponse():
             * Bumps the ServerTransactionID value and returns it in sequence
         """
         self.ServerTransactionID = getNextTransId()
-        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0))
+        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))  #Caseless on GET
         self.Value = value
         self.ErrorNumber = err.Number
         self.ErrorMessage = err.Message
@@ -234,7 +244,9 @@ class MethodResponse():
             * Bumps the ServerTransactionID value and returns it in sequence
         """
         self.ServerTransactionID = getNextTransId()
-        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, 0))   # 0 for missing CTID
+        # This is crazy ... if casing is incorrect here, we're supposed to return the default 0
+        # even if the caseless check coming in returned a valid number.
+        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))   # Case significant on PUT
         if not value is None:
             self.Value = value
             logger.info(f'{req.remote_addr} <- {str(value)}')
