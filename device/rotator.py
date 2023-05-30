@@ -174,13 +174,13 @@ class Connected:
         resp.text = PropertyResponse(rot_dev.connected, req).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        conn = to_bool(formdata['Connected'])   # Raises 400 BadRequest
+        conn_str = get_request_field('Connected', req)
+        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
         try:
             # ----------------------
             rot_dev.connected = conn
             # ----------------------
-            logger.info(f'(Connected = {conn}) from ClientID={formdata["ClientID"]}')
+            logger.info(f'(Connected = {conn}) from ClientID={get_request_field("ClientID", req, "??")}')
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
@@ -305,17 +305,17 @@ class Reverse:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
-        rev = to_bool(formdata['Reverse'])   # Raises 400 BadRequest
+        rev_str = get_request_field('Reverse', req)
+        rev = to_bool(rev_str)              # Raises 400 Bad Request if str to bool fails
         try:
             # ----------------------
             rot_dev.reverse = rev
             # ----------------------
-            logger.info(f'(reverse = {str(rev)}) from ClientID={formdata["ClientID"]}')
+            logger.info(f'(reverse = {str(rev)}) from ClientID={get_request_field("ClientID", req, "??")}')
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
@@ -433,27 +433,27 @@ class Move:
 
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
+        pos_str = get_request_field('Position', req)    # May raise 400 bad request
         try:
-            newpos = origpos = float(formdata['Position'])
+            newpos = origpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
+                            InvalidValueException(f'Position {pos_str} not a valid integer.')).json
             return
         # The spec calls for "anything goes" requires you to range the
         # final value modulo 360 degrees.
-        logger.debug(f'Move({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.debug(f'Move({newpos}) from ClientID={get_request_field("ClientID", req, "??")}')
         if newpos >= 360.0:
             newpos -= 360.0
             logger.debug('Result would be >= 360, setting to {newpos}')
         if newpos < 0:
             newpos += 360
             logger.debug('Result would be < 0, setting to {newpos}')
-        logger.info(f'Move({origpos}) -> {str(newpos)} ClientID={formdata["ClientID"]}')
+        logger.info(f'Move({origpos}) -> {str(newpos)} ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # ------------------
             rot_dev.Move(newpos)    # async
@@ -491,22 +491,22 @@ class MoveAbsolute:
 
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
         if not rot_dev.connected:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
+        pos_str = get_request_field('Position', req)
         try:
-            newpos = float(formdata['Position'])
+            newpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
+                            InvalidValueException(f'Position {pos_str} not a valid integer.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.info(f'MoveAbsolute({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.info(f'MoveAbsolute({newpos}) from ClientID={get_request_field("ClientID", req, "??")}')
         try:
             # --------------------------
             rot_dev.MoveAbsolute(newpos)    # async
@@ -550,8 +550,9 @@ class MoveMechanical:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
+        pos_str = get_request_field('Position', req)
         try:
-            newpos = float(formdata['Position'])
+            newpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
@@ -560,7 +561,7 @@ class MoveMechanical:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.info(f'MoveMechanical({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.info(f'MoveMechanical({newpos}) from ClientID={get_request_field("ClientID", req)}')
         try:
             # ----------------------------
             rot_dev.MoveMechanical(newpos)    # async
@@ -600,8 +601,9 @@ class Sync:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
+        pos_str = get_request_field('Position', req)
         try:
-            newpos = float(formdata['Position'])
+            newpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
@@ -610,7 +612,7 @@ class Sync:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Invalid position {str(newpos)} outside range 0 <= pos < 360.')).json
             return
-        logger.info(f'Sync({newpos}) from ClientID={formdata["ClientID"]}')
+        logger.info(f'Sync({newpos}) from ClientID={get_request_field("ClientID", req)}')
         try:
             # ------------------
             rot_dev.Sync(newpos)

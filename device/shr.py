@@ -51,6 +51,8 @@
 # 10-Jan-2023   rbd 0.1 Cleanups for documentation and add docstrings for Sphinx.
 # 23-May-2023   rbd 0.2 Refactoring for multiple ASCOM device type support
 #               GitHub issue #1. Improve error messages in PreProcessRequest().
+# 29-May-2023   rbd 0.2 Enhance get_request_field() so empty string for default
+#               value means mandatory field.
 
 from threading import Lock
 from exceptions import Success
@@ -83,23 +85,30 @@ bools = ['true', 'false']                               # Only valid JSON bools 
 def to_bool(str: str) -> bool:
     val = str.lower()
     if val not in bools:
-        raise HTTPBadRequest                            # Always a bad request
+        raise HTTPBadRequest(description=f'Bad boolean value "{val}"') # Always a bad request
     return val == bools[0]
 
 # ---------------------------------------------------------
 # Get parameter/field from query string or body "form" data
+# If default is missing then the field is required. Maybe the
+# field name is smisspelled, or mis-cased (for PUT), or
+# missing. In any case, raise a 400 BAD REQUEST.
 # ---------------------------------------------------------
-def get_request_field(name: str, req: Request, default: str) -> str:
+def get_request_field(name: str, req: Request, default: str = None) -> str:
     if req.method == 'GET':
         lcName = name.lower()
         for param in req.params.items():        # [name,value] tuples
             if param[0].lower() == lcName:
                 return param[1]
+        if default == None:
+            raise HTTPBadRequest(description='Missing, empty, or misspelled parameter "{name}"')                # Missing or incorrect casing
         return default                          # not in args, return default
     else:                                       # Assume PUT since we never route other methods
         formdata= req.get_media()
-        if name in formdata:
+        if name in formdata and formdata[name] != '':
             return formdata[name]
+        if default == None:
+            raise HTTPBadRequest(description='Missing, empty, or misspelled parameter "{name}"')                # Missing or incorrect casing
         return default
 
 #

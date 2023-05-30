@@ -108,7 +108,7 @@
     "method": "PUT",
     "sortNum": 30000,
     "created": "2022-12-17T21:11:51.326Z",
-    "modified": "2023-01-13T19:16:29.087Z",
+    "modified": "2023-05-30T00:42:39.260Z",
     "headers": [],
     "params": [],
     "body": {
@@ -116,7 +116,7 @@
       "raw": "",
       "form": [
         {
-          "name": "Position",
+          "name": "position",
           "value": "120"
         },
         {
@@ -126,10 +126,6 @@
         {
           "name": "ClientTransactionID",
           "value": "321"
-        },
-        {
-          "name": "foo",
-          "value": "bar"
         }
       ]
     },
@@ -144,7 +140,7 @@
     "method": "PUT",
     "sortNum": 20000,
     "created": "2022-12-17T21:38:32.673Z",
-    "modified": "2023-01-13T19:16:07.705Z",
+    "modified": "2023-05-30T01:02:37.286Z",
     "headers": [],
     "params": [],
     "body": {
@@ -153,7 +149,7 @@
       "form": [
         {
           "name": "Connected",
-          "value": "True"
+          "value": ""
         },
         {
           "name": "ClientID",
@@ -171,12 +167,12 @@
     "_id": "652dcf10-adbf-402c-b5b6-f05b7707babb",
     "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
     "containerId": "",
-    "name": "Sync",
-    "url": "http://192.168.0.42:5555/api/v1/rotator/0/sync",
+    "name": "Reverse",
+    "url": "http://localhost:5555/api/v1/rotator/0/reverse",
     "method": "PUT",
     "sortNum": 50000,
     "created": "2022-12-20T19:01:36.105Z",
-    "modified": "2022-12-20T19:37:57.534Z",
+    "modified": "2023-05-30T00:49:14.783Z",
     "headers": [],
     "params": [],
     "body": {
@@ -184,8 +180,8 @@
       "raw": "",
       "form": [
         {
-          "name": "Position",
-          "value": "10"
+          "name": "reverse",
+          "value": "True"
         },
         {
           "name": "ClientID",
@@ -339,6 +335,31 @@
         }
       ]
     },
+    "tests": []
+  },
+  {
+    "_id": "ff233d08-54c4-4d2e-9887-768b0acedf29",
+    "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+    "containerId": "",
+    "name": "Connected",
+    "url": "http://localhost:5555/api/v1/rotator/0/connected?ClientID=123&ClientTransactionID=321",
+    "method": "GET",
+    "sortNum": 25000,
+    "created": "2023-05-29T22:22:29.996Z",
+    "modified": "2023-05-29T22:26:58.982Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "ClientID",
+        "value": "123",
+        "isPath": false
+      },
+      {
+        "name": "ClientTransactionID",
+        "value": "321",
+        "isPath": false
+      }
+    ],
     "tests": []
   }
 ]
