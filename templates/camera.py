@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -104,6 +104,10 @@ class SupportedActions():
 class bayeroffsetx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -111,12 +115,16 @@ class bayeroffsetx:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Bayeroffsetx failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class bayeroffsety:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -124,12 +132,16 @@ class bayeroffsety:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Bayeroffsety failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class binx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -137,11 +149,21 @@ class binx:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Binx failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        binxstr = get_request_field('BinX', req)      # Raises 400 bad request if missing
+        try:
+            binx = int(binxstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'BinX " + binxstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -149,12 +171,30 @@ class binx:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Binx failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Binx failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class biny:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -162,11 +202,21 @@ class biny:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Biny failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        binystr = get_request_field('BinY', req)      # Raises 400 bad request if missing
+        try:
+            biny = int(binystr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'BinY " + binystr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -174,12 +224,30 @@ class biny:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Biny failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Biny failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class camerastate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -187,12 +255,16 @@ class camerastate:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Camerastate failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cameraxsize:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -200,12 +272,16 @@ class cameraxsize:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Cameraxsize failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cameraysize:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -213,12 +289,16 @@ class cameraysize:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Cameraysize failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canabortexposure:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -226,12 +306,16 @@ class canabortexposure:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Canabortexposure failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canasymmetricbin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -239,12 +323,16 @@ class canasymmetricbin:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Canasymmetricbin failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canfastreadout:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -252,12 +340,16 @@ class canfastreadout:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Canfastreadout failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cangetcoolerpower:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -265,12 +357,16 @@ class cangetcoolerpower:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Cangetcoolerpower failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canpulseguide:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -278,12 +374,16 @@ class canpulseguide:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Canpulseguide failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cansetccdtemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -291,12 +391,16 @@ class cansetccdtemperature:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Cansetccdtemperature failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canstopexposure:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -304,12 +408,16 @@ class canstopexposure:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Canstopexposure failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class ccdtemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -317,12 +425,16 @@ class ccdtemperature:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Ccdtemperature failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cooleron:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -330,11 +442,16 @@ class cooleron:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Cooleron failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        cooleronstr = get_request_field('CoolerOn', req)      # Raises 400 bad request if missing
+        cooleron = to_bool(cooleronstr)                       # Same here
+
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -342,12 +459,30 @@ class cooleron:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Cooleron failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Cooleron failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class coolerpower:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -355,12 +490,16 @@ class coolerpower:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Coolerpower failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class electronsperadu:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -368,12 +507,16 @@ class electronsperadu:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Electronsperadu failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class exposuremax:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -381,12 +524,16 @@ class exposuremax:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Exposuremax failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class exposuremin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -394,12 +541,16 @@ class exposuremin:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Exposuremin failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class exposureresolution:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -407,12 +558,16 @@ class exposureresolution:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Exposureresolution failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class fastreadout:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -420,11 +575,16 @@ class fastreadout:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Fastreadout failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        fastreadoutstr = get_request_field('FastReadout', req)      # Raises 400 bad request if missing
+        fastreadout = to_bool(fastreadoutstr)                       # Same here
+
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -432,12 +592,30 @@ class fastreadout:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Fastreadout failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Fastreadout failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class fullwellcapacity:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -445,12 +623,16 @@ class fullwellcapacity:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Fullwellcapacity failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class gain:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -458,11 +640,21 @@ class gain:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Gain failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        gainstr = get_request_field('Gain', req)      # Raises 400 bad request if missing
+        try:
+            gain = int(gainstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Gain " + gainstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -470,12 +662,30 @@ class gain:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Gain failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Gain failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class gainmax:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -483,12 +693,16 @@ class gainmax:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Gainmax failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class gainmin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -496,12 +710,16 @@ class gainmin:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Gainmin failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class gains:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -509,12 +727,16 @@ class gains:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Gains failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class hasshutter:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -522,12 +744,16 @@ class hasshutter:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Hasshutter failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class heatsinktemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -535,12 +761,16 @@ class heatsinktemperature:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Heatsinktemperature failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class imagearray:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -548,12 +778,16 @@ class imagearray:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Imagearray failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class imagearrayvariant:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -561,12 +795,16 @@ class imagearrayvariant:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Imagearrayvariant failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class imageready:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -574,12 +812,16 @@ class imageready:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Imageready failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class ispulseguiding:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -587,12 +829,16 @@ class ispulseguiding:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Ispulseguiding failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class lastexposureduration:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -600,12 +846,16 @@ class lastexposureduration:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Lastexposureduration failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class lastexposurestarttime:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -613,12 +863,16 @@ class lastexposurestarttime:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Lastexposurestarttime failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class maxadu:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -626,12 +880,16 @@ class maxadu:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Maxadu failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class maxbinx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -639,12 +897,16 @@ class maxbinx:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Maxbinx failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class maxbiny:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -652,12 +914,16 @@ class maxbiny:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Maxbiny failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class numx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -665,11 +931,21 @@ class numx:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Numx failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        numxstr = get_request_field('NumX', req)      # Raises 400 bad request if missing
+        try:
+            numx = int(numxstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'NumX " + numxstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -677,12 +953,30 @@ class numx:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Numx failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Numx failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class numy:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -690,11 +984,21 @@ class numy:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Numy failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        numystr = get_request_field('NumY', req)      # Raises 400 bad request if missing
+        try:
+            numy = int(numystr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'NumY " + numystr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -702,12 +1006,30 @@ class numy:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Numy failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Numy failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class offset:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -715,11 +1037,21 @@ class offset:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Offset failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        offsetstr = get_request_field('Offset', req)      # Raises 400 bad request if missing
+        try:
+            offset = int(offsetstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Offset " + offsetstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -727,12 +1059,30 @@ class offset:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Offset failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Offset failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class offsetmax:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -740,12 +1090,16 @@ class offsetmax:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Offsetmax failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class offsetmin:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -753,12 +1107,16 @@ class offsetmin:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Offsetmin failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class offsets:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -766,12 +1124,16 @@ class offsets:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Offsets failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class percentcompleted:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -779,12 +1141,16 @@ class percentcompleted:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Percentcompleted failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class pixelsizex:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -792,12 +1158,16 @@ class pixelsizex:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Pixelsizex failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class pixelsizey:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -805,12 +1175,16 @@ class pixelsizey:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Pixelsizey failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class readoutmode:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -818,11 +1192,21 @@ class readoutmode:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Readoutmode failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        readoutmodestr = get_request_field('ReadoutMode', req)      # Raises 400 bad request if missing
+        try:
+            readoutmode = int(readoutmodestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'ReadoutMode " + readoutmodestr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -830,12 +1214,30 @@ class readoutmode:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Readoutmode failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Readoutmode failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class readoutmodes:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -843,12 +1245,16 @@ class readoutmodes:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Readoutmodes failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class sensorname:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -856,12 +1262,16 @@ class sensorname:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Sensorname failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class sensortype:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -869,12 +1279,16 @@ class sensortype:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Sensortype failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class setccdtemperature:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -882,11 +1296,21 @@ class setccdtemperature:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Setccdtemperature failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        setccdtemperaturestr = get_request_field('SetCCDTemperature', req)      # Raises 400 bad request if missing
+        try:
+            setccdtemperature = float(setccdtemperaturestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'SetCCDTemperature " + setccdtemperaturestr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -894,12 +1318,30 @@ class setccdtemperature:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Setccdtemperature failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Setccdtemperature failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class startx:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -907,11 +1349,21 @@ class startx:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Startx failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        startxstr = get_request_field('StartX', req)      # Raises 400 bad request if missing
+        try:
+            startx = int(startxstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'StartX " + startxstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -919,12 +1371,30 @@ class startx:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Startx failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Startx failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class starty:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -932,11 +1402,21 @@ class starty:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Starty failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        startystr = get_request_field('StartY', req)      # Raises 400 bad request if missing
+        try:
+            starty = int(startystr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'StartY " + startystr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -944,12 +1424,30 @@ class starty:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Starty failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Starty failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class subexposureduration:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -957,11 +1455,21 @@ class subexposureduration:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Subexposureduration failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        subexposuredurationstr = get_request_field('SubExposureDuration', req)      # Raises 400 bad request if missing
+        try:
+            subexposureduration = float(subexposuredurationstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'SubExposureDuration " + subexposuredurationstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -969,14 +1477,30 @@ class subexposureduration:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Subexposureduration failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Subexposureduration failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class abortexposure:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -984,14 +1508,32 @@ class abortexposure:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Abortexposure failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class pulseguide:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        directionstr = get_request_field('Direction', req)      # Raises 400 bad request if missing
+        try:
+            direction = int(directionstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Direction " + directionstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
+        try:
+            duration = int(durationstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Duration " + durationstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -999,14 +1541,41 @@ class pulseguide:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Pulseguide failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Pulseguide failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class startexposure:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
+        try:
+            duration = float(durationstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Duration " + durationstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        lightstr = get_request_field('Light', req)      # Raises 400 bad request if missing
+        light = to_bool(lightstr)                       # Same here
+
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1014,14 +1583,30 @@ class startexposure:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Startexposure failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Camera.Startexposure failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class stopexposure:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1029,5 +1614,5 @@ class stopexposure:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Camera.Stopexposure failed', ex)).json
 

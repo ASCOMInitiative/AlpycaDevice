@@ -89,7 +89,7 @@ _bools = ['true', 'false']                               # Only valid JSON bools
 def to_bool(str: str) -> bool:
     val = str.lower()
     if val not in _bools:
-        raise HTTPBadRequest(title=_bad_title, description=f'Bad boolean value "{val}"') # Always a bad request
+        raise HTTPBadRequest(title=_bad_title, description=f'Bad boolean value "{val}"')
     return val == _bools[0]
 
 # ---------------------------------------------------------

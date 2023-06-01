@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -104,6 +104,10 @@ class SupportedActions():
 class altitude:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -111,12 +115,16 @@ class altitude:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Altitude failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class athome:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -124,12 +132,16 @@ class athome:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Athome failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class atpark:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -137,12 +149,16 @@ class atpark:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Atpark failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class azimuth:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -150,12 +166,16 @@ class azimuth:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Azimuth failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canfindhome:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -163,12 +183,16 @@ class canfindhome:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Canfindhome failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canpark:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -176,12 +200,16 @@ class canpark:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Canpark failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cansetaltitude:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -189,12 +217,16 @@ class cansetaltitude:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Cansetaltitude failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cansetazimuth:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -202,12 +234,16 @@ class cansetazimuth:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Cansetazimuth failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cansetpark:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -215,12 +251,16 @@ class cansetpark:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Cansetpark failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cansetshutter:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -228,12 +268,16 @@ class cansetshutter:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Cansetshutter failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canslave:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -241,12 +285,16 @@ class canslave:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Canslave failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class cansyncazimuth:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -254,12 +302,16 @@ class cansyncazimuth:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Cansyncazimuth failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class shutterstatus:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -267,12 +319,16 @@ class shutterstatus:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Shutterstatus failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class slaved:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -280,11 +336,16 @@ class slaved:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Slaved failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        slavedstr = get_request_field('Slaved', req)      # Raises 400 bad request if missing
+        slaved = to_bool(slavedstr)                       # Same here
+
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -292,12 +353,30 @@ class slaved:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Slaved failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Dome.Slaved failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class slewing:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -305,14 +384,16 @@ class slewing:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Slewing failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class abortslew:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -320,14 +401,16 @@ class abortslew:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Abortslew failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class closeshutter:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -335,14 +418,16 @@ class closeshutter:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Closeshutter failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class findhome:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -350,14 +435,16 @@ class findhome:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Findhome failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class openshutter:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -365,14 +452,16 @@ class openshutter:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Openshutter failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class park:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -380,14 +469,16 @@ class park:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Park failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class setpark:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -395,14 +486,24 @@ class setpark:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Setpark failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class slewtoaltitude:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        altitudestr = get_request_field('Altitude', req)      # Raises 400 bad request if missing
+        try:
+            altitude = float(altitudestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Altitude " + altitudestr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -410,14 +511,38 @@ class slewtoaltitude:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Slewtoaltitude failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Dome.Slewtoaltitude failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class slewtoazimuth:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        azimuthstr = get_request_field('Azimuth', req)      # Raises 400 bad request if missing
+        try:
+            azimuth = int(azimuthstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Azimuth " + azimuthstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -425,14 +550,24 @@ class slewtoazimuth:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Slewtoazimuth failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class synctoazimuth:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        azimuthstr = get_request_field('Azimuth', req)      # Raises 400 bad request if missing
+        try:
+            azimuth = int(azimuthstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Azimuth " + azimuthstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -440,5 +575,5 @@ class synctoazimuth:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Dome.Synctoazimuth failed', ex)).json
 

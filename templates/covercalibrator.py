@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -104,6 +104,10 @@ class SupportedActions():
 class brightness:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -111,12 +115,16 @@ class brightness:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Brightness failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class calibratorstate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -124,12 +132,16 @@ class calibratorstate:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Calibratorstate failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class coverstate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -137,12 +149,16 @@ class coverstate:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Coverstate failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class maxbrightness:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -150,14 +166,16 @@ class maxbrightness:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Maxbrightness failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class calibratoroff:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -165,14 +183,24 @@ class calibratoroff:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Calibratoroff failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class calibratoron:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        brightnessstr = get_request_field('Brightness', req)      # Raises 400 bad request if missing
+        try:
+            brightness = int(brightnessstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Brightness " + brightnessstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -180,14 +208,30 @@ class calibratoron:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Calibratoron failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Covercalibrator.Calibratoron failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class closecover:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -195,14 +239,16 @@ class closecover:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Closecover failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class haltcover:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -210,14 +256,16 @@ class haltcover:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Haltcover failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class opencover:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -225,5 +273,5 @@ class opencover:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Covercalibrator.Opencover failed', ex)).json
 

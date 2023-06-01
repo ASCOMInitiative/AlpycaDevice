@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -104,6 +104,10 @@ class SupportedActions():
 class focusoffsets:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -111,12 +115,16 @@ class focusoffsets:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Filterwheel.Focusoffsets failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class names:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -124,12 +132,16 @@ class names:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Filterwheel.Names failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class position:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -137,11 +149,21 @@ class position:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Filterwheel.Position failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
+        try:
+            position = int(positionstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -149,5 +171,19 @@ class position:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Filterwheel.Position failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Filterwheel.Position failed', ex)).json
 

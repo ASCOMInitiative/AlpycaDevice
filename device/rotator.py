@@ -50,6 +50,7 @@
 # 23-May-2023   rbd 0.2 Refactoring for  multiple ASCOM device type support
 #               GitHub issue #1
 # 30-May-2023   rbd 0.2 Remove redundant logging from PUT responders
+# 31-May-2023   rbd 0.3 responder class names lower cased to match URI
 #
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
@@ -101,58 +102,58 @@ def start_rot_device(logger: logger):
 # --------------------
 
 @before(PreProcessRequest(maxdev))
-class Action:
+class action:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandBlind:
+class commandblind:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandBool:
+class commandbool:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandString():
+class commandstring():
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 # Connected, though common, is implemented in rotator.py
 @before(PreProcessRequest(maxdev))
-class Description():
+class description():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Description, req).json
 
 @before(PreProcessRequest(maxdev))
-class DriverInfo():
+class driverinfo():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Info, req).json
 
 @before(PreProcessRequest(maxdev))
-class InterfaceVersion():
+class interfaceversion():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.InterfaceVersion, req).json
 
 @before(PreProcessRequest(maxdev))
-class DriverVersion():
+class driverversion():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Version, req).json
 
 @before(PreProcessRequest(maxdev))
-class Name():
+class name():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Name, req).json
 
 @before(PreProcessRequest(maxdev))
-class SupportedActions():
+class supportedactions():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 
 @before(PreProcessRequest(maxdev))
-class CanReverse:
+class canreverse:
     """True if the rotator supports the ``Reverse`` method
 
     Always True for IRotatorV3 (InterfaceVersion >= 3).
@@ -161,7 +162,7 @@ class CanReverse:
         resp.text = PropertyResponse(True, req).json    # IRotatorV3, CanReverse must be True
 
 @before(PreProcessRequest(maxdev))
-class Connected:
+class connected:
     """Retrieves or sets the connected state of the device
 
     * Set True to connect to the device hardware. Set False to disconnect
@@ -177,6 +178,7 @@ class Connected:
     def on_put(self, req: Request, resp: Response, devnum: int):
         conn_str = get_request_field('Connected', req)
         conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
+
         try:
             # ----------------------
             rot_dev.connected = conn
@@ -187,7 +189,7 @@ class Connected:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class IsMoving:
+class ismoving:
     """True if the rotator is currently moving to a new angle
 
     Caution:
@@ -220,7 +222,7 @@ class IsMoving:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class MechanicalPosition:
+class mechanicalposition:
     """The raw mechanical position (deg) of the rotator
 
     Raises:
@@ -246,7 +248,7 @@ class MechanicalPosition:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class Position:
+class position:
     """The virtual position (deg) of the rotator
 
     Raises:
@@ -275,7 +277,7 @@ class Position:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class Reverse:
+class reverse:
     """The direction of rotation CCW or CW
 
     Raises:
@@ -321,7 +323,7 @@ class Reverse:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class StepSize:
+class stepsize:
     """Minimum rotation step size (deg)
 
     Raises:
@@ -348,7 +350,7 @@ class StepSize:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class TargetPosition:
+class targetposition:
     """The destination angle for ``Move()`` and ``MoveAbsolute()``
 
     Raises:
@@ -377,7 +379,7 @@ class TargetPosition:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class Halt:
+class halt:
     """Halt rotator motion.
 
     Raises:
@@ -404,7 +406,7 @@ class Halt:
 
 
 @before(PreProcessRequest(maxdev))
-class Move:
+class move:
     """Start rotation relative to the current position (degrees)
 
     Must cause the ``TargetPosition`` property to change to the sum of the current
@@ -460,7 +462,7 @@ class Move:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class MoveAbsolute:
+class moveabsolute:
     """Start rotation to the given new virtual position (degrees)
 
     Must cause the (virtual) ``TargetPosition`` property to change to the
@@ -512,7 +514,7 @@ class MoveAbsolute:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class MoveMechanical:
+class movemechanical:
     """Start rotation to the given new mechanical position (degrees)
 
     The Position is the mechanical angle, independent of any ``Sync()``
@@ -566,7 +568,7 @@ class MoveMechanical:
                             DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class Sync:
+class sync:
     """Syncs the rotator to the specified position angle (degrees) without moving it.
 
     Once this method has been called and the sync offset determined, both the

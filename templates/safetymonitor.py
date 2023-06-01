@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -104,6 +104,10 @@ class SupportedActions():
 class issafe:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -111,5 +115,5 @@ class issafe:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Safetymonitor.Issafe failed', ex)).json
 

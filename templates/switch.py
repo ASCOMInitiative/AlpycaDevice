@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -104,6 +104,10 @@ class SupportedActions():
 class maxswitch:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -111,12 +115,16 @@ class maxswitch:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Maxswitch failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class canwrite:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -124,12 +132,16 @@ class canwrite:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Canwrite failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class getswitch:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -137,12 +149,16 @@ class getswitch:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Getswitch failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class getswitchdescription:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -150,12 +166,16 @@ class getswitchdescription:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Getswitchdescription failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class getswitchname:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -163,12 +183,16 @@ class getswitchname:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Getswitchname failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class getswitchvalue:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -176,12 +200,16 @@ class getswitchvalue:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Getswitchvalue failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class minswitchvalue:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -189,12 +217,16 @@ class minswitchvalue:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Minswitchvalue failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class maxswitchvalue:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -202,14 +234,27 @@ class maxswitchvalue:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Maxswitchvalue failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class setswitch:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Id " + idstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        statestr = get_request_field('State', req)      # Raises 400 bad request if missing
+        state = to_bool(statestr)                       # Same here
+
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -217,14 +262,46 @@ class setswitch:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Setswitch failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Setswitch failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class setswitchname:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Id " + idstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        namestr = get_request_field('Name', req)      # Raises 400 bad request if missing
+        try:
+            name = {cvtfunc}(namestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Name " + namestr + " not a valid number.')).json
+            return
+
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -232,14 +309,46 @@ class setswitchname:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Setswitchname failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Setswitchname failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class setswitchvalue:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Id " + idstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
+        try:
+            value = float(valuestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Value " + valuestr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -247,12 +356,30 @@ class setswitchvalue:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Setswitchvalue failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Setswitchvalue failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class switchstep:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -260,5 +387,5 @@ class switchstep:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Switch.Switchstep failed', ex)).json
 

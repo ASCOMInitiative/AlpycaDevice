@@ -38,6 +38,12 @@
 # Edit History:
 # 19-Jan-2023   rbd Initial edit
 # 24-May-2023   rbd For upgraded templates with multi-device support
+# 31-May-2023   Changes for Alpaca protocol conformance, and connected
+# check in templates. Corrct capitalizaton of responder class names.
+# Replace dunder naming with real names from YAML. Enhance to provide
+# put paraeter handling with names and conversion functions that will
+# raise an exception. Major upgrade to the templates.
+#
 
 import yaml
 
@@ -61,7 +67,7 @@ mod_hdr = '''
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \\
-                get_request_field, to_bool
+                get_request_field, to_bool, to_int, to_float
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -148,11 +154,15 @@ class SupportedActions():
 
 '''
 cls_tmpl = '''@before(PreProcessRequest(maxdev))
-class {mname}:
+class {memname}:
 
 '''
 
 get_tmpl = '''    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -160,13 +170,15 @@ get_tmpl = '''    def on_get(self, req: Request, resp: Response, devnum: int):
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, '{Devname}.{Memname} failed', ex)).json
 
 '''
 
 put_tmpl = '''    def on_put(self, req: Request, resp: Response, devnum: int):
-        formdata = req.get_media()
-        ##PARAMVAL## = ##PARAMCVT##formdata['##PARAMNAME##'])
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return{GETPARAMS}
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -174,9 +186,25 @@ put_tmpl = '''    def on_put(self, req: Request, resp: Response, devnum: int):
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, '{Devname}.{Memname} failed', ex)).json
 
 '''
+
+params_tmpl_bool = '''
+        {param}str = get_request_field('{Param}', req)      # Raises 400 bad request if missing
+        {param} = to_bool({param}str)                       # Same here
+'''
+
+params_tmpl_num = '''
+        {param}str = get_request_field('{Param}', req)      # Raises 400 bad request if missing
+        try:
+            {param} = {cvtfunc}({param}str)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'{Param} " + {param}str + " not a valid number.')).json
+            return
+'''
+
 
 def main():
     with open('AlpacaDeviceAPI_v1.yaml') as f:
@@ -190,20 +218,82 @@ def main():
             continue
         bits = path.split('/')
         devname = bits[1]
+        Devname = devname.title()
         if not devname in seendevs:
             if not mf is None and not mf.closed:
                 mf.close
             mf = open(f'{devname}.py', 'w')
             temp = mod_hdr.replace('{devname}', devname)
-            mf.write(temp.replace('{Devname}', devname.title()))
+            mf.write(temp.replace('{Devname}', Devname))
             seendevs.append(devname)
-        mname = bits[3]
-        mf.write(cls_tmpl.replace('{mname}', mname))
+        memname = bits[3]
+        Memname = memname.title()
+        mf.write(cls_tmpl.replace('{memname}', memname))
         for meth, meta in meths.items():
             if meth == 'get':
-                mf.write(get_tmpl)
+                temp = get_tmpl.replace('{Devname}', Devname)
+                mf.write(temp.replace('{Memname}', Memname))
             else:
-                mf.write(put_tmpl)
+                temp = put_tmpl.replace('{Devname}', Devname)
+                temp = temp.replace('{Memname}', Memname)
+                # Create code for getting and converting prameters
+                # Please don't laugh
+                getparams = ''
+                if 'content' in  meths['put']['requestBody']:
+                    for param in meths['put']['requestBody']['content']['application/x-www-form-urlencoded']['schema']['allOf'][1]['properties'].items():
+                        ptemp = params_tmpl_num
+                        ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                        ptemp = ptemp.replace('{Param}', param[0])
+                        ptype = param[1]['type']
+                        if ptype == 'boolean':
+                            ptemp = params_tmpl_bool
+                            ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                            ptemp = ptemp.replace('{Param}', param[0])
+                        if ptype == 'integer':
+                            ptemp = params_tmpl_num
+                            ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                            ptemp = ptemp.replace('{Param}', param[0])
+                            ptemp = ptemp.replace('{cvtfunc}', 'int')
+                            ptemp += '        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!'
+                        if ptype == 'number':
+                            ptemp = params_tmpl_num
+                            ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                            ptemp = ptemp.replace('{Param}', param[0])
+                            ptemp = ptemp.replace('{cvtfunc}', 'float')
+                            ptemp += '        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!'
+                        getparams += ptemp
+                    mf.write (temp.replace('{GETPARAMS}', getparams))
+                if '$ref' in  meths['put']['requestBody']:
+                    ref = meths['put']['requestBody']['$ref']
+                    if ref != '#/components/requestBodies/putStandardClientParameters':
+                        content = toptree['components']['requestBodies'][ref.split('/')[3]]['content']
+                        for param in content['application/x-www-form-urlencoded']['schema']['allOf'][1]['properties'].items():
+                            ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                            ptemp = ptemp.replace('{Param}', param[0])
+                            ptype = param[1]['type']
+                            if ptype == 'boolean':
+                                ptemp = params_tmpl_bool
+                                ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                                ptemp = ptemp.replace('{Param}', param[0])
+                            if ptype == 'integer':
+                                ptemp = params_tmpl_num
+                                ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                                ptemp = ptemp.replace('{Param}', param[0])
+                                ptemp = ptemp.replace('{cvtfunc}', 'int')
+                                ptemp += '        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!'
+                            if ptype == 'number':
+                                ptemp = params_tmpl_num
+                                ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
+                                ptemp = ptemp.replace('{Param}', param[0])
+                                ptemp = ptemp.replace('{cvtfunc}', 'int')
+                                ptemp += '        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!'
+                            getparams += ptemp
+                        mf.write (temp.replace('{GETPARAMS}', getparams))
+                    else:
+                        mf.write (temp.replace('{GETPARAMS}', ''))
+                else:
+                    mf.write (temp.replace('{GETPARAMS}', ''))
+
     mf.close()
 
     print('end')

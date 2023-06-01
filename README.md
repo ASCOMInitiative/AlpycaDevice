@@ -8,6 +8,8 @@ Rotator-specific API endpoint implementations can be easily replaced with an
 API endpoints implementation for any ASCOM device. Templates for all ASCOM device
 types are provided. The "boiler plate" logic remains the same for any device.
 
+## 30-May-2023 These are for 0.1, and 0.3 experimental is now on the master branch
+
 ## [Alpyca Device Full Documentation](https://ascom-standards.org/alpycadevice/)
 
 ## [Quick Start Video Introduction](https://www.youtube.com/watch?v=bJ-1TJBfe0c")
@@ -37,11 +39,15 @@ Linux, Windows) for Python development but it's certainly not a requirement.
 9. Click Start and watch it exercise this sample device. After a while it should
    complete successfully.
 
-## Status (Mar 2023) *Experimental - Limited Distribution*
+## Incomplete Update (May 31, 2023) *Incomplete - Needs templates and docs updated.* Result of premature merge of my development branch into the master. Oops
 
-Ready for initial testing by others. Passes [Conform
+Fairly extensive refactoring of bits to make supporting multiple device *types* as
+well as multiple instandces of a given device type. Passes [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) for
-Rotator device, docstrings and [Sphinx build to
+Rotator device, as well as [Conform
+Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) Alpaca
+Protocol tests.
+docstrings and [Sphinx build to
 HTML](https://ascom-standards.org/alpycadevice/) completed.
 
 ## Potential Applications
