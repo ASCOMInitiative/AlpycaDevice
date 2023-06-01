@@ -54,7 +54,9 @@
 # 29-May-2023   rbd 0.2 Enhance get_request_field() so empty string for default
 #               value means mandatory field. Add title and description info
 #               to raised HTTP BAD_REQUEST.
-# 30-May-2023   rbd 0.2 Improve request logging at time of arrival
+# 30-May-2023   rbd 0.3 Improve request logging at time of arrival
+# 01-Jun-2023   rbd 0.3 Issue #2 Do not return empty Value field in property
+#               response, and omit Value if error is not success().
 
 from threading import Lock
 from exceptions import Success
@@ -215,11 +217,11 @@ class PropertyResponse():
         """
         self.ServerTransactionID = getNextTransId()
         self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))  #Caseless on GET
-        self.Value = value
+        if err == Success() and not value is None:
+            self.Value = value
+            logger.info(f'{req.remote_addr} <- {str(value)}')
         self.ErrorNumber = err.Number
         self.ErrorMessage = err.Message
-        if not value is None:
-            logger.info(f'{req.remote_addr} <- {str(value)}')
 
     @property
     def json(self) -> str:
@@ -245,9 +247,9 @@ class MethodResponse():
         """
         self.ServerTransactionID = getNextTransId()
         # This is crazy ... if casing is incorrect here, we're supposed to return the default 0
-        # even if the caseless check coming in returned a valid number.
-        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))   # Case significant on PUT
-        if not value is None:
+        # even if the caseless check coming in returned a valid number. This is for PUT only.
+        self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))
+        if err == Success() and not value is None:
             self.Value = value
             logger.info(f'{req.remote_addr} <- {str(value)}')
         self.ErrorNumber = err.Number

@@ -1,14 +1,16 @@
-# AlpycaDevice - Python 3.7+ Alpaca Device Framework and Templates
+# AlpycaDevice - Python Alpaca Device Framework and Templates
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
-This project is a  lightweight framework for a device
-driver that supports the Alpaca protocol and ASCOM Standards. It implements
-a basic Rotator device that is structured in a way that the
-Rotator-specific API endpoint implementations can be easily replaced with an
-API endpoints implementation for any ASCOM device. Templates for all ASCOM device
-types are provided. The "boiler plate" logic remains the same for any device.
 
-## 30-May-2023 These are for 0.1, and 0.3 experimental is now on the master branch
+This project is a lightweight Python framework for a device
+driver that supports the Alpaca protocol and ASCOM Standards. It implements
+a basic Rotator device with a simple simulation for Conform tests.
+**Templates for all ASCOM device types are provided**. The "boiler plate" logic
+remains the same for any device.
+
+## Incomplete Update (May 31, 2023) *Incomplete - Needs templates and docs updated.* Result of premature merge of my development branch into the master. Oops. Will have this out by week's end
+
+## 30-May-2023 Doc and Video are for 0.1, and 0.3 experimental is now on the master branch
 
 ## [Alpyca Device Full Documentation](https://ascom-standards.org/alpycadevice/)
 
@@ -38,8 +40,9 @@ Linux, Windows) for Python development but it's certainly not a requirement.
    Pick any one.
 9. Click Start and watch it exercise this sample device. After a while it should
    complete successfully.
+10. Now use the Alpaca Protocol Checker in ConformU to validate the
 
-## Incomplete Update (May 31, 2023) *Incomplete - Needs templates and docs updated.* Result of premature merge of my development branch into the master. Oops
+## Status of this project
 
 Fairly extensive refactoring of bits to make supporting multiple device *types* as
 well as multiple instandces of a given device type. Passes [Conform

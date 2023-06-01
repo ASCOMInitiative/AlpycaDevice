@@ -1,0 +1,700 @@
+09:05:17.124                                     Connecting to device: 127.0.0.1:5555 through URL: http://127.0.0.1:5555
+09:05:17.125                                     
+09:05:17.143 PUT Connected                 OK     True - The expected ClientTransactionID was returned: 67890
+09:05:17.144 PUT Connected                 OK     True - The ServerTransactionID was 1 or greater: 1185
+09:05:17.148 PUT Connected                 OK     True - Received HTTP status 200 (OK) as expected.
+09:05:17.148 PUT Connected                 OK       Response: {"ServerTransactionID": 1185, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.148                                     
+09:05:17.155 GET Description               OK     Bad Alpaca URL device type (capitalised ROTATOR) - Received HTTP status 404 (NotFound) as expected.
+09:05:17.156 GET Description               OK       Response: {"title": "404 Not Found"}
+09:05:17.158 GET Description               OK     Bad Alpaca URL device type (baddevicetype) - Received HTTP status 404 (NotFound) as expected.
+09:05:17.158 GET Description               OK       Response: {"title": "404 Not Found"}
+09:05:17.160 GET Description               OK     Bad Alpaca URL device number (-1) - Received HTTP status 404 (NotFound) as expected.
+09:05:17.161 GET Description               OK       Response: {"title": "404 Not Found"}
+09:05:17.168 GET Description               OK     Bad Alpaca URL device number (99999) - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.168 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Device number 99999 does not exist. Maximum device number is 0."}
+09:05:17.170 GET Description               OK     Bad Alpaca URL device number (A) - Received HTTP status 404 (NotFound) as expected.
+09:05:17.170 GET Description               OK       Response: {"title": "404 Not Found"}
+09:05:17.172 GET Description               OK     Bad Alpaca URL method name (descrip) - Received HTTP status 404 (NotFound) as expected.
+09:05:17.173 GET Description               OK       Response: {"title": "404 Not Found"}
+09:05:17.179 GET Connected                 OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.180 GET Connected                 OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1186
+09:05:17.180 GET Connected                 OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.180 GET Connected                 OK       Response: {"ServerTransactionID": 1186, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.187 GET Connected                 OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:17.188 GET Connected                 OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1187
+09:05:17.188 GET Connected                 OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:17.188 GET Connected                 OK       Response: {"ServerTransactionID": 1187, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.194 GET Connected                 OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.194 GET Connected                 OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1188
+09:05:17.194 GET Connected                 OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.195 GET Connected                 OK       Response: {"ServerTransactionID": 1188, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.201 GET Connected                 OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.202 GET Connected                 OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1189
+09:05:17.202 GET Connected                 OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.203 GET Connected                 OK       Response: {"ServerTransactionID": 1189, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.211 GET Connected                 OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.211 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:17.218 GET Connected                 OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.218 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:17.225 GET Connected                 OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.225 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:17.231 GET Connected                 OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.231 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:17.237 GET Connected                 OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.238 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.245 GET Connected                 OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.245 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.251 GET Connected                 OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.252 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:17.257 GET Connected                 OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.258 GET Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:17.264 PUT Connected                 OK     Bad parameter value - Empty string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.264 PUT Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Missing, empty, or misspelled parameter \"Connected\""}
+09:05:17.271 PUT Connected                 OK     Bad parameter value - Number - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.271 PUT Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Bad boolean value \"123456\""}
+09:05:17.277 PUT Connected                 OK     Bad parameter value - Meaningless string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.278 PUT Connected                 OK       Response: {"title": "Bad Alpaca Request", "description": "Bad boolean value \"asdqwe\""}
+09:05:17.283 GET Description               OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.284 GET Description               OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1190
+09:05:17.284 GET Description               OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.284 GET Description               OK       Response: {"ServerTransactionID": 1190, "ClientTransactionID": 67890, "Value": "Sample ASCOM Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.291 GET Description               OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:17.291 GET Description               OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1191
+09:05:17.291 GET Description               OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:17.292 GET Description               OK       Response: {"ServerTransactionID": 1191, "ClientTransactionID": 67890, "Value": "Sample ASCOM Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.298 GET Description               OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.298 GET Description               OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1192
+09:05:17.298 GET Description               OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.299 GET Description               OK       Response: {"ServerTransactionID": 1192, "ClientTransactionID": 67890, "Value": "Sample ASCOM Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.305 GET Description               OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.306 GET Description               OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1193
+09:05:17.306 GET Description               OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.306 GET Description               OK       Response: {"ServerTransactionID": 1193, "ClientTransactionID": 67890, "Value": "Sample ASCOM Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.313 GET Description               OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.313 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:17.319 GET Description               OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.319 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:17.326 GET Description               OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.326 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:17.333 GET Description               OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.333 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:17.341 GET Description               OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.341 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.348 GET Description               OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.348 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.353 GET Description               OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.354 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:17.359 GET Description               OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.360 GET Description               OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:17.366 GET DriverInfo                OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.366 GET DriverInfo                OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1194
+09:05:17.366 GET DriverInfo                OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.367 GET DriverInfo                OK       Response: {"ServerTransactionID": 1194, "ClientTransactionID": 67890, "Value": "Alpaca Sample Device\nImplements Rotator\nASCOM Initiative", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.373 GET DriverInfo                OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:17.373 GET DriverInfo                OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1195
+09:05:17.373 GET DriverInfo                OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:17.374 GET DriverInfo                OK       Response: {"ServerTransactionID": 1195, "ClientTransactionID": 67890, "Value": "Alpaca Sample Device\nImplements Rotator\nASCOM Initiative", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.379 GET DriverInfo                OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.379 GET DriverInfo                OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1196
+09:05:17.380 GET DriverInfo                OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.380 GET DriverInfo                OK       Response: {"ServerTransactionID": 1196, "ClientTransactionID": 67890, "Value": "Alpaca Sample Device\nImplements Rotator\nASCOM Initiative", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.386 GET DriverInfo                OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.387 GET DriverInfo                OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1197
+09:05:17.387 GET DriverInfo                OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.387 GET DriverInfo                OK       Response: {"ServerTransactionID": 1197, "ClientTransactionID": 67890, "Value": "Alpaca Sample Device\nImplements Rotator\nASCOM Initiative", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.395 GET DriverInfo                OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.395 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:17.401 GET DriverInfo                OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.402 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:17.408 GET DriverInfo                OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.408 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:17.414 GET DriverInfo                OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.414 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:17.420 GET DriverInfo                OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.420 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.427 GET DriverInfo                OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.428 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.433 GET DriverInfo                OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.433 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:17.439 GET DriverInfo                OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.439 GET DriverInfo                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:17.445 GET DriverVersion             OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.446 GET DriverVersion             OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1198
+09:05:17.446 GET DriverVersion             OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.446 GET DriverVersion             OK       Response: {"ServerTransactionID": 1198, "ClientTransactionID": 67890, "Value": "0.2", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.453 GET DriverVersion             OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:17.453 GET DriverVersion             OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1199
+09:05:17.454 GET DriverVersion             OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:17.454 GET DriverVersion             OK       Response: {"ServerTransactionID": 1199, "ClientTransactionID": 67890, "Value": "0.2", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.460 GET DriverVersion             OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.460 GET DriverVersion             OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1200
+09:05:17.460 GET DriverVersion             OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.460 GET DriverVersion             OK       Response: {"ServerTransactionID": 1200, "ClientTransactionID": 67890, "Value": "0.2", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.467 GET DriverVersion             OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.468 GET DriverVersion             OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1201
+09:05:17.468 GET DriverVersion             OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.468 GET DriverVersion             OK       Response: {"ServerTransactionID": 1201, "ClientTransactionID": 67890, "Value": "0.2", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.473 GET DriverVersion             OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.474 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:17.480 GET DriverVersion             OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.481 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:17.487 GET DriverVersion             OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.487 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:17.493 GET DriverVersion             OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.493 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:17.499 GET DriverVersion             OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.500 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.506 GET DriverVersion             OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.507 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.512 GET DriverVersion             OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.513 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:17.520 GET DriverVersion             OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.520 GET DriverVersion             OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:17.527 GET InterfaceVersion          OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.527 GET InterfaceVersion          OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1202
+09:05:17.527 GET InterfaceVersion          OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.528 GET InterfaceVersion          OK       Response: {"ServerTransactionID": 1202, "ClientTransactionID": 67890, "Value": 3, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.534 GET InterfaceVersion          OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:17.534 GET InterfaceVersion          OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1203
+09:05:17.534 GET InterfaceVersion          OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:17.535 GET InterfaceVersion          OK       Response: {"ServerTransactionID": 1203, "ClientTransactionID": 67890, "Value": 3, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.540 GET InterfaceVersion          OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.541 GET InterfaceVersion          OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1204
+09:05:17.541 GET InterfaceVersion          OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.542 GET InterfaceVersion          OK       Response: {"ServerTransactionID": 1204, "ClientTransactionID": 67890, "Value": 3, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.926 GET InterfaceVersion          OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.927 GET InterfaceVersion          OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1205
+09:05:17.927 GET InterfaceVersion          OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.928 GET InterfaceVersion          OK       Response: {"ServerTransactionID": 1205, "ClientTransactionID": 67890, "Value": 3, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:17.938 GET InterfaceVersion          OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.939 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:17.950 GET InterfaceVersion          OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.951 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:17.960 GET InterfaceVersion          OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.961 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:17.967 GET InterfaceVersion          OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.968 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:17.973 GET InterfaceVersion          OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.974 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.979 GET InterfaceVersion          OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.980 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:17.986 GET InterfaceVersion          OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.986 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:17.992 GET InterfaceVersion          OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:17.993 GET InterfaceVersion          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:17.998 GET Name                      OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:17.999 GET Name                      OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1206
+09:05:17.999 GET Name                      OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:17.999 GET Name                      OK       Response: {"ServerTransactionID": 1206, "ClientTransactionID": 67890, "Value": "Sample Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.005 GET Name                      OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.006 GET Name                      OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1207
+09:05:18.006 GET Name                      OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.006 GET Name                      OK       Response: {"ServerTransactionID": 1207, "ClientTransactionID": 67890, "Value": "Sample Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.012 GET Name                      OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.012 GET Name                      OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1208
+09:05:18.013 GET Name                      OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.013 GET Name                      OK       Response: {"ServerTransactionID": 1208, "ClientTransactionID": 67890, "Value": "Sample Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.018 GET Name                      OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.019 GET Name                      OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1209
+09:05:18.019 GET Name                      OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.019 GET Name                      OK       Response: {"ServerTransactionID": 1209, "ClientTransactionID": 67890, "Value": "Sample Rotator", "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.026 GET Name                      OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.026 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.032 GET Name                      OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.032 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.038 GET Name                      OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.038 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.044 GET Name                      OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.045 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.051 GET Name                      OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.051 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.058 GET Name                      OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.058 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.064 GET Name                      OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.064 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.070 GET Name                      OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.071 GET Name                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.077 GET SupportedActions          OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.077 GET SupportedActions          OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1210
+09:05:18.078 GET SupportedActions          OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.079 GET SupportedActions          OK       Response: {"ServerTransactionID": 1210, "ClientTransactionID": 67890, "Value": [], "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.084 GET SupportedActions          OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.085 GET SupportedActions          OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1211
+09:05:18.085 GET SupportedActions          OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.085 GET SupportedActions          OK       Response: {"ServerTransactionID": 1211, "ClientTransactionID": 67890, "Value": [], "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.091 GET SupportedActions          OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.092 GET SupportedActions          OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1212
+09:05:18.092 GET SupportedActions          OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.092 GET SupportedActions          OK       Response: {"ServerTransactionID": 1212, "ClientTransactionID": 67890, "Value": [], "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.098 GET SupportedActions          OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.099 GET SupportedActions          OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1213
+09:05:18.099 GET SupportedActions          OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.099 GET SupportedActions          OK       Response: {"ServerTransactionID": 1213, "ClientTransactionID": 67890, "Value": [], "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.106 GET SupportedActions          OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.107 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.113 GET SupportedActions          OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.114 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.119 GET SupportedActions          OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.120 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.126 GET SupportedActions          OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.126 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.132 GET SupportedActions          OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.132 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.138 GET SupportedActions          OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.138 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.145 GET SupportedActions          OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.146 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.153 GET SupportedActions          OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.153 GET SupportedActions          OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.171 GET CanReverse                OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.172 GET CanReverse                OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1215
+09:05:18.172 GET CanReverse                OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.172 GET CanReverse                OK       Response: {"ServerTransactionID": 1215, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.178 GET CanReverse                OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.178 GET CanReverse                OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1216
+09:05:18.179 GET CanReverse                OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.179 GET CanReverse                OK       Response: {"ServerTransactionID": 1216, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.185 GET CanReverse                OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.185 GET CanReverse                OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1217
+09:05:18.185 GET CanReverse                OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.186 GET CanReverse                OK       Response: {"ServerTransactionID": 1217, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.192 GET CanReverse                OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.192 GET CanReverse                OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1218
+09:05:18.192 GET CanReverse                OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.193 GET CanReverse                OK       Response: {"ServerTransactionID": 1218, "ClientTransactionID": 67890, "Value": true, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.199 GET CanReverse                OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.199 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.205 GET CanReverse                OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.205 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.211 GET CanReverse                OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.211 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.217 GET CanReverse                OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.217 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.223 GET CanReverse                OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.224 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.230 GET CanReverse                OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.231 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.236 GET CanReverse                OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.237 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.242 GET CanReverse                OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.243 GET CanReverse                OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.250 GET IsMoving                  OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.250 GET IsMoving                  OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1219
+09:05:18.250 GET IsMoving                  OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.251 GET IsMoving                  OK       Response: {"ServerTransactionID": 1219, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.257 GET IsMoving                  OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.257 GET IsMoving                  OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1220
+09:05:18.258 GET IsMoving                  OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.258 GET IsMoving                  OK       Response: {"ServerTransactionID": 1220, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.264 GET IsMoving                  OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.264 GET IsMoving                  OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1221
+09:05:18.265 GET IsMoving                  OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.265 GET IsMoving                  OK       Response: {"ServerTransactionID": 1221, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.271 GET IsMoving                  OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.271 GET IsMoving                  OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1222
+09:05:18.272 GET IsMoving                  OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.272 GET IsMoving                  OK       Response: {"ServerTransactionID": 1222, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.278 GET IsMoving                  OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.278 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.284 GET IsMoving                  OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.285 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.290 GET IsMoving                  OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.291 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.297 GET IsMoving                  OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.297 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.304 GET IsMoving                  OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.305 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.311 GET IsMoving                  OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.311 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.316 GET IsMoving                  OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.317 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.323 GET IsMoving                  OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.323 GET IsMoving                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.329 GET MechanicalPosition        OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.329 GET MechanicalPosition        OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1223
+09:05:18.330 GET MechanicalPosition        OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.330 GET MechanicalPosition        OK       Response: {"ServerTransactionID": 1223, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.336 GET MechanicalPosition        OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.337 GET MechanicalPosition        OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1224
+09:05:18.337 GET MechanicalPosition        OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.337 GET MechanicalPosition        OK       Response: {"ServerTransactionID": 1224, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.343 GET MechanicalPosition        OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.344 GET MechanicalPosition        OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1225
+09:05:18.344 GET MechanicalPosition        OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.345 GET MechanicalPosition        OK       Response: {"ServerTransactionID": 1225, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.352 GET MechanicalPosition        OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.352 GET MechanicalPosition        OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1226
+09:05:18.352 GET MechanicalPosition        OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.353 GET MechanicalPosition        OK       Response: {"ServerTransactionID": 1226, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.359 GET MechanicalPosition        OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.359 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.368 GET MechanicalPosition        OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.368 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.375 GET MechanicalPosition        OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.375 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.380 GET MechanicalPosition        OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.381 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.387 GET MechanicalPosition        OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.388 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.393 GET MechanicalPosition        OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.394 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.399 GET MechanicalPosition        OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.400 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.405 GET MechanicalPosition        OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.406 GET MechanicalPosition        OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.412 GET Position                  OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.412 GET Position                  OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1227
+09:05:18.413 GET Position                  OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.413 GET Position                  OK       Response: {"ServerTransactionID": 1227, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.419 GET Position                  OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.419 GET Position                  OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1228
+09:05:18.420 GET Position                  OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.420 GET Position                  OK       Response: {"ServerTransactionID": 1228, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.426 GET Position                  OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.426 GET Position                  OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1229
+09:05:18.426 GET Position                  OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.427 GET Position                  OK       Response: {"ServerTransactionID": 1229, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.433 GET Position                  OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.433 GET Position                  OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1230
+09:05:18.433 GET Position                  OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.434 GET Position                  OK       Response: {"ServerTransactionID": 1230, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.439 GET Position                  OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.439 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.447 GET Position                  OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.447 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.453 GET Position                  OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.453 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.459 GET Position                  OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.459 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.466 GET Position                  OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.466 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.472 GET Position                  OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.472 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.478 GET Position                  OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.478 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.484 GET Position                  OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.485 GET Position                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.490 GET Reverse                   OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.491 GET Reverse                   OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1231
+09:05:18.491 GET Reverse                   OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.491 GET Reverse                   OK       Response: {"ServerTransactionID": 1231, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.497 GET Reverse                   OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.497 GET Reverse                   OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1232
+09:05:18.498 GET Reverse                   OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.498 GET Reverse                   OK       Response: {"ServerTransactionID": 1232, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.503 GET Reverse                   OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.504 GET Reverse                   OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1233
+09:05:18.504 GET Reverse                   OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.505 GET Reverse                   OK       Response: {"ServerTransactionID": 1233, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.511 GET Reverse                   OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.512 GET Reverse                   OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1234
+09:05:18.512 GET Reverse                   OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.512 GET Reverse                   OK       Response: {"ServerTransactionID": 1234, "ClientTransactionID": 67890, "Value": false, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.519 GET Reverse                   OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.520 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.526 GET Reverse                   OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.526 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.533 GET Reverse                   OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.533 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.539 GET Reverse                   OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.539 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.545 GET Reverse                   OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.545 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.551 GET Reverse                   OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.551 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.557 GET Reverse                   OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.557 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.562 GET Reverse                   OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.563 GET Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.577 PUT Reverse                   OK     Parameter Reverse (Good casing) - The expected ClientTransactionID was returned: 67890
+09:05:18.578 PUT Reverse                   OK     Parameter Reverse (Good casing) - The ServerTransactionID was 1 or greater: 1236
+09:05:18.578 PUT Reverse                   OK     Parameter Reverse (Good casing) - Received HTTP status 200 (OK) as expected.
+09:05:18.578 PUT Reverse                   OK       Response: {"ServerTransactionID": 1236, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.584 PUT Reverse                   OK     Parameter Reverse (Good casing + extra parameter) - The expected ClientTransactionID was returned: 67890
+09:05:18.585 PUT Reverse                   OK     Parameter Reverse (Good casing + extra parameter) - The ServerTransactionID was 1 or greater: 1237
+09:05:18.585 PUT Reverse                   OK     Parameter Reverse (Good casing + extra parameter) - Received HTTP status 200 (OK) as expected.
+09:05:18.585 PUT Reverse                   OK       Response: {"ServerTransactionID": 1237, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.592 PUT Reverse                   OK     Parameter Reverse (Bad value) - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.592 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Bad boolean value \"asduio6fghzz\""}
+09:05:18.598 PUT Reverse                   OK     Parameter Reverse (Bad casing) - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.599 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Missing, empty, or misspelled parameter \"Reverse\""}
+09:05:18.606 PUT Reverse                   OK     Bad ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.606 PUT Reverse                   OK     Bad ClientID casing - The ServerTransactionID was 1 or greater: 1238
+09:05:18.610 PUT Reverse                   OK     Bad ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.611 PUT Reverse                   OK       Response: {"ServerTransactionID": 1238, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.619 PUT Reverse                   OK     Bad ClientTransactionID casing - The expected ClientTransactionID was returned: 0
+09:05:18.619 PUT Reverse                   OK     Bad ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1239
+09:05:18.619 PUT Reverse                   OK     Bad ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.620 PUT Reverse                   OK       Response: {"ServerTransactionID": 1239, "ClientTransactionID": 0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.628 PUT Reverse                   OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.628 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.636 PUT Reverse                   OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.637 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.644 PUT Reverse                   OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.644 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.654 PUT Reverse                   OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.654 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.661 PUT Reverse                   OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.661 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.670 PUT Reverse                   OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.670 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value      "}
+09:05:18.677 PUT Reverse                   OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.678 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.688 PUT Reverse                   OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.689 PUT Reverse                   OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.695 GET StepSize                  OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.695 GET StepSize                  OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1240
+09:05:18.696 GET StepSize                  OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.696 GET StepSize                  OK       Response: {"ServerTransactionID": 1240, "ClientTransactionID": 67890, "Value": 1.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.703 GET StepSize                  OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.703 GET StepSize                  OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1241
+09:05:18.703 GET StepSize                  OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.704 GET StepSize                  OK       Response: {"ServerTransactionID": 1241, "ClientTransactionID": 67890, "Value": 1.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.710 GET StepSize                  OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.710 GET StepSize                  OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1242
+09:05:18.711 GET StepSize                  OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.711 GET StepSize                  OK       Response: {"ServerTransactionID": 1242, "ClientTransactionID": 67890, "Value": 1.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.716 GET StepSize                  OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.717 GET StepSize                  OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1243
+09:05:18.717 GET StepSize                  OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.717 GET StepSize                  OK       Response: {"ServerTransactionID": 1243, "ClientTransactionID": 67890, "Value": 1.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.723 GET StepSize                  OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.724 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.731 GET StepSize                  OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.732 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.738 GET StepSize                  OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.738 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.744 GET StepSize                  OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.744 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.750 GET StepSize                  OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.750 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.755 GET StepSize                  OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.756 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.762 GET StepSize                  OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.762 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.768 GET StepSize                  OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.769 GET StepSize                  OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.774 GET TargetPosition            OK     Good ClientID and ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.775 GET TargetPosition            OK     Good ClientID and ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1244
+09:05:18.775 GET TargetPosition            OK     Good ClientID and ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.775 GET TargetPosition            OK       Response: {"ServerTransactionID": 1244, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.781 GET TargetPosition            OK     Good ClientID and ClientTransactionID casing with additional parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.781 GET TargetPosition            OK     Good ClientID and ClientTransactionID casing with additional parameter - The ServerTransactionID was 1 or greater: 1245
+09:05:18.781 GET TargetPosition            OK     Good ClientID and ClientTransactionID casing with additional parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.782 GET TargetPosition            OK       Response: {"ServerTransactionID": 1245, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.788 GET TargetPosition            OK     Different ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.789 GET TargetPosition            OK     Different ClientID casing - The ServerTransactionID was 1 or greater: 1246
+09:05:18.789 GET TargetPosition            OK     Different ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.789 GET TargetPosition            OK       Response: {"ServerTransactionID": 1246, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.795 GET TargetPosition            OK     Different ClientTransactionID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.795 GET TargetPosition            OK     Different ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1247
+09:05:18.796 GET TargetPosition            OK     Different ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.796 GET TargetPosition            OK       Response: {"ServerTransactionID": 1247, "ClientTransactionID": 67890, "Value": 0.0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.802 GET TargetPosition            OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.802 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.808 GET TargetPosition            OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.808 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.813 GET TargetPosition            OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.814 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.819 GET TargetPosition            OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.820 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.827 GET TargetPosition            OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.827 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.832 GET TargetPosition            OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.834 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.840 GET TargetPosition            OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.841 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.850 GET TargetPosition            OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.851 GET TargetPosition            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.858 PUT Halt                      OK     Good ID name casing - The expected ClientTransactionID was returned: 67890
+09:05:18.858 PUT Halt                      OK     Good ID name casing - The ServerTransactionID was 1 or greater: 1248
+09:05:18.859 PUT Halt                      OK     Good ID name casing - Received HTTP status 200 (OK) as expected.
+09:05:18.859 PUT Halt                      OK       Response: {"ServerTransactionID": 1248, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.874 PUT Halt                      OK     Good ID casing + extra parameter - The expected ClientTransactionID was returned: 67890
+09:05:18.874 PUT Halt                      OK     Good ID casing + extra parameter - The ServerTransactionID was 1 or greater: 1250
+09:05:18.874 PUT Halt                      OK     Good ID casing + extra parameter - Received HTTP status 200 (OK) as expected.
+09:05:18.875 PUT Halt                      OK       Response: {"ServerTransactionID": 1250, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.888 PUT Halt                      OK     Bad ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:18.888 PUT Halt                      OK     Bad ClientID casing - The ServerTransactionID was 1 or greater: 1252
+09:05:18.888 PUT Halt                      OK     Bad ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.889 PUT Halt                      OK       Response: {"ServerTransactionID": 1252, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.899 PUT Halt                      OK     Bad ClientTransactionID casing - The expected ClientTransactionID was returned: 0
+09:05:18.899 PUT Halt                      OK     Bad ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1254
+09:05:18.899 PUT Halt                      OK     Bad ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:18.900 PUT Halt                      OK       Response: {"ServerTransactionID": 1254, "ClientTransactionID": 0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:18.913 PUT Halt                      OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.913 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:18.924 PUT Halt                      OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.925 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:18.933 PUT Halt                      OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.933 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:18.941 PUT Halt                      OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.941 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:18.949 PUT Halt                      OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.949 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:18.957 PUT Halt                      OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.957 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value      "}
+09:05:18.965 PUT Halt                      OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.966 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:18.973 PUT Halt                      OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:18.973 PUT Halt                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:18.993 PUT Move                      OK     Parameter Position (Good casing) - The expected ClientTransactionID was returned: 67890
+09:05:18.994 PUT Move                      OK     Parameter Position (Good casing) - The ServerTransactionID was 1 or greater: 1258
+09:05:18.994 PUT Move                      OK     Parameter Position (Good casing) - Received HTTP status 200 (OK) as expected.
+09:05:18.994 PUT Move                      OK       Response: {"ServerTransactionID": 1258, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:19.539 PUT Move                      OK     Parameter Position (Good casing + extra parameter) - The expected ClientTransactionID was returned: 67890
+09:05:19.541 PUT Move                      OK     Parameter Position (Good casing + extra parameter) - The ServerTransactionID was 1 or greater: 1261
+09:05:19.543 PUT Move                      OK     Parameter Position (Good casing + extra parameter) - Received HTTP status 200 (OK) as expected.
+09:05:19.547 PUT Move                      OK       Response: {"ServerTransactionID": 1261, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:20.098 PUT Move                      OK     Parameter Position (Bad value) - The expected ClientTransactionID was returned: 67890
+09:05:20.099 PUT Move                      OK     Parameter Position (Bad value) - The ServerTransactionID was 1 or greater: 1264
+09:05:20.101 PUT Move                      OK     Parameter Position (Bad value) - Received HTTP status 200 (OK) and an invalid value error: Position asduio6fghZZ not a valid integer.
+09:05:20.102 PUT Move                      OK       Response: {"ServerTransactionID": 1264, "ClientTransactionID": 67890, "ErrorNumber": 1025, "ErrorMessage": "Position asduio6fghZZ not a valid integer."}
+09:05:20.111 PUT Move                      OK     Parameter Position (Bad casing) - Received HTTP status 400 (BadRequest) as expected.
+09:05:20.112 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Missing, empty, or misspelled parameter \"Position\""}
+09:05:20.130 PUT Move                      OK     Bad ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:20.130 PUT Move                      OK     Bad ClientID casing - The ServerTransactionID was 1 or greater: 1266
+09:05:20.131 PUT Move                      OK     Bad ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:20.131 PUT Move                      OK       Response: {"ServerTransactionID": 1266, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:20.676 PUT Move                      OK     Bad ClientTransactionID casing - The expected ClientTransactionID was returned: 0
+09:05:20.677 PUT Move                      OK     Bad ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1269
+09:05:20.678 PUT Move                      OK     Bad ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:20.679 PUT Move                      OK       Response: {"ServerTransactionID": 1269, "ClientTransactionID": 0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:21.208 PUT Move                      OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.209 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:21.217 PUT Move                      OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.217 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:21.226 PUT Move                      OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.226 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:21.237 PUT Move                      OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.238 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:21.245 PUT Move                      OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.245 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:21.253 PUT Move                      OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.254 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value      "}
+09:05:21.261 PUT Move                      OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.262 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:21.270 PUT Move                      OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:21.270 PUT Move                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:21.288 PUT MoveAbsolute              OK     Parameter Position (Good casing) - The expected ClientTransactionID was returned: 67890
+09:05:21.288 PUT MoveAbsolute              OK     Parameter Position (Good casing) - The ServerTransactionID was 1 or greater: 1274
+09:05:21.288 PUT MoveAbsolute              OK     Parameter Position (Good casing) - Received HTTP status 200 (OK) as expected.
+09:05:21.289 PUT MoveAbsolute              OK       Response: {"ServerTransactionID": 1274, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:21.817 PUT MoveAbsolute              OK     Parameter Position (Good casing + extra parameter) - The expected ClientTransactionID was returned: 67890
+09:05:21.818 PUT MoveAbsolute              OK     Parameter Position (Good casing + extra parameter) - The ServerTransactionID was 1 or greater: 1277
+09:05:21.818 PUT MoveAbsolute              OK     Parameter Position (Good casing + extra parameter) - Received HTTP status 200 (OK) as expected.
+09:05:21.818 PUT MoveAbsolute              OK       Response: {"ServerTransactionID": 1277, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:22.344 PUT MoveAbsolute              OK     Parameter Position (Bad value) - The expected ClientTransactionID was returned: 67890
+09:05:22.345 PUT MoveAbsolute              OK     Parameter Position (Bad value) - The ServerTransactionID was 1 or greater: 1280
+09:05:22.345 PUT MoveAbsolute              OK     Parameter Position (Bad value) - Received HTTP status 200 (OK) and an invalid value error: Position asduio6fghZZ not a valid integer.
+09:05:22.346 PUT MoveAbsolute              OK       Response: {"ServerTransactionID": 1280, "ClientTransactionID": 67890, "ErrorNumber": 1025, "ErrorMessage": "Position asduio6fghZZ not a valid integer."}
+09:05:22.352 PUT MoveAbsolute              OK     Parameter Position (Bad casing) - Received HTTP status 400 (BadRequest) as expected.
+09:05:22.353 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Missing, empty, or misspelled parameter \"Position\""}
+09:05:22.367 PUT MoveAbsolute              OK     Bad ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:22.367 PUT MoveAbsolute              OK     Bad ClientID casing - The ServerTransactionID was 1 or greater: 1282
+09:05:22.368 PUT MoveAbsolute              OK     Bad ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:22.368 PUT MoveAbsolute              OK       Response: {"ServerTransactionID": 1282, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:22.885 PUT MoveAbsolute              OK     Bad ClientTransactionID casing - The expected ClientTransactionID was returned: 0
+09:05:22.885 PUT MoveAbsolute              OK     Bad ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1285
+09:05:22.886 PUT MoveAbsolute              OK     Bad ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:22.887 PUT MoveAbsolute              OK       Response: {"ServerTransactionID": 1285, "ClientTransactionID": 0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:23.413 PUT MoveAbsolute              OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.413 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:23.422 PUT MoveAbsolute              OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.422 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:23.431 PUT MoveAbsolute              OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.431 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:23.438 PUT MoveAbsolute              OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.439 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:23.448 PUT MoveAbsolute              OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.449 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:23.457 PUT MoveAbsolute              OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.457 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value      "}
+09:05:23.465 PUT MoveAbsolute              OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.466 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:23.474 PUT MoveAbsolute              OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:23.474 PUT MoveAbsolute              OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:23.492 PUT MoveMechanical            OK     Parameter Position (Good casing) - The expected ClientTransactionID was returned: 67890
+09:05:23.493 PUT MoveMechanical            OK     Parameter Position (Good casing) - The ServerTransactionID was 1 or greater: 1290
+09:05:23.494 PUT MoveMechanical            OK     Parameter Position (Good casing) - Received HTTP status 200 (OK) as expected.
+09:05:23.495 PUT MoveMechanical            OK       Response: {"ServerTransactionID": 1290, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:24.023 PUT MoveMechanical            OK     Parameter Position (Good casing + extra parameter) - The expected ClientTransactionID was returned: 67890
+09:05:24.023 PUT MoveMechanical            OK     Parameter Position (Good casing + extra parameter) - The ServerTransactionID was 1 or greater: 1293
+09:05:24.024 PUT MoveMechanical            OK     Parameter Position (Good casing + extra parameter) - Received HTTP status 200 (OK) as expected.
+09:05:24.025 PUT MoveMechanical            OK       Response: {"ServerTransactionID": 1293, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:24.546 PUT MoveMechanical            OK     Parameter Position (Bad value) - The expected ClientTransactionID was returned: 67890
+09:05:24.546 PUT MoveMechanical            OK     Parameter Position (Bad value) - The ServerTransactionID was 1 or greater: 1296
+09:05:24.547 PUT MoveMechanical            OK     Parameter Position (Bad value) - Received HTTP status 200 (OK) and an invalid value error: Position asduio6fghZZ not a valid integer.
+09:05:24.547 PUT MoveMechanical            OK       Response: {"ServerTransactionID": 1296, "ClientTransactionID": 67890, "ErrorNumber": 1025, "ErrorMessage": "Position asduio6fghZZ not a valid integer."}
+09:05:24.553 PUT MoveMechanical            OK     Parameter Position (Bad casing) - Received HTTP status 400 (BadRequest) as expected.
+09:05:24.554 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Missing, empty, or misspelled parameter \"Position\""}
+09:05:24.568 PUT MoveMechanical            OK     Bad ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:24.569 PUT MoveMechanical            OK     Bad ClientID casing - The ServerTransactionID was 1 or greater: 1298
+09:05:24.569 PUT MoveMechanical            OK     Bad ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:24.569 PUT MoveMechanical            OK       Response: {"ServerTransactionID": 1298, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.088 PUT MoveMechanical            OK     Bad ClientTransactionID casing - The expected ClientTransactionID was returned: 0
+09:05:25.089 PUT MoveMechanical            OK     Bad ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1301
+09:05:25.089 PUT MoveMechanical            OK     Bad ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:25.090 PUT MoveMechanical            OK       Response: {"ServerTransactionID": 1301, "ClientTransactionID": 0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.616 PUT MoveMechanical            OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.617 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:25.624 PUT MoveMechanical            OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.625 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:25.633 PUT MoveMechanical            OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.634 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:25.642 PUT MoveMechanical            OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.642 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:25.651 PUT MoveMechanical            OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.651 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:25.658 PUT MoveMechanical            OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.659 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value      "}
+09:05:25.668 PUT MoveMechanical            OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.669 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:25.677 PUT MoveMechanical            OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.677 PUT MoveMechanical            OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:25.695 PUT Sync                      OK     Parameter Position (Good casing) - The expected ClientTransactionID was returned: 67890
+09:05:25.695 PUT Sync                      OK     Parameter Position (Good casing) - The ServerTransactionID was 1 or greater: 1306
+09:05:25.695 PUT Sync                      OK     Parameter Position (Good casing) - Received HTTP status 200 (OK) as expected.
+09:05:25.696 PUT Sync                      OK       Response: {"ServerTransactionID": 1306, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.707 PUT Sync                      OK     Parameter Position (Good casing + extra parameter) - The expected ClientTransactionID was returned: 67890
+09:05:25.708 PUT Sync                      OK     Parameter Position (Good casing + extra parameter) - The ServerTransactionID was 1 or greater: 1308
+09:05:25.708 PUT Sync                      OK     Parameter Position (Good casing + extra parameter) - Received HTTP status 200 (OK) as expected.
+09:05:25.708 PUT Sync                      OK       Response: {"ServerTransactionID": 1308, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.720 PUT Sync                      OK     Parameter Position (Bad value) - The expected ClientTransactionID was returned: 67890
+09:05:25.720 PUT Sync                      OK     Parameter Position (Bad value) - The ServerTransactionID was 1 or greater: 1310
+09:05:25.721 PUT Sync                      OK     Parameter Position (Bad value) - Received HTTP status 200 (OK) and an invalid value error: Position asduio6fghZZ not a valid integer.
+09:05:25.721 PUT Sync                      OK       Response: {"ServerTransactionID": 1310, "ClientTransactionID": 67890, "ErrorNumber": 1025, "ErrorMessage": "Position asduio6fghZZ not a valid integer."}
+09:05:25.731 PUT Sync                      OK     Parameter Position (Bad casing) - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.732 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Missing, empty, or misspelled parameter \"Position\""}
+09:05:25.742 PUT Sync                      OK     Bad ClientID casing - The expected ClientTransactionID was returned: 67890
+09:05:25.742 PUT Sync                      OK     Bad ClientID casing - The ServerTransactionID was 1 or greater: 1312
+09:05:25.743 PUT Sync                      OK     Bad ClientID casing - Received HTTP status 200 (OK) as expected.
+09:05:25.743 PUT Sync                      OK       Response: {"ServerTransactionID": 1312, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.754 PUT Sync                      OK     Bad ClientTransactionID casing - The expected ClientTransactionID was returned: 0
+09:05:25.755 PUT Sync                      OK     Bad ClientTransactionID casing - The ServerTransactionID was 1 or greater: 1314
+09:05:25.755 PUT Sync                      OK     Bad ClientTransactionID casing - Received HTTP status 200 (OK) as expected.
+09:05:25.755 PUT Sync                      OK       Response: {"ServerTransactionID": 1314, "ClientTransactionID": 0, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.768 PUT Sync                      OK     ClientID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.769 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value "}
+09:05:25.776 PUT Sync                      OK     ClientID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.777 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value      "}
+09:05:25.783 PUT Sync                      OK     ClientID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.784 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value -12345"}
+09:05:25.791 PUT Sync                      OK     ClientID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.792 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientID value asdasd"}
+09:05:25.799 PUT Sync                      OK     ClientTransactionID is empty - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.799 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value "}
+09:05:25.806 PUT Sync                      OK     ClientTransactionID is white space - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.807 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value      "}
+09:05:25.814 PUT Sync                      OK     ClientTransactionID is negative - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.815 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value -67890"}
+09:05:25.825 PUT Sync                      OK     ClientTransactionID is a string - Received HTTP status 400 (BadRequest) as expected.
+09:05:25.825 PUT Sync                      OK       Response: {"title": "Bad Alpaca Request", "description": "Request has bad Alpaca ClientTransactionID value qweqwe"}
+09:05:25.838                                     
+09:05:25.847 PUT Connected                 OK     False - The expected ClientTransactionID was returned: 67890
+09:05:25.848 PUT Connected                 OK     False - The ServerTransactionID was 1 or greater: 1318
+09:05:25.848 PUT Connected                 OK     False - Received HTTP status 200 (OK) as expected.
+09:05:25.848 PUT Connected                 OK       Response: {"ServerTransactionID": 1318, "ClientTransactionID": 67890, "ErrorNumber": 0, "ErrorMessage": ""}
+09:05:25.848                                     
+09:05:25.849 Congratulations there were no errors, issues or information alerts - Your device passes ASCOM Alpaca protocol validation!! 

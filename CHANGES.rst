@@ -19,7 +19,7 @@ Version 0.3.0 Experimental (2023-06-01)
   `GitHub Issue #1 <https://github.com/BobDenny/AlpycaDevice/issues/1>`_
   and
   `GitHub Issue #3 <https://github.com/BobDenny/AlpycaDevice/issues/3>`_.
-* Enhancment of templates to add procesing of PUT parameters and proper
-  exception reporting
-* Passes the new Alpaca Protocol checker (this requireed many changes!)
-
+* Enhancment of templates to add explicit names and procesing of PUT parameters
+  and for proper exception reporting. This includes
+  `GitHub Issue #2 <https://github.com/BobDenny/AlpycaDevice/issues/2>`_.
+* Passes the new Alpaca Protocol checker (this required numerous changes!)

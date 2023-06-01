@@ -45,11 +45,13 @@
 from falcon import Request, Response
 from shr import PropertyResponse, DeviceMetadata
 from config import Config
+from logging import Logger
 # For each *type* of device served
 from rotator import RotatorMetadata
 
-#logger: Logger = None
-logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
+logger: Logger = None
+#logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
+
 def set_management_logger(lgr):
     global logger
     logger = lgr
@@ -80,7 +82,7 @@ class description:
 # -----------------
 class configureddevices():
     def on_get(self, req: Request, resp: Response):
-        confarray = [                          # TODO ADD ONE FOR EACH DEVICE TYPE AND INSTANCE SERVED
+        confarray = [    # TODO ADD ONE FOR EACH DEVICE TYPE AND INSTANCE SERVED
             {
             'DeviceName'    : RotatorMetadata.Name,
             'DeviceType'    : RotatorMetadata.DeviceType,
