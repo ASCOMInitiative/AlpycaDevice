@@ -7,11 +7,18 @@
 Developer Roadmap
 =================
 
-
 Before starting your development project, it is highly recommended that you take
-a few minutes to read through |princ|. Also, t's suggested that you make an
+a few minutes to read through |princ|. Also, it's suggested that you make an
 Alpaca driver for a single ASCOM device type and a single instance of that
-device. This roadmap is written with that in mind.
+device, using the sample Rotator driver as a guide. Before doing this,
+though, it's good to know how  the moving parts fit together.
+This roadmap is written with that in mind.
+
+.. note::
+    If you are more inclined to dive in and sink or swim, follow the steps in
+    :ref:`create-first_driver` then when you get mixed up, don't know what'same
+    what, you can come back here and take the time to come up to speed on the
+    structure and usage of the moving parts.
 
 Alpaca Driver Request Flow - Responder Classes
 ----------------------------------------------
@@ -37,9 +44,10 @@ Preprocessor
 ``@before`` - This is a decorator :py:class:`~shr.PreProcessRequest()` which is
 applied to all responder classes. Its job is to quality check the request. It
 rejects illegal values for Alpaca ``ClientID`` and ``ClientTransactionID``. It
-also checks that the ``DeviceNumber`` is a valid integer. If any of these tests
-fail, it raises an ``HTTPBadRequest`` [#f1]_  with a body containing a specific
-error message.
+also checks that the ``DeviceNumber`` is a valid integer, and in range for the
+number of instances that your driver supports (for example, it supports two
+focusers). If any of these tests fail, it raises an ``HTTPBadRequest``
+[#f1]_  with a body containing a specific error message.
 
 .. note::
 
@@ -91,12 +99,13 @@ method. Here is the responder code for :py:class:`~rotator.MoveAbsolute`:
     :align: center
 
 The main thing to note here is that the parameter for the *method* comes in the
-HTTP body of the ``PUT``. Falcon provides the ``req.get_media()`` function to
-get the form data, and the fields are in a Python dictionary. So for example the
-``Position`` parameter to ``MoveAbsolute()`` is element ``'Position'`` of the
-dictionary. It uses the :py:class:`~shr.MethodResponse` class to construct the
-JSON response. We'll cover the more detailed exception handling in the next
-section.
+HTTP body of the ``PUT`` as "form data". The boilerplate function
+:py:func:`shr.get_request_field()` handles getting parameter text
+from the PUT body, including capitalization requirements, raising an
+`HTTPBadRequest` exception if anything
+goes wrong. The PUT responder uses the :py:class:`~shr.MethodResponse` class
+to construct the JSON response. We'll cover the more detailed exception
+handling in the next section. :py:func``
 
 
 Alpaca Exceptions
@@ -122,12 +131,12 @@ message with which it constructs the Alpaca JSON Response:
 
 It sets the ``Response.text`` to the above Alpaca JSON, and returns to Falcon,
 which returns the JSON as the HTTP body with a ``200 OK`` status. Note that any
-Alpaca request which gets to the responder always returns with an HTTP ``200
-OK`` status, even though the response might be an Alpaca exception like this.
+Alpaca request which gets to the responder always returns with an HTTP
+``200 OK`` status, even though the response might be an Alpaca exception like this.
 
 .. tip::
 
-    You can supply your own error message as an optional parameter to any of the
+    You should supply your own error message as an optional parameter to any of the
     Alpaca exception classes. You should try to help the client app and its user
     by providing specifics about the error, and even perhaps a suggestion on how
     to fix the problem.

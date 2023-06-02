@@ -135,10 +135,16 @@ Three types of exceptions here:
 
 28-May-2023
 -----------
-* On the W10 system, running from global environment, the RST extension is failing to start esbonio for a space in the command line.
-  The author doesn't give a shit per the GitHub traffic. NOW WHAT? GOD ALMIGHTY THIS STUFF IS SOOOOOO FRAGILE. I seem to recall that
-  I needed to revert to 189.1.0..... I did it and now it works. DAMN! I opened the  Extension page and the "Update to 189.3.0 dropdown
-  has an option "Ignore Updates". I did it.
+* On the W10 system, running from global environment, the RST extension is failing to start esbonio for a space in the
+  command line. The author doesn't give a shit per the GitHub traffic. NOW WHAT? GOD ALMIGHTY THIS STUFF IS SOOOOOO
+  FRAGILE. I seem to recall that I needed to revert to 189.1.0..... I did it and now it works. DAMN! I opened the
+  Extension page and the "Update to 189.3.0 dropdown has an option "Ignore Updates". I did it. That "cured" the
+  problem. You should see the traffi on GitHub for   the RestructuredText extension. The author says "well no
+  one uses Windows anyway"" yet it worked fine 2 releases previous.
+
+  ####################################################################
+  ### DO NOT UPDATE THE RESTRUCTURED TEXT EXTENSION BEYOND 189.1.0 ###
+  ####################################################################
 
 01-Jun-2023
 -----------
@@ -146,3 +152,17 @@ Three types of exceptions here:
 Apparently, the preview feature depends on the RST file being compiled by esbonio. Running it does not compile
 CHANGES.rst because it is outside the docs folder. It is not part of the docs but there for viewing on GitHub
 at the rood of the folder tree. No preview on this.
+
+* I keep getting this cryptic message while editing RST docs with a squiggle yellow at the end of the editor.
+      RuntimeWarning: 'doc8.main' found in sys.modules after import of package 'doc8', but prior to execution
+      of 'doc8.main'; this may result in unpredictable behaviour
+  Great. Try to find any info on this ha ha ha. I'm pretty sure doc8 is an RST linter? This should be fun....
+
+* Reminder frm a horrible wrestling match on another project where the PDF construction in Sphinx (rinohtype)
+  dies for any Sphinx runs. This turned out to be the importlib-metadata packate (Python) which nededs to stay
+  at 4.1.4. Maybe later but I don't have time to look at this. Apparently as I recall there wa sa breaking API
+  change with V6 that sacorched Sphinx and/or Rinoh.
+
+  ##########################################################################
+  ### DO NOT ALLOW PYTHON PKG IMPORTLIB-METADATA TO UPDATE BEYOND 4.11.4 ###
+  ##########################################################################

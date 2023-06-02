@@ -24,7 +24,7 @@ Alpaca Exception response.
     **Start Here:** :doc:`/quickstart` then look through :doc:`/introduction`.
 
 .. Note::
-    This is the 0.1.x developmental version. For release notes see
+    This is the 0.3.x (June 01, 2023) experimental version. For release notes see
     |changes| on the |github|.
 
 For background see |about| and |alpcon| on the |ascsite|. As an astronomy
@@ -55,7 +55,7 @@ developer wanting to use Alpaca, we suggest you look over |devhelp| and join the
 .. |alpcon| raw:: html
 
     <a href="https://ascom-standards.org/About/Conn-Alpaca.htm" target="_blank">
-    About Alpaca and ASCOM</a>
+    ASCOM Alpaca Connectivity</a>
 
 .. |conformu| raw:: html
 

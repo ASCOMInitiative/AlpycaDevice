@@ -217,7 +217,7 @@ class PropertyResponse():
         """
         self.ServerTransactionID = getNextTransId()
         self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))  #Caseless on GET
-        if err == Success() and not value is None:
+        if err.Number == 0 and not value is None:
             self.Value = value
             logger.info(f'{req.remote_addr} <- {str(value)}')
         self.ErrorNumber = err.Number
@@ -249,7 +249,7 @@ class MethodResponse():
         # This is crazy ... if casing is incorrect here, we're supposed to return the default 0
         # even if the caseless check coming in returned a valid number. This is for PUT only.
         self.ClientTransactionID = int(get_request_field('ClientTransactionID', req, False, 0))
-        if err == Success() and not value is None:
+        if err.Number == 0 and not value is None:
             self.Value = value
             logger.info(f'{req.remote_addr} <- {str(value)}')
         self.ErrorNumber = err.Number
