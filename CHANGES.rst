@@ -23,3 +23,4 @@ Version 0.3.0 Experimental (2023-06-01)
   and for proper exception reporting. This includes
   `GitHub Issue #2 <https://github.com/BobDenny/AlpycaDevice/issues/2>`_.
 * Passes the new Alpaca Protocol checker (this required numerous changes!)
+* Documentation enhancements (lots!)

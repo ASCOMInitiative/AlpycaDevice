@@ -1,4 +1,6 @@
-# AlpycaDevice - Python Alpaca Device Framework and Templates
+# AlpycaDevice - Python Alpaca Device Driver SDK
+
+## Version 0.3.0, June 2, 2023 (experimental)
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
 
@@ -8,50 +10,27 @@ a basic Rotator device with a simple simulation for Conform tests.
 **Templates for all ASCOM device types are provided**. The "boiler plate" logic
 remains the same for any device.
 
-## Incomplete Update (May 31, 2023) *Incomplete - Needs templates and docs updated.* Result of premature merge of my development branch into the master. Oops. Will have this out by week's end
-
-## 30-May-2023 Doc and Video are for 0.1, and 0.3 experimental is now on the master branch
-
-## [Alpyca Device Full Documentation](https://ascom-standards.org/alpycadevice/)
-
-## [Quick Start Video Introduction](https://www.youtube.com/watch?v=bJ-1TJBfe0c")
+## [AlpycaDevice SDK 0.3.0 Documentation](https://ascom-standards.org/alpycadevice/)
 
 ## Quick Start
 
-Here's how to get this sample running on your development system. We recommended
-you use [Visual Studio Code](https://code.visualstudio.com/) and the Python
-plugins including the recommended linting tools (cross platform, Mac,
-Linux, Windows) for Python development but it's certainly not a requirement.
-
-1. Clone the [this repo](https://github.com/BobDenny/AlpycaDevice) from GitHub.
-2. The ``device`` folder has all of the driver app files, ``app.py`` is the startup
-3. Look at ``config.toml`` and if port 5555 is ok, you can leave everything else for now.
-4. Recommend you create (and activate) a separate Python virtual environment.
-   You do not need Conda or any fancy virtual environment tools.
-5. Use ``pip`` to install ``falcon`` and ``toml``. These are the only two packages
-   needed by the driver sample.
-6. If you don't have the cross-platform
-   [Conform Universal tool](https://github.com/ASCOMInitiative/ConformU/releases) get it now.
-7. Start the sample/template from the ``device`` folder ``python app.py``. It will
-   not write to the shell/stdout. See the ``rotator.log`` file created in the ``device``
-   folder.
-8. Start ConformU and click Select Device. The sample should be discovered. If your
-   dev system is on multiple IP addresses, you'll see it listed multiple times.
-   Pick any one.
-9. Click Start and watch it exercise this sample device. After a while it should
-   complete successfully.
-10. Now use the Alpaca Protocol Checker in ConformU to validate the
+Open the [Alpyca Device Quick Start section of the above
+documentation](https://ascom-standards.org/alpycadevice/quickstart.html). This gives
+instructions on getting the sample to run and pass the ConformU checks (see below),
+as well as step-by-step detailed instructions on creating a skeleton Alpaca
+driver for any ASCOM device using the provided templates.
 
 ## Status of this project
 
-Fairly extensive refactoring of bits to make supporting multiple device *types* as
-well as multiple instandces of a given device type. Passes [Conform
+This is intended to be the last experimental release. **Templates for all ASCOM
+device types are included**. While preserving simplicity
+as much as possible, version 0.3.0 can easily be configured for multiple ASCOM
+device types and multiple instances of a given ASCOM device type within the
+Alpaca device/server. The sample Rotator simulator passes [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) for
 Rotator device, as well as [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) Alpaca
 Protocol tests.
-docstrings and [Sphinx build to
-HTML](https://ascom-standards.org/alpycadevice/) completed.
 
 ## Potential Applications
 

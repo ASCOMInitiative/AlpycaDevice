@@ -63,12 +63,16 @@ import discovery
 import exceptions
 from falcon import Request, Response, App, HTTPInternalServerError
 import management
-import rotator
 import setup
 import log
 from config import Config
 from discovery import DiscoveryResponder
 from shr import set_shr_logger
+
+#########################
+# FOR EACH ASCOM DEVICE #
+#########################
+import rotator
 
 #--------------
 API_VERSION = 1
@@ -212,11 +216,15 @@ def main():
     logger = log.init_logging()
     # Share this logger throughout
     log.logger = logger
-    rotator.logger = logger
     exceptions.logger = logger
     rotator.start_rot_device(logger)
     discovery.logger = logger
     set_shr_logger(logger)
+
+    #########################
+    # FOR EACH ASCOM DEVICE #
+    #########################
+    rotator.logger = logger
 
     # -----------------------------
     # Last-Chance Exception Handler
@@ -236,7 +244,12 @@ def main():
     #
     # Initialize routes for each endpoint the magic way
     #
+    #########################
+    # FOR EACH ASCOM DEVICE #
+    #########################
     init_routes(falc_app, 'rotator', rotator)
+    #
+    # Initialize routes for Alpaca support endpoints
     falc_app.add_route('/management/apiversions', management.apiversions())
     falc_app.add_route(f'/management/v{API_VERSION}/description', management.description())
     falc_app.add_route(f'/management/v{API_VERSION}/configureddevices', management.configureddevices())

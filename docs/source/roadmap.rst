@@ -7,11 +7,9 @@
 Developer Roadmap
 =================
 
-Before starting your development project, it is highly recommended that you take
-a few minutes to read through |princ|. Also, it's suggested that you make an
-Alpaca driver for a single ASCOM device type and a single instance of that
-device, using the sample Rotator driver as a guide. Before doing this,
-though, it's good to know how  the moving parts fit together.
+It's suggested that you make an Alpaca driver for a single ASCOM device type and
+a single instance of that device, using the sample Rotator driver as a guide.
+Before doing this, though, it's good to know how the moving parts fit together.
 This roadmap is written with that in mind.
 
 .. note::
@@ -34,20 +32,23 @@ Here is the code to handle a simple request for the Rotator's
 :py:class:`~rotator.IsMoving` property.
 
 .. image:: ismoving.png
-    :height: 264px
-    :width: 700px
+    :height: 289px
+    :width: 746px
     :align: center
 
 Preprocessor
 ~~~~~~~~~~~~
 
 ``@before`` - This is a decorator :py:class:`~shr.PreProcessRequest()` which is
-applied to all responder classes. Its job is to quality check the request. It
+applied to all responder classes. TIts job is to quality check the request. It
 rejects illegal values for Alpaca ``ClientID`` and ``ClientTransactionID``. It
-also checks that the ``DeviceNumber`` is a valid integer, and in range for the
-number of instances that your driver supports (for example, it supports two
-focusers). If any of these tests fail, it raises an ``HTTPBadRequest``
+also checks that the ``DeviceNumber`` in the request is a valid integer, and in range for the
+maximum device number (0  by default). If any of these tests fail, it raises an ``HTTPBadRequest``
 [#f1]_  with a body containing a specific error message.
+
+If your driver supports multiple instances of your device (e.g. multiple focusers)
+then the ``maxdev`` variable in your device responder code (e.g. focuser.py) will
+need to be one less than the number of instances you support.
 
 .. note::
 
@@ -76,7 +77,7 @@ property response, including the retrieved position value. For example:
     :caption: Alpaca property response
 
     {
-        "Value": true               // It's moving
+        "Value": true,              // It's moving
         "ClientTransactionID": 321,
         "ServerTransactionID": 1,   // Automatically bumped by PropertyResponse
         "ErrorNumber": 0,           // Success
@@ -94,13 +95,13 @@ Alpaca API *method* calls, those which do something, use the HTTP ``PUT``
 method. Here is the responder code for :py:class:`~rotator.MoveAbsolute`:
 
 .. image:: moveabsolute.png
-    :height: 375px
-    :width: 700px
+    :height: 497px
+    :width: 1003px
     :align: center
 
 The main thing to note here is that the parameter for the *method* comes in the
 HTTP body of the ``PUT`` as "form data". The boilerplate function
-:py:func:`shr.get_request_field()` handles getting parameter text
+:py:func:`~shr.get_request_field()` handles getting parameter text
 from the PUT body, including capitalization requirements, raising an
 `HTTPBadRequest` exception if anything
 goes wrong. The PUT responder uses the :py:class:`~shr.MethodResponse` class
@@ -117,22 +118,26 @@ Continuing with the above sample, note how the Alpaca
 as its first parameter. The second parameter, the Alpaca exception class
 :py:class:`~exceptions.NotConnectedException` is used by
 :py:class:`~shr.PropertyResponse` to get the Alpaca error number and an error
-message with which it constructs the Alpaca JSON Response:
+message with which it constructs the Alpaca JSON Response.
 
 .. code-block:: json
-    :emphasize-lines: 2,3
+    :emphasize-lines: 4,5
     :caption: Alpaca **NotConnectedException** response
 
     {
+        "ClientTransactionID": 321,
+        "ServerTransactionID": 1,
         "ErrorNumber": 1031,        // 0x407
         "ErrorMessage": "The device is not connected.",
-        "Value": ""                 // App ignores this value if present
     }
 
 It sets the ``Response.text`` to the above Alpaca JSON, and returns to Falcon,
 which returns the JSON as the HTTP body with a ``200 OK`` status. Note that any
 Alpaca request which gets to the responder always returns with an HTTP
 ``200 OK`` status, even though the response might be an Alpaca exception like this.
+Also note that the ``Value`` field is missing. It is meaningless in an exception
+response where ``ErrorNumber`` is non-zero. The :py:class:`~shr.MethodResponse` class
+takes care of this.
 
 .. tip::
 
@@ -176,18 +181,19 @@ no specified meaning within Alpaca.
 Invocations of DriverException
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Throughout the template/sample, the invocation of ``DriverException`` uses some
-Python 'dunders' to help get the endpoint name into the error message, and also
-hand the caught Python runtime exception (``as ex``) to ``DriverException`` for
+Throughout the template/sample, the invocation of ``DriverException`` uses
+the caught Python runtime exception (``as ex``) to ``DriverException`` for
 error reporting including possible traceback (see next section). You will see
 this pattern used throughout the template/sample and it is self-documenting
-thanks to the dunders.
+thanks to the templates already having the device and member names.
 
 .. code-block:: python
+    :caption: Alpaca **DriverException** response
+    :emphasize-lines: 3
 
     except Exception as ex:
         resp.text = MethodResponse(req, # Put is actually like a method :-(
-                        DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                        DriverException(0x500, '{Device.Member} failed', ex)).json
         return
 
 
@@ -205,7 +211,7 @@ with a detailed error message like ``Rotator has failed, possible jam or cable
 wrap``. If the *completion property* ``IsMoving`` returns False it means "no
 longer moving and it got there *successfully*."
 
-In this case, even deep within your device code, raise any Python exception
+In this case, even deep within your device code, raise *any Python exception*
 (e.g. ``RuntimeError``) with your detailed message. The boiler plate exception
 handling shown above and used in all of the responder classes will turn this
 into a useful Alpaca ``DriverException``.
@@ -239,7 +245,9 @@ raise an internal Python ``RuntimeError``. The result will be your driver
 returning something like the following ``DriverException`` (with a ``200 OK``
 HTTP status).
 
-.. code-block:: json
+.. code-block::
+    :caption: Alpaca Verbose **DriverException** Response
+    :emphasize-lines: 4,5,6,7,8,9,10,11
 
     {
         "ServerTransactionID": 3,
@@ -278,6 +286,9 @@ to ``false``, this is what is returned when the app violates the "can't move
 while moving" rule.
 
 .. code-block:: json
+    :caption: Alpaca Normal **DriverException** Response
+    :emphasize-lines: 4,5,6
+
 
     {
         "ServerTransactionID": 3,
@@ -313,9 +324,7 @@ Falcon API responder, it ends up in the "last-chance exception handler"
 application. Otherwise the unhanded exception is logged and dismissed. If there
 is any possibility that the Python code can still run, it will. If the exception
 leads to a cascade of other exceptions, the Python will eventually die. This
-handler is installed during app startup :py:func:`app.main`. Have a look at this
-but don't change anything except the list of API endpoint class modules that
-:py:func:`app.init_routes` sets up.
+handler is installed during app startup :py:func:`app.main`.
 
 .. rubric:: Footnotes
 

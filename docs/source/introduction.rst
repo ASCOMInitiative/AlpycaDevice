@@ -3,9 +3,9 @@
     :width: 128px
     :align: right
 
-============
-Introduction
-============
+==============================
+Introduction to Alpaca Drivers
+==============================
 
 Writing a successful device driver requires, first and foremost, a clear
 understanding of the role of a driver, and by extension, the responsibilities of
@@ -122,10 +122,13 @@ programming with an async/await type feature, the Alpaca base model is one of
 explicit endpoints acting as *initiators* and *completion properties*.
 
 .. attention::
+
     * Your device and the responders in the driver must return promptly to every call.
     * This may surprise you, but if your device runs into trouble after
-      successfully starting an operation, you *must* raise an exception when
+      successfully starting an operation, you *should* raise an exception when
       the client app later asks for the status of that operation. See |async|.
+      test
+
 
 .. _excep-intro:
 
