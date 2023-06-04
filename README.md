@@ -12,6 +12,9 @@ remains the same for any device.
 
 ## [AlpycaDevice SDK 0.3.0 Documentation](https://ascom-standards.org/alpycadevice/)
 
+[![AlpycaDevice Video](https://raw.githubusercontent.com/BobDenny/AlpycaDevice/master/docs/source/vthumb.png)](https://www.youtube.com/watch?v=soGb0j4iOt4 "AlpycaDevice Video")
+
+
 ## Quick Start
 
 Open the [Alpyca Device Quick Start section of the above
