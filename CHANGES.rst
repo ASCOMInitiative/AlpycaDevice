@@ -27,10 +27,10 @@ Version 0.3.0 Experimental (2023-06-01)
 
 Version 0.4.0 Experimental (2023-11-08)
 =======================================
-* Fix templates to remove `to_int()` and `to_float()` from import
+* Fix templates to remove ``to_int()`` and ``to_float()`` from import
   of ``shr``, These were eliminated  in earlier refactoring.
   `GitHub Issue #6 <https://github.com/BobDenny/AlpycaDevice/issues/6>`_.
-* Rename `rotator.log` in `log.py` module to `alpyca.log` since this server can
+* Rename ``rotator.log`` in ``log.py`` module to ``alpyca.log`` since this server can
   support multiple device types. Update QuickStart to mention
   that the name may  be changed to match the single device type (dome e.g.).
   `GitHub Issue #7 <https://github.com/BobDenny/AlpycaDevice/issues/7>`_.
