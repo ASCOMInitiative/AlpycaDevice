@@ -34,6 +34,7 @@
 # Edit History:
 # 01-Jan-2023   rbd 0.1 Initial edit, moved from config.py
 # 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
+# 08-Nov-2023   rbd 0.4 Log name is now 'alpyca'
 
 import logging
 import logging.handlers
@@ -71,7 +72,7 @@ def init_logging():
     formatter.converter = time.gmtime           # UTC time
     logger.handlers[0].setFormatter(formatter)  # This is the stdout handler, level set above
     # Add a logfile handler, same formatter and level
-    handler = logging.handlers.RotatingFileHandler('rotator.log',
+    handler = logging.handlers.RotatingFileHandler('alpyca.log',
                                                     mode='w',
                                                     delay=True,     # Prevent creation of empty logs
                                                     maxBytes=Config.max_size_mb * 1000000,
