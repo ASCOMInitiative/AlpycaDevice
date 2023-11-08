@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool, to_int, to_float
+                get_request_field, to_bool
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -51,52 +51,71 @@ class CameraMetadata:
 # --------------------
 
 @before(PreProcessRequest(maxdev))
-class Action:
+class action:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandBlind:
+class commandblind:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandBool:
+class commandbool:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandString():
+class commandstring:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class Description():
+class connected:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+            # -------------------------------
+            is_conn = ### READ CONN STATE ###
+            # -------------------------------
+        resp.text = PropertyResponse(is_conn, req).json)
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        conn_str = get_request_field('Connected', req)
+        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
+        try:
+            # --------------------------------
+            ### CONNECT/DISCONNECT()PARAM) ###
+            # --------------------------------
+           resp.text = MethodResponse(req).json
+        except Exception as ex:
+            DriverException(0x500, 'Camera.{Memname} failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(CameraMetadata.Description, req).json
 
 @before(PreProcessRequest(maxdev))
-class DriverInfo():
+class driverinfo:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(CameraMetadata.Info, req).json
 
 @before(PreProcessRequest(maxdev))
-class InterfaceVersion():
+class interfaceversion:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(CameraMetadata.InterfaceVersion, req).json
 
 @before(PreProcessRequest(maxdev))
-class DriverVersion():
+class driverversion():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(CameraMetadata.Version, req).json
 
 @before(PreProcessRequest(maxdev))
-class Name():
+class name():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(CameraMetadata.Name, req).json
 
 @before(PreProcessRequest(maxdev))
-class SupportedActions():
+class supportedactions:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 
@@ -163,21 +182,7 @@ class binx:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'BinX " + binxstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Binx failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -216,21 +221,7 @@ class biny:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'BinY " + binystr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Biny failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -461,20 +452,6 @@ class cooleron:
             resp.text = MethodResponse(req,
                             DriverException(0x500, 'Camera.Cooleron failed', ex)).json
 
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Cooleron failed', ex)).json
-
 @before(PreProcessRequest(maxdev))
 class coolerpower:
 
@@ -594,20 +571,6 @@ class fastreadout:
             resp.text = MethodResponse(req,
                             DriverException(0x500, 'Camera.Fastreadout failed', ex)).json
 
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Fastreadout failed', ex)).json
-
 @before(PreProcessRequest(maxdev))
 class fullwellcapacity:
 
@@ -654,21 +617,7 @@ class gain:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Gain " + gainstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Gain failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -945,21 +894,7 @@ class numx:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'NumX " + numxstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Numx failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -998,21 +933,7 @@ class numy:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'NumY " + numystr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Numy failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1051,21 +972,7 @@ class offset:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Offset " + offsetstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Offset failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1206,21 +1113,7 @@ class readoutmode:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'ReadoutMode " + readoutmodestr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Readoutmode failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1310,21 +1203,7 @@ class setccdtemperature:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'SetCCDTemperature " + setccdtemperaturestr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Setccdtemperature failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1363,21 +1242,7 @@ class startx:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'StartX " + startxstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Startx failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1416,21 +1281,7 @@ class starty:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'StartY " + startystr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Starty failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1469,21 +1320,7 @@ class subexposureduration:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'SubExposureDuration " + subexposuredurationstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Subexposureduration failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1525,7 +1362,7 @@ class pulseguide:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Direction " + directionstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
         try:
             duration = int(durationstr)
@@ -1533,21 +1370,7 @@ class pulseguide:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Duration " + durationstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Pulseguide failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1572,24 +1395,10 @@ class startexposure:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Duration " + durationstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
         lightstr = get_request_field('Light', req)      # Raises 400 bad request if missing
         light = to_bool(lightstr)                       # Same here
 
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Camera.Startexposure failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

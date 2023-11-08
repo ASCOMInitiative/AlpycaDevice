@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool, to_int, to_float
+                get_request_field, to_bool
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -51,52 +51,71 @@ class ObservingconditionsMetadata:
 # --------------------
 
 @before(PreProcessRequest(maxdev))
-class Action:
+class action:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandBlind:
+class commandblind:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandBool:
+class commandbool:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class CommandString():
+class commandstring:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class Description():
+class connected:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+            # -------------------------------
+            is_conn = ### READ CONN STATE ###
+            # -------------------------------
+        resp.text = PropertyResponse(is_conn, req).json)
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        conn_str = get_request_field('Connected', req)
+        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
+        try:
+            # --------------------------------
+            ### CONNECT/DISCONNECT()PARAM) ###
+            # --------------------------------
+           resp.text = MethodResponse(req).json
+        except Exception as ex:
+            DriverException(0x500, 'Observingconditions.{Memname} failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(ObservingconditionsMetadata.Description, req).json
 
 @before(PreProcessRequest(maxdev))
-class DriverInfo():
+class driverinfo:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(ObservingconditionsMetadata.Info, req).json
 
 @before(PreProcessRequest(maxdev))
-class InterfaceVersion():
+class interfaceversion:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(ObservingconditionsMetadata.InterfaceVersion, req).json
 
 @before(PreProcessRequest(maxdev))
-class DriverVersion():
+class driverversion():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(ObservingconditionsMetadata.Version, req).json
 
 @before(PreProcessRequest(maxdev))
-class Name():
+class name():
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(ObservingconditionsMetadata.Name, req).json
 
 @before(PreProcessRequest(maxdev))
-class SupportedActions():
+class supportedactions:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 
@@ -129,21 +148,7 @@ class averageperiod:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'AveragePeriod " + averageperiodstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
-        try:
-            # -----------------------------
-            ### DEVICE OPERATION(PARAM) ###
-            # -----------------------------
-            resp.text = MethodResponse(req).json
-        except Exception as ex:
-            resp.text = MethodResponse(req,
-                            DriverException(0x500, 'Observingconditions.Averageperiod failed', ex)).json
-
-    def on_put(self, req: Request, resp: Response, devnum: int):
-        if not ## IS DEV CONNECTED ##:
-            resp.text = PropertyResponse(None, req,
-                            NotConnectedException()).json
-            return
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

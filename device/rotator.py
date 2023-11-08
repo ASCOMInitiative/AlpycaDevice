@@ -51,6 +51,9 @@
 #               GitHub issue #1
 # 30-May-2023   rbd 0.2 Remove redundant logging from PUT responders
 # 31-May-2023   rbd 0.3 responder class names lower cased to match URI
+# 08-Nov-2023   rbd 0.4 Replace exotic 'dunder' construction of error
+#               messages with actual text. Just a clarification. Remove
+#               superfluous () on class declarations.
 #
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
@@ -117,38 +120,38 @@ class commandbool:
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class commandstring():
+class commandstring:
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 # Connected, though common, is implemented in rotator.py
 @before(PreProcessRequest(maxdev))
-class description():
+class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Description, req).json
 
 @before(PreProcessRequest(maxdev))
-class driverinfo():
+class driverinfo:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Info, req).json
 
 @before(PreProcessRequest(maxdev))
-class interfaceversion():
+class interfaceversion:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.InterfaceVersion, req).json
 
 @before(PreProcessRequest(maxdev))
-class driverversion():
+class driverversion:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Version, req).json
 
 @before(PreProcessRequest(maxdev))
-class name():
+class name:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Name, req).json
 
 @before(PreProcessRequest(maxdev))
-class supportedactions():
+class supportedactions:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
 
@@ -186,7 +189,7 @@ class connected:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Connected failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class ismoving:
@@ -219,7 +222,7 @@ class ismoving:
             resp.text = PropertyResponse(moving, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.IsMovingfailed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class mechanicalposition:
@@ -245,7 +248,7 @@ class mechanicalposition:
             resp.text = PropertyResponse(pos, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.MechanicalPosition failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class position:
@@ -274,7 +277,7 @@ class position:
             resp.text = PropertyResponse(pos, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Position failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class reverse:
@@ -304,7 +307,7 @@ class reverse:
             resp.text = PropertyResponse(rev, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Reverse failed', ex)).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -320,7 +323,7 @@ class reverse:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Reverse failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class stepsize:
@@ -347,7 +350,7 @@ class stepsize:
             resp.text = PropertyResponse(steps, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.StepSize failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class targetposition:
@@ -376,7 +379,7 @@ class targetposition:
             resp.text = PropertyResponse(pos, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.TargetPosition failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class halt:
@@ -402,7 +405,7 @@ class halt:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Halt failed', ex)).json
 
 
 @before(PreProcessRequest(maxdev))
@@ -459,7 +462,7 @@ class move:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Move failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class moveabsolute:
@@ -511,7 +514,7 @@ class moveabsolute:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.MoveAbsolute failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class movemechanical:
@@ -565,7 +568,7 @@ class movemechanical:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.MoveMechanical failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class sync:
@@ -615,4 +618,4 @@ class sync:
             resp.text = MethodResponse(req).json
         except Exception as ex:
             resp.text = MethodResponse(req,
-                            DriverException(0x500, f'{self.__class__.__name__} failed', ex)).json
+                            DriverException(0x500, 'Rotator.Sync failed', ex)).json

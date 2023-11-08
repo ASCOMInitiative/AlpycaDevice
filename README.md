@@ -1,6 +1,6 @@
 # AlpycaDevice - Python Alpaca Device Driver SDK
 
-## Version 0.3.0, June 2, 2023 (experimental)
+## Version 0.40, November 8, 2023 (experimental)
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
 
@@ -10,10 +10,9 @@ a basic Rotator device with a simple simulation for Conform tests.
 **Templates for all ASCOM device types are provided**. The "boiler plate" logic
 remains the same for any device.
 
-## [AlpycaDevice SDK 0.3.0 Documentation](https://ascom-standards.org/alpycadevice/)
+## [AlpycaDevice SDK 0.4.0 Documentation](https://ascom-standards.org/alpycadevice/)
 
 [![AlpycaDevice Video](https://raw.githubusercontent.com/BobDenny/AlpycaDevice/master/docs/source/vthumb.png)](https://www.youtube.com/watch?v=soGb0j4iOt4 "AlpycaDevice Video")
-
 
 ## Quick Start
 
@@ -25,15 +24,16 @@ driver for any ASCOM device using the provided templates.
 
 ## Status of this project
 
-This is intended to be the last experimental release. **Templates for all ASCOM
+One more experimental release. A few problems were detected after 0.3. CHANGES
+**Templates for all ASCOM
 device types are included**. While preserving simplicity
-as much as possible, version 0.3.0 can easily be configured for multiple ASCOM
+as much as possible, version 0.4.0 can easily be configured for multiple ASCOM
 device types and multiple instances of a given ASCOM device type within the
 Alpaca device/server. The sample Rotator simulator passes [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) for
 Rotator device, as well as [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) Alpaca
-Protocol tests.
+Protocol tests. The 0.4.0 Conform logs are part of the repository.
 
 ## Potential Applications
 

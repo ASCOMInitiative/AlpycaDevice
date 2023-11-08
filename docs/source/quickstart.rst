@@ -71,14 +71,17 @@ you want to make a roll-off roof driver.
       ``init_routes(falc_app, 'rotator', rotator)``
    replace with
       ``init_routes(falc_app, 'dome', dome)``
-10. Open your project's ``management.py`` module
-11. Remove this line
+10. Optional: In your project's log.py module replace ``alpyca.log`` with
+    ``dome.log``. The original name is generic because this server can support
+    multiple device types.
+11. Open your project's ``management.py`` module
+12. Remove this line
         ``from rotator import RotatorMetadata``
     replace with
         ``from dome import DomeMetadata``
-12. Find  ``class configureddevices`` and change the references ``RotatorMetadata``
+13. Find  ``class configureddevices`` and change the references ``RotatorMetadata``
     to ``DomeMetadata``.
-13. OK, that's all there is to assemble the pieces. If you were to go back to
+14. OK, that's all there is to assemble the pieces. If you were to go back to
     ``dome.py`` and replace the ``##`` stuff with calls to your device code or just
     stub it out so the app would run, you would have a driver that would be
     discoverable and the endpoint responders would be called when any app talks
