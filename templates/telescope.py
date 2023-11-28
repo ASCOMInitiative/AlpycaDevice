@@ -76,7 +76,7 @@ class connected:
             # -------------------------------
             is_conn = ### READ CONN STATE ###
             # -------------------------------
-        resp.text = PropertyResponse(is_conn, req).json)
+        resp.text = PropertyResponse(is_conn, req).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
         conn_str = get_request_field('Connected', req)
@@ -85,9 +85,9 @@ class connected:
             # --------------------------------
             ### CONNECT/DISCONNECT()PARAM) ###
             # --------------------------------
-           resp.text = MethodResponse(req).json
+            resp.text = MethodResponse(req).json
         except Exception as ex:
-            DriverException(0x500, 'Telescope.{Memname} failed', ex)).json
+            resp.text = MethodResponse(req, DriverException(0x500, 'Telescope.Connected failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class description:

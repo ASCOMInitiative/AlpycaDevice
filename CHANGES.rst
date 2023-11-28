@@ -35,7 +35,14 @@ Version 0.4.0 Experimental (2023-11-08)
   that the name may  be changed to match the single device type (dome e.g.).
   `GitHub Issue #7 <https://github.com/BobDenny/AlpycaDevice/issues/7>`_.
 * Add missing Connected member to all device type templates
-  `GitHub Issue #9 <https://github.com/BobDenny/AlpycaDevice/issues/8>`_.
+  `GitHub Issue #8 <https://github.com/BobDenny/AlpycaDevice/issues/8>`_.
 * Fixed the template generator app to avoid adding duplicate and
   fragmentary `on_put()` calls in addition to the correct ones.
-*  Regenerated all templates.
+  `GitHub Issue #9 <https://github.com/BobDenny/AlpycaDevice/issues/9>`_.
+* Regenerated all templates.
+
+Version 0.5.0 Experimental (2023-11-28)
+=======================================
+* Fixed Connected class in several ways. See
+  `GitHub Issue #10 <https://github.com/BobDenny/AlpycaDevice/issues/10>`_
+* Regenerated all templates.

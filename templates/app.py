@@ -49,7 +49,10 @@
 # 08-Noc-2023   rbd Change other ommon property responder classes to
 #               lower case andremove redundant ().
 # 08-Nov-2023   rbd GitHub #9 Corrections to avoid adding fragments
-#               of on_put() to existinv crrect on_put().
+#               of on_put() to existinv correct on_put().
+# 28-Nov-2023   rbd GitHub #9 Missing line and extra parenthesis in
+#               class Connected. Also substitute {memname} in mod_hdr
+#               to avoid naked {memhdr} in the templates.
 #
 
 import yaml
@@ -135,7 +138,7 @@ class connected:
             # -------------------------------
             is_conn = ### READ CONN STATE ###
             # -------------------------------
-        resp.text = PropertyResponse(is_conn, req).json)
+        resp.text = PropertyResponse(is_conn, req).json
 
     def on_put(self, req: Request, resp: Response, devnum: int):
         conn_str = get_request_field('Connected', req)
@@ -144,9 +147,9 @@ class connected:
             # --------------------------------
             ### CONNECT/DISCONNECT()PARAM) ###
             # --------------------------------
-           resp.text = MethodResponse(req).json
+            resp.text = MethodResponse(req).json
         except Exception as ex:
-            DriverException(0x500, '{Devname}.{Memname} failed', ex)).json
+            resp.text = MethodResponse(req, DriverException(0x500, '{Devname}.Connected failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class description:
@@ -245,6 +248,8 @@ def main():
         bits = path.split('/')
         devname = bits[1]
         Devname = devname.title()
+        memname = bits[3]
+        Memname = memname.title()
         if not devname in seendevs:
             if not mf is None and not mf.closed:
                 mf.close
@@ -252,8 +257,6 @@ def main():
             temp = mod_hdr.replace('{devname}', devname)
             mf.write(temp.replace('{Devname}', Devname))
             seendevs.append(devname)
-        memname = bits[3]
-        Memname = memname.title()
         mf.write(cls_tmpl.replace('{memname}', memname))
         for meth, meta in meths.items():
             if meth == 'get':
