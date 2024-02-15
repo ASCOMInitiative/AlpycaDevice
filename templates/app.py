@@ -53,9 +53,11 @@
 # 28-Nov-2023   rbd GitHub #9 Missing line and extra parenthesis in
 #               class Connected. Also substitute {memname} in mod_hdr
 #               to avoid naked {memhdr} in the templates.
-#
+# 14-Feb-2024   rbd Overhaul to use JSON insteadc of YAML, use the JSON
+#               from the Omni Simulator swagger for Platform 7 changes.
+#               **UNTESTED** and Platform 7 is not yet released!!
 
-import yaml
+import json
 
 cls_tmpl = '''@before(PreProcessRequest(maxdev))
 class {mname}'''
@@ -133,28 +135,73 @@ class commandstring:
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class connected:
-    def on_get(self, req: Request, resp: Response, devnum: int):
-            # -------------------------------
-            is_conn = ### READ CONN STATE ###
-            # -------------------------------
-        resp.text = PropertyResponse(is_conn, req).json
-
+class connect:
     def on_put(self, req: Request, resp: Response, devnum: int):
-        conn_str = get_request_field('Connected', req)
-        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
         try:
-            # --------------------------------
-            ### CONNECT/DISCONNECT()PARAM) ###
-            # --------------------------------
+            # ------------------------
+            ### CONNECT THE DEVICE ###
+            # ------------------------
             resp.text = MethodResponse(req).json
         except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, '{Devname}.Connect failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connected:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # -------------------------------------
+            is_connecting = ### READ CONN STATE ###
+            # -------------------------------------
+            resp.text = PropertyResponse(is_conn, req).json
+        except Exception as ex:
             resp.text = MethodResponse(req, DriverException(0x500, '{Devname}.Connected failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connecting:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ------------------------------
+            val = ## GET CONNECTING STATE ##
+            # ------------------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, '{Devname}.Connecting failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse({Devname}Metadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class devicestate:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+
+
+class disconnect:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ---------------------------
+            ### DISCONNECT THE DEVICE ###
+            # ---------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, '{Devname}.Disconnect failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class driverinfo:
@@ -234,22 +281,29 @@ params_tmpl_num = '''
             return
 '''
 
+# Skip these common members, they are in the device main template
+common_mems = ['action', 'commandblind', 'commandbool', 'commandstring', 'connect', 'connected', 'connecting',
+               'devicestate', 'description', 'disconnect', 'driverinfo', 'driverversion', 'interfaceversion',
+               'name', 'supportedactions']
 
 def main():
-    with open('AlpacaDeviceAPI_v1.yaml') as f:
-        toptree = yaml.safe_load(f)
+    with open('AlpacaDeviceAPI_v2_plat7.json') as f:
+        toptree = json.load(f)
 
     seendevs = []
     mf = None
+
     for path, meths in toptree['paths'].items():
         print(f'{path}')
-        if(path.startswith('/{device_type}')):
-            continue
         bits = path.split('/')
-        devname = bits[1]
+        if bits[1] == 'management' or bits[1] == 'simulator':
+            continue
+        devname = bits[3]
         Devname = devname.title()
-        memname = bits[3]
+        memname = bits[5]
         Memname = memname.title()
+        if memname in common_mems:
+            continue;
         if not devname in seendevs:
             if not mf is None and not mf.closed:
                 mf.close
@@ -265,15 +319,19 @@ def main():
             else:
                 temp = put_tmpl.replace('{Devname}', Devname)
                 temp = temp.replace('{Memname}', Memname)
-                # Create code for getting and converting prameters
-                # Please don't laugh
                 getparams = ''
                 if 'content' in  meths['put']['requestBody']:
-                    for param in meths['put']['requestBody']['content']['application/x-www-form-urlencoded']['schema']['allOf'][1]['properties'].items():
+                    for param in meths['put']['requestBody']['content']['multipart/form-data']['schema']['properties'].items():
+                        if param[0].lower() == 'clientid' or param[0].lower() == 'clienttransactionid':
+                            continue;
                         ptemp = params_tmpl_num
                         ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
                         ptemp = ptemp.replace('{Param}', param[0])
-                        ptype = param[1]['type']
+                        if '$ref' in param[1]:
+                            ref = param[1]['$ref'].split('/')[3]
+                            ptype = toptree['components']['schemas'][ref]['type']
+                        else:
+                            ptype = param[1]['type']
                         if ptype == 'boolean':
                             ptemp = params_tmpl_bool
                             ptemp = ptemp.replace('{param}', param[0].lower())      # Parameter name
@@ -293,36 +351,7 @@ def main():
                         getparams += ptemp
                     #mf.write('#------ 1 ------\n')                                  # Direct RequestBody with parameters
                     mf.write (temp.replace('{GETPARAMS}', getparams))
-                elif '$ref' in  meths['put']['requestBody']:
-                    ref = meths['put']['requestBody']['$ref']
-                    if ref != '#/components/requestBodies/putStandardClientParameters':
-                        content = toptree['components']['requestBodies'][ref.split('/')[3]]['content']
-                        for param in content['application/x-www-form-urlencoded']['schema']['allOf'][1]['properties'].items():
-                            ptemp = ptemp.replace('{param}', param[0].lower())      # Parameter name
-                            ptemp = ptemp.replace('{Param}', param[0])
-                            ptype = param[1]['type']
-                            if ptype == 'boolean':
-                                ptemp = params_tmpl_bool
-                                ptemp = ptemp.replace('{param}', param[0].lower())  # Parameter name
-                                ptemp = ptemp.replace('{Param}', param[0])
-                            if ptype == 'integer':
-                                ptemp = params_tmpl_num
-                                ptemp = ptemp.replace('{param}', param[0].lower())  # Parameter name
-                                ptemp = ptemp.replace('{Param}', param[0])
-                                ptemp = ptemp.replace('{cvtfunc}', 'int')
-                                ptemp += '        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!'
-                            if ptype == 'number':
-                                ptemp = params_tmpl_num
-                                ptemp = ptemp.replace('{param}', param[0].lower())  # Parameter name
-                                ptemp = ptemp.replace('{Param}', param[0])
-                                ptemp = ptemp.replace('{cvtfunc}', 'int')
-                                ptemp += '        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!'
-                            getparams += ptemp
-                        #mf.write('#------ 2 ------\n')                              # Reference with parameters
-                        mf.write (temp.replace('{GETPARAMS}', getparams))
-                    else:
-                        #mf.write('#------ 3 ------\n')                              # Reference but no parameters
-                        mf.write (temp.replace('{GETPARAMS}', ''))                  # Remove substitution token
+
 
     mf.close()
 

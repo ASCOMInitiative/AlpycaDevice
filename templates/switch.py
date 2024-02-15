@@ -71,28 +71,73 @@ class commandstring:
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class connected:
-    def on_get(self, req: Request, resp: Response, devnum: int):
-            # -------------------------------
-            is_conn = ### READ CONN STATE ###
-            # -------------------------------
-        resp.text = PropertyResponse(is_conn, req).json
-
+class connect:
     def on_put(self, req: Request, resp: Response, devnum: int):
-        conn_str = get_request_field('Connected', req)
-        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
         try:
-            # --------------------------------
-            ### CONNECT/DISCONNECT()PARAM) ###
-            # --------------------------------
+            # ------------------------
+            ### CONNECT THE DEVICE ###
+            # ------------------------
             resp.text = MethodResponse(req).json
         except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Connect failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connected:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # -------------------------------------
+            is_connecting = ### READ CONN STATE ###
+            # -------------------------------------
+            resp.text = PropertyResponse(is_conn, req).json
+        except Exception as ex:
             resp.text = MethodResponse(req, DriverException(0x500, 'Switch.Connected failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connecting:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ------------------------------
+            val = ## GET CONNECTING STATE ##
+            # ------------------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Switch.Connecting failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(SwitchMetadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class devicestate:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+
+
+class disconnect:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ---------------------------
+            ### DISCONNECT THE DEVICE ###
+            # ---------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Disconnect failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class driverinfo:
@@ -256,6 +301,23 @@ class maxswitchvalue:
                             DriverException(0x500, 'Switch.Maxswitchvalue failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
+class switchstep:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Switch.Switchstep failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
 class setswitch:
 
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -263,12 +325,12 @@ class setswitch:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
-        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Id " + idstr + " not a valid number.')).json
+                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
@@ -291,12 +353,12 @@ class setswitchname:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
-        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Id " + idstr + " not a valid number.')).json
+                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         namestr = get_request_field('Name', req)      # Raises 400 bad request if missing
@@ -324,12 +386,12 @@ class setswitchvalue:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
-        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Id " + idstr + " not a valid number.')).json
+                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
@@ -350,7 +412,7 @@ class setswitchvalue:
                             DriverException(0x500, 'Switch.Setswitchvalue failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
-class switchstep:
+class canasync:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not ##IS DEV CONNECTED##:
@@ -364,5 +426,108 @@ class switchstep:
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, 'Switch.Switchstep failed', ex)).json
+                            DriverException(0x500, 'Switch.Canasync failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class statechangecomplete:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Switch.Statechangecomplete failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class cancelasync:
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Cancelasync failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class setasync:
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        statestr = get_request_field('State', req)      # Raises 400 bad request if missing
+        state = to_bool(statestr)                       # Same here
+
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Setasync failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class setasyncvalue:
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        if not ## IS DEV CONNECTED ##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
+        try:
+            value = float(valuestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Value " + valuestr + " not a valid number.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        try:
+            # -----------------------------
+            ### DEVICE OPERATION(PARAM) ###
+            # -----------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Switch.Setasyncvalue failed', ex)).json
 

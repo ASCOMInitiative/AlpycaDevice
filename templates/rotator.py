@@ -71,28 +71,73 @@ class commandstring:
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class connected:
-    def on_get(self, req: Request, resp: Response, devnum: int):
-            # -------------------------------
-            is_conn = ### READ CONN STATE ###
-            # -------------------------------
-        resp.text = PropertyResponse(is_conn, req).json
-
+class connect:
     def on_put(self, req: Request, resp: Response, devnum: int):
-        conn_str = get_request_field('Connected', req)
-        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
         try:
-            # --------------------------------
-            ### CONNECT/DISCONNECT()PARAM) ###
-            # --------------------------------
+            # ------------------------
+            ### CONNECT THE DEVICE ###
+            # ------------------------
             resp.text = MethodResponse(req).json
         except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Rotator.Connect failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connected:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # -------------------------------------
+            is_connecting = ### READ CONN STATE ###
+            # -------------------------------------
+            resp.text = PropertyResponse(is_conn, req).json
+        except Exception as ex:
             resp.text = MethodResponse(req, DriverException(0x500, 'Rotator.Connected failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connecting:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ------------------------------
+            val = ## GET CONNECTING STATE ##
+            # ------------------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Rotator.Connecting failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class devicestate:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+
+
+class disconnect:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ---------------------------
+            ### DISCONNECT THE DEVICE ###
+            # ---------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Rotator.Disconnect failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class driverinfo:

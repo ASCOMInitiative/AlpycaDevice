@@ -71,28 +71,73 @@ class commandstring:
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
-class connected:
-    def on_get(self, req: Request, resp: Response, devnum: int):
-            # -------------------------------
-            is_conn = ### READ CONN STATE ###
-            # -------------------------------
-        resp.text = PropertyResponse(is_conn, req).json
-
+class connect:
     def on_put(self, req: Request, resp: Response, devnum: int):
-        conn_str = get_request_field('Connected', req)
-        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
         try:
-            # --------------------------------
-            ### CONNECT/DISCONNECT()PARAM) ###
-            # --------------------------------
+            # ------------------------
+            ### CONNECT THE DEVICE ###
+            # ------------------------
             resp.text = MethodResponse(req).json
         except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Dome.Connect failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connected:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # -------------------------------------
+            is_connecting = ### READ CONN STATE ###
+            # -------------------------------------
+            resp.text = PropertyResponse(is_conn, req).json
+        except Exception as ex:
             resp.text = MethodResponse(req, DriverException(0x500, 'Dome.Connected failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connecting:
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ------------------------------
+            val = ## GET CONNECTING STATE ##
+            # ------------------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Dome.Connecting failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class description:
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(DomeMetadata.Description, req).json
+
+@before(PreProcessRequest(maxdev))
+class devicestate:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+
+
+class disconnect:
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        try:
+            # ---------------------------
+            ### DISCONNECT THE DEVICE ###
+            # ---------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Dome.Disconnect failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class driverinfo:
@@ -528,12 +573,12 @@ class slewtoazimuth:
             return
         azimuthstr = get_request_field('Azimuth', req)      # Raises 400 bad request if missing
         try:
-            azimuth = int(azimuthstr)
+            azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Azimuth " + azimuthstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -553,12 +598,12 @@ class synctoazimuth:
             return
         azimuthstr = get_request_field('Azimuth', req)      # Raises 400 bad request if missing
         try:
-            azimuth = int(azimuthstr)
+            azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
                             InvalidValueException(f'Azimuth " + azimuthstr + " not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###       # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
