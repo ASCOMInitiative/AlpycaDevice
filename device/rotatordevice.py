@@ -73,6 +73,7 @@ class RotatorDevice:
     #
     def __init__(self, logger: Logger):
         self._lock = Lock()
+        self._connlock = Lock()
         self.name: str = 'device'
         self.logger = logger
         #
@@ -81,6 +82,7 @@ class RotatorDevice:
         self._can_reverse: bool = True
         self._step_size: float = 1.0
         self._steps_per_sec: int = 6
+        self._conn_time_sec: float = 5.0    # Async connect delay
         #
         # Rotator device state variables
         #
@@ -89,6 +91,7 @@ class RotatorDevice:
         self._tgt_mech_pos = 0.0
         self._pos_offset = 0.0      # TODO In real life this must be persisted
         self._is_moving = False
+        self._connecting = False
         self._connected = False
         #
         # Rotator engine
@@ -96,6 +99,10 @@ class RotatorDevice:
         self._timer: Timer = None
         self._interval: float = 1.0 / self._steps_per_sec
         self._stopped: bool = True
+        #
+        # Connect delay
+        #
+        self._conntimer: Timer = None
 
     def _pos_to_mech(self, pos: float) -> float:
         mech = pos - self._pos_offset
@@ -112,6 +119,13 @@ class RotatorDevice:
         if pos < 0.0:
             pos += 360.0
         return pos
+
+    def _conn_complete(self):
+        self._connlock.acquire()
+        self.logger.info('[connected]')
+        self.connecting = False
+        self.connected = True
+        self._connlock.release()
 
     def start(self, from_run: bool = False) -> None:
         #print('[start]')
@@ -254,26 +268,67 @@ class RotatorDevice:
 
     @property
     def connected(self) -> bool:
-        self._lock.acquire()
+        self._connlock.acquire()
         res = self._connected
-        self._lock.release()
+        self._connlock.release()
         return res
     @connected.setter
-    def connected (self, connected: bool):
-        self._lock.acquire()
-        if (not connected) and self._connected and self._is_moving:
-            self._lock.release()
+    def connected (self, toconnect: bool):
+        self._connlock.acquire()
+        if (not toconnect) and self._connected and self._is_moving:
+            self._connlock.release()
             # Yes you could call Halt() but this is for illustration
             raise RuntimeError('Cannot disconnect while rotator is moving')
-        self._connected = connected
-        self._lock.release()
-        if connected:
-            self.logger.info('[connected]')
+        if toconnect:
+            self._connlock.release()
+            self.logger.info('[connecting]')
+            self.Connect()      # Does own locking
         else:
+            self.connected = False
+            self._connlock.release()
             self.logger.info('[disconnected]')
 
-    #
+    @property
+    def connecting(self) -> bool:
+        self._connlock.acquire()
+        res = self._connecting
+        self._connlock.release()
+        return res
+
+    # =======
     # Methods
+    # =======
+
+    def Connect(self) -> None:
+        self.logger.debug(f'[Connect]')
+        self._connlock.acquire()
+        if self.connected:
+            self.connecting = False
+            self._connlock.release()
+            self.logger.debug(f'[Already connected]')
+            return
+        self.connecting = True
+        self.connected = False
+        self._connlock.release()
+        self._timer = Timer(self._conn_time_sec, self._conn_complete)
+        #print('[connect] now start the timer')
+        self._timer.start()
+
+    def Disconnect(self) -> None:
+        self.logger.debug(f'[Disconnect]')
+        self._connlock.acquire()
+        if not self.connected:
+            self.connecting = False
+            self._connlock.release()
+            self.logger.debug(f'[Already disconnected]')
+            return
+        if self._is_moving:
+            self._connlock.release()
+            # Yes you could call Halt() but this is for illustration
+            raise RuntimeError('Cannot disconnect while rotator is moving')
+        self.connected = False
+        self._connlock.release()
+
     # TODO - This is supposed to throw if the final position is outside 0-360, but WHICH position? Mech or user????
     #
     def Move(self, delta_pos: float) -> None:

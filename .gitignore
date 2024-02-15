@@ -10,3 +10,4 @@ docs/refs
 alpycadevice.code-workspace
 skeletons/AlpycaDeviceSkeletons.code-workspace
 alpyca.log*
+thunder-tests/*

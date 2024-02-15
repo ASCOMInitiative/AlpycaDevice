@@ -6,6 +6,8 @@
 #
 # Author:   Robert B. Denny <rdenny@dc3.com> (rbd)
 #
+# Implements: ASCOM IRotatorV4 interface
+#             https://ascom-standards.org/newdocs/rotator.html#Rotator
 # Python Compatibility: Requires Python 3.7 or later
 # GitHub: https://github.com/ASCOMInitiative/AlpycaDevice
 #
@@ -54,7 +56,9 @@
 # 08-Nov-2023   rbd 0.4 Replace exotic 'dunder' construction of error
 #               messages with actual text. Just a clarification. Remove
 #               superfluous () on class declarations.
+# 15-Feb-2024   rbd 0.6 Upgrade to Rotator V4 (Platform 7)
 #
+import datetime
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
@@ -82,13 +86,21 @@ maxdev = 0                      # Single instance
 class RotatorMetadata:
     """ Metadata describing the Rotator Device. Edit for your device"""
     Name = 'Sample Rotator'
-    Version = '0.2'
+    Version = '0.6'
     Description = 'Sample ASCOM Rotator'
     DeviceType = 'Rotator'
     DeviceID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
     Info = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
     MaxDeviceNumber = maxdev
-    InterfaceVersion = 3        # IRotatorV3
+    InterfaceVersion = 4        # IRotatorV4 (Platform 7)
+
+# --------------------------------
+# NAME/VALUE PAIRS FOR DEVICESTATE
+# --------------------------------
+class StateValue:
+    def __init__(self, name, value):
+        self.Name = name
+        self.Value = value
 
 # --------------------
 # SIMULATED ROTATOR ()
@@ -165,15 +177,24 @@ class canreverse:
         resp.text = PropertyResponse(True, req).json    # IRotatorV3, CanReverse must be True
 
 @before(PreProcessRequest(maxdev))
+class connect:
+    """Connect to the device asynchronously
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Connect
+    """
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        try:
+            rot_dev.Connect()
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Rotator.Connect failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
 class connected:
     """Retrieves or sets the connected state of the device
 
-    * Set True to connect to the device hardware. Set False to disconnect
-      from the device hardware. Client can also read the property to check
-      whether it is connected. This reports the current hardware state.
-    * Multiple calls setting Connected to true or false must not cause
-      an error.
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Connected
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(rot_dev.connected, req).json
@@ -190,6 +211,56 @@ class connected:
         except Exception as ex:
             resp.text = MethodResponse(req, # Put is actually like a method :-(
                             DriverException(0x500, 'Rotator.Connected failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class connecting:
+    """True while the device is undertaking an asynchronous connect or disconnect operation.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Connecting
+    """
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        try:
+            val = rot_dev.connecting
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Rotator.Connecting failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class devicestate:
+    """List of StateValue objects representing the operational properties of this device.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.DeviceState
+    """
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not rot_dev.connected:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            val = []
+            val.append(StateValue('IsMoving', rot_dev.is_moving))
+            val.append(StateValue('MechanicalPosition', rot_dev.mechanical_position))
+            val.append(StateValue('Position', rot_dev.position))
+            val.append(StateValue('TimeStamp', datetime.datetime.utcnow().isoformat))
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class disconnect:
+    """Disconnect from the device asynchronously.
+
+        **NOTE** This implementation is synchronous, no delay.
+    """
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        try:
+            rot_dev.Disconnect()
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req,
+                            DriverException(0x500, 'Rotator.Disconnect failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class ismoving:
