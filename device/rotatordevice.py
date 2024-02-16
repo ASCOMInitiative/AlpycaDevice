@@ -123,8 +123,8 @@ class RotatorDevice:
     def _conn_complete(self):
         self._connlock.acquire()
         self.logger.info('[connected]')
-        self.connecting = False
-        self.connected = True
+        self._connecting = False
+        self._connected = True
         self._connlock.release()
 
     def start(self, from_run: bool = False) -> None:
@@ -284,7 +284,7 @@ class RotatorDevice:
             self.logger.info('[connecting]')
             self.Connect()      # Does own locking
         else:
-            self.connected = False
+            self._connected = False
             self._connlock.release()
             self.logger.info('[disconnected]')
 
@@ -302,13 +302,13 @@ class RotatorDevice:
     def Connect(self) -> None:
         self.logger.debug(f'[Connect]')
         self._connlock.acquire()
-        if self.connected:
-            self.connecting = False
+        if self._connected:
+            self._connecting = False
             self._connlock.release()
             self.logger.debug(f'[Already connected]')
             return
-        self.connecting = True
-        self.connected = False
+        self._connecting = True
+        self._connected = False
         self._connlock.release()
         self._timer = Timer(self._conn_time_sec, self._conn_complete)
         #print('[connect] now start the timer')
@@ -317,8 +317,8 @@ class RotatorDevice:
     def Disconnect(self) -> None:
         self.logger.debug(f'[Disconnect]')
         self._connlock.acquire()
-        if not self.connected:
-            self.connecting = False
+        if not self._connected:
+            self._connecting = False
             self._connlock.release()
             self.logger.debug(f'[Already disconnected]')
             return
@@ -326,7 +326,7 @@ class RotatorDevice:
             self._connlock.release()
             # Yes you could call Halt() but this is for illustration
             raise RuntimeError('Cannot disconnect while rotator is moving')
-        self.connected = False
+        self._connected = False
         self._connlock.release()
 
     # TODO - This is supposed to throw if the final position is outside 0-360, but WHICH position? Mech or user????

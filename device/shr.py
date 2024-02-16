@@ -83,6 +83,17 @@ class DeviceMetadata:
     Description = 'Alpaca Sample Rotator '
     Manufacturer = 'ASCOM Initiative'
 
+# --------------------------------
+# NAME/VALUE PAIRS FOR DEVICESTATE
+# --------------------------------
+class StateValue:
+    def __init__(self, name, value):
+        self.Name = name
+        self.Value = value
+
+    @property
+    def json(self) -> str:
+        return '{"Name": "%s", "Value": "%s"}' % (self.Name, self.Value)
 
 # ---------------
 # Data Validation

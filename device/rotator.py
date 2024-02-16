@@ -58,11 +58,11 @@
 #               superfluous () on class declarations.
 # 15-Feb-2024   rbd 0.6 Upgrade to Rotator V4 (Platform 7)
 #
-import datetime
+import datetime, json
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                StateValue, get_request_field, to_bool
 from exceptions import *        # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
@@ -94,14 +94,6 @@ class RotatorMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = 4        # IRotatorV4 (Platform 7)
 
-# --------------------------------
-# NAME/VALUE PAIRS FOR DEVICESTATE
-# --------------------------------
-class StateValue:
-    def __init__(self, name, value):
-        self.Name = name
-        self.Value = value
-
 # --------------------
 # SIMULATED ROTATOR ()
 # --------------------
@@ -115,7 +107,6 @@ def start_rot_device(logger: logger):
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------
-
 @before(PreProcessRequest(maxdev))
 class action:
     def on_put(self, req: Request, resp: Response, devnum: int):
@@ -239,10 +230,10 @@ class devicestate:
             return
         try:
             val = []
-            val.append(StateValue('IsMoving', rot_dev.is_moving))
-            val.append(StateValue('MechanicalPosition', rot_dev.mechanical_position))
-            val.append(StateValue('Position', rot_dev.position))
-            val.append(StateValue('TimeStamp', datetime.datetime.utcnow().isoformat))
+            val.append(StateValue('IsMoving', rot_dev.is_moving).json)
+            #val.append(StateValue('MechanicalPosition', rot_dev.mechanical_position).json)
+            #val.append(StateValue('Position', rot_dev.position).json)
+            #val.append(StateValue('TimeStamp', datetime.datetime.utcnow().isoformat()).json)
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,

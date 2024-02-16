@@ -180,3 +180,16 @@ at the rood of the folder tree. No preview on this.
   reader, and CTRL-SHFT-R opens the Thunder Client pane on the left. I found 'thunder' in the mappings
   and removed that one, and 'shortcuts' revealed help keboard shortcuts reference and I removed that.
   I'm sure I'm gonna need to do this again.
+
+  15-Feb-2024
+  -----------
+  * ThunderClient stopped working because it wanted a subscription to store the activity and collections
+  along with the workspace. I subscribed but the ****ing activation process requirees email on your
+  development machine (long story!). I really wanted the collections I made to test AlpycaDevice SDK
+  The files in the ThunderTests workspece folder are where they are, but Thunder can no longer use
+  them without $35/year. In thunder settings you have to shut off the Workspace Data setting.
+  Reading their docs, I found that by moving the collection JSON files to
+  %APPDATA%\Code\User\globalStorage\rangav.vscode-thunder-client
+  I can again use Thunder. This is not an issue with the Thunder on the old Win7 system which
+  is 2.4.3. Well I reverted to 2.4.3 on the Windows 10 system and it can't find the stuff in the
+  workspace so to hell with it.
