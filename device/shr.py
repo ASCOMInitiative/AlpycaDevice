@@ -57,6 +57,9 @@
 # 30-May-2023   rbd 0.3 Improve request logging at time of arrival
 # 01-Jun-2023   rbd 0.3 Issue #2 Do not return empty Value field in property
 #               response, and omit Value if error is not success().
+# 16-Feb-2024   rbd 0.6 For Platform 7, common DeviceState property.
+#               New StateValue object, and enhance PropertyResponse to
+#               serialize objects into JSON (the StateValue objects).
 
 from threading import Lock
 from exceptions import Success
@@ -93,7 +96,7 @@ class StateValue:
 
     @property
     def json(self) -> str:
-        return '{"Name": "%s", "Value": "%s"}' % (self.Name, self.Value)
+        return json.dumps(self.__dict__)
 
 # ---------------
 # Data Validation
@@ -184,21 +187,21 @@ class PreProcessRequest():
         if devnum > self.maxdev:
             msg = f'Device number {str(devnum)} does not exist. Maximum device number is {self.maxdev}.'
             logger.error(msg)
-            raise HTTPBadRequest(title=_bad_title, description=msg)
+            raise HTTPBadRequest(_bad_title, msg)
         test: str = get_request_field('ClientID', req, True)        # Caseless
         if test is None:
             msg = 'Request has missing Alpaca ClientID value'
             logger.error(msg)
-            raise HTTPBadRequest(title=_bad_title, description=msg)
+            raise HTTPBadRequest(_bad_title, msg)
         if not self._pos_or_zero(test):
             msg = f'Request has bad Alpaca ClientID value {test}'
             logger.error(msg)
-            raise HTTPBadRequest(title=_bad_title, description=msg)
+            raise HTTPBadRequest(_bad_title, msg)
         test: str = get_request_field('ClientTransactionID', req, True)
         if not self._pos_or_zero(test):
             msg = f'Request has bad Alpaca ClientTransactionID value {test}'
             logger.error(msg)
-            raise HTTPBadRequest(title=_bad_title, description=msg)
+            raise HTTPBadRequest(_bad_title, msg)
 
     #
     # params contains {'devnum': n } from the URI template matcher
@@ -237,7 +240,9 @@ class PropertyResponse():
     @property
     def json(self) -> str:
         """Return the JSON for the Property Response"""
-        return json.dumps(self.__dict__)
+#       # This trickery allows serializing the StateValue object into the JSON
+        # https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 # --------------
 # MethodResponse
@@ -270,6 +275,7 @@ class MethodResponse():
     @property
     def json(self) -> str:
         """Return the JSON for the Method Response"""
+        # Simple scalars here so no need for fancy conversion
         return json.dumps(self.__dict__)
 
 

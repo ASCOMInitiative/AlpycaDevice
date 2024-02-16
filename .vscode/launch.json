@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Sample Driver",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "device/app.py",
             "console": "integratedTerminal",
@@ -14,7 +14,7 @@
         },
         {
             "name": "Python: Current File",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",

@@ -79,7 +79,7 @@ mod_hdr = '''
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \\
-                get_request_field, to_bool
+                StateValue, get_request_field, to_bool
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None

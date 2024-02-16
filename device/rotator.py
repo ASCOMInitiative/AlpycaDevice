@@ -57,6 +57,7 @@
 #               messages with actual text. Just a clarification. Remove
 #               superfluous () on class declarations.
 # 15-Feb-2024   rbd 0.6 Upgrade to Rotator V4 (Platform 7)
+# 16-Feb-2024   rbd 0.6 Passes Validtion and Protocol ConformU 2.1.0
 #
 import datetime, json
 from falcon import Request, Response, HTTPBadRequest, before
@@ -230,10 +231,10 @@ class devicestate:
             return
         try:
             val = []
-            val.append(StateValue('IsMoving', rot_dev.is_moving).json)
-            #val.append(StateValue('MechanicalPosition', rot_dev.mechanical_position).json)
-            #val.append(StateValue('Position', rot_dev.position).json)
-            #val.append(StateValue('TimeStamp', datetime.datetime.utcnow().isoformat()).json)
+            val.append(StateValue('IsMoving', rot_dev.is_moving))
+            val.append(StateValue('MechanicalPosition', rot_dev.mechanical_position))
+            val.append(StateValue('Position', rot_dev.position))
+            val.append(StateValue('TimeStamp', datetime.datetime.utcnow().isoformat()))
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
