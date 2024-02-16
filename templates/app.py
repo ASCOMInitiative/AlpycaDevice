@@ -56,6 +56,7 @@
 # 14-Feb-2024   rbd Overhaul to use JSON insteadc of YAML, use the JSON
 #               from the Omni Simulator swagger for Platform 7 changes.
 #               **UNTESTED** and Platform 7 is not yet released!!
+# 16-Feb-2024   rbd DeviceState has template code for construction
 
 import json
 
@@ -184,12 +185,14 @@ class devicestate:
             return
         try:
             # ----------------------
-            val = ## GET PROPERTY ##
+            val = []
+            # val.append(StateValue('## NAME ##', ## GET VAL ##))
+            # Repeat for each of the operational states per the device spec
             # ----------------------
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+                            DriverException(0x500, '{devname}.Devicestate failed', ex)).json
 
 
 class disconnect:

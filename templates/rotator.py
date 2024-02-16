@@ -15,7 +15,7 @@
 from falcon import Request, Response, HTTPBadRequest, before
 from logging import Logger
 from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
-                get_request_field, to_bool
+                StateValue, get_request_field, to_bool
 from exceptions import *        # Nothing but exception classes
 
 logger: Logger = None
@@ -120,12 +120,14 @@ class devicestate:
             return
         try:
             # ----------------------
-            val = ## GET PROPERTY ##
+            val = []
+            # val.append(StateValue('## NAME ##', ## GET VAL ##))
+            # Repeat for each of the operational states per the device spec
             # ----------------------
             resp.text = PropertyResponse(val, req).json
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
-                            DriverException(0x500, 'Camera.Devicestate failed', ex)).json
+                            DriverException(0x500, 'rotator.Devicestate failed', ex)).json
 
 
 class disconnect:
