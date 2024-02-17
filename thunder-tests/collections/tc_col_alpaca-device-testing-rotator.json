@@ -374,6 +374,31 @@
                 }
             ],
             "tests": []
+        },
+        {
+            "_id": "cc11b7cf-e4a9-40ec-8917-d5ca46209cae",
+            "colId": "e2eb6a74-b20d-4023-91ab-1cbc5380fc67",
+            "containerId": "",
+            "name": "SupportedActions",
+            "url": "http://localhost:5555/api/v1/rotator/0/supportedactions?ClientID=123&ClientTransactionID=321",
+            "method": "GET",
+            "sortNum": 45000,
+            "created": "2024-02-17T00:00:10.455Z",
+            "modified": "2024-02-17T00:00:51.682Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "ClientID",
+                    "value": "123",
+                    "isPath": false
+                },
+                {
+                    "name": "ClientTransactionID",
+                    "value": "321",
+                    "isPath": false
+                }
+            ],
+            "tests": []
         }
     ]
 }

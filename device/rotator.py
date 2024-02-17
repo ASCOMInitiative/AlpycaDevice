@@ -67,8 +67,8 @@ from shr import PropertyResponse, MethodResponse, PreProcessRequest, \
 from exceptions import *        # Nothing but exception classes
 from rotatordevice import RotatorDevice
 
-logger: Logger = None
-#logger = None                   # Safe on Python 3.7 but no intellisense in VSCode etc.
+logger: Logger = None           # Really should use Pyton 3.10 or later
+#logger = None                  # Safe on Python 3.7 but no intellisense in VSCode etc.
 
 # ----------------------
 # MULTI-INSTANCE SUPPORT
@@ -91,7 +91,7 @@ class RotatorMetadata:
     Description = 'Sample ASCOM Rotator'
     DeviceType = 'Rotator'
     DeviceID = '1892ED30-92F3-4236-843E-DA8EEEF2D1CC' # https://guidgenerator.com/online-guid-generator.aspx
-    Info = 'Alpaca Sample Device\nImplements Rotator\nASCOM Initiative'
+    Info = 'Alpaca Sample Device\nImplements IRotatorV4\nASCOM Initiative'
     MaxDeviceNumber = maxdev
     InterfaceVersion = 4        # IRotatorV4 (Platform 7)
 
@@ -110,60 +110,113 @@ def start_rot_device(logger: logger):
 # --------------------
 @before(PreProcessRequest(maxdev))
 class action:
+    """Invoke the specified device-specific custom action
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Action
+    """
     def on_put(self, req: Request, resp: Response, devnum: int):
-        resp.text = MethodResponse(req, NotImplementedException()).json
+        name = get_request_field('ActionName', req)
+        params = get_request_field('ActionParameters', req)
+        # See SupportedActions
+        # Python 3.10 or newer
+        match name.lower():
+            case 'myaction':
+                logger.info('MyAction called')
+                # Execute rot_dev.MyAction(params)
+            case 'youraction':
+                logger.info('YourAction called')
+                # Execute rot_dev.YourAction(params)
+            case _:
+                resp.text = MethodResponse(req, ActionNotImplementedException())
+        # If you don't want to implement this at all then
+        # resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
 class commandblind:
+    # Do not use
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
 class commandbool:
+    # Do not use
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 @before(PreProcessRequest(maxdev))
 class commandstring:
+    # Do not use
     def on_put(self, req: Request, resp: Response, devnum: int):
         resp.text = MethodResponse(req, NotImplementedException()).json
 
 # Connected, though common, is implemented in rotator.py
 @before(PreProcessRequest(maxdev))
 class description:
+    """Description of the device such as manufacturer and model number.
+        Any ASCII characters may be used.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Description
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Description, req).json
 
 @before(PreProcessRequest(maxdev))
 class driverinfo:
+    """Descriptive and version information about the ASCOM **driver**
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.DriverInfo
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Info, req).json
 
 @before(PreProcessRequest(maxdev))
 class interfaceversion:
+    """ASCOM Device interface definition version that this device supports.
+        Should return 4 for this interface version IRotatorV4.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.InterfaceVersion
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.InterfaceVersion, req).json
 
 @before(PreProcessRequest(maxdev))
 class driverversion:
+    """String containing only the major and minor version of the **driver**.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.DriverVersion
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Version, req).json
 
 @before(PreProcessRequest(maxdev))
 class name:
+    """The short name of the **driver**, for display purposes.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Name
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(RotatorMetadata.Name, req).json
 
 @before(PreProcessRequest(maxdev))
 class supportedactions:
+    """Returns the list of custom action names, to be used with ``Action()``,
+        supported by this driver.
+
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.SupportedActions
+    """
     def on_get(self, req: Request, resp: Response, devnum: int):
-        resp.text = PropertyResponse([], req).json  # Not PropertyNotImplemented
+        val = []
+        val.append('MyAction')
+        val.append('YourAction')
+        resp.text = PropertyResponse(val, req).json  # Not PropertyNotImplemented
 
 @before(PreProcessRequest(maxdev))
 class canreverse:
     """True if the rotator supports the ``Reverse`` method
 
-    Always True for IRotatorV3 (InterfaceVersion >= 3).
+        Seehttps://ascom-standards.org/newdocs/rotator.html#Rotator.CanReverse
+
+        Always True for IRotatorV3 (InterfaceVersion >= 3).
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(True, req).json    # IRotatorV3, CanReverse must be True
@@ -244,7 +297,9 @@ class devicestate:
 class disconnect:
     """Disconnect from the device asynchronously.
 
-        **NOTE** This implementation is synchronous, no delay.
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Disconnect
+
+        NOTE: In this sample, Disconnect is instantaneous
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
         try:
@@ -258,20 +313,7 @@ class disconnect:
 class ismoving:
     """True if the rotator is currently moving to a new angle
 
-    Caution:
-        This must be true **immediately after** a return from calling
-        ``Move()``, ``MoveAbsolute()``, or ``MoveMechanical()`` *unless*
-        it is already at the requested position and is therefore not moving.
-        There must
-        be no possibility of seeing ``IsMoving = False`` even for an instant
-        after the app calls one of the (asynchronous) Move methods with
-        a *new* position. A driver must hide internal device states.
-
-    Raises:
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.IsMoving
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -289,15 +331,9 @@ class ismoving:
 
 @before(PreProcessRequest(maxdev))
 class mechanicalposition:
-    """The raw mechanical position (deg) of the rotator
+    """The raw mechanical position of the rotator in degrees.
 
-    Raises:
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
-    * Value is in degrees counterclockwise from the rotator's mechanical index.
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.MechanicalPosition
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -315,18 +351,9 @@ class mechanicalposition:
 
 @before(PreProcessRequest(maxdev))
 class position:
-    """The virtual position (deg) of the rotator
+    """Current instantaneous Rotator position, allowing for any sync offset, in degrees.
 
-    Raises:
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
-    * Value is in degrees counterclockwise from the rotator's virtual index.
-    * This angle includes offset between the mechanical index and the
-      effect of the last ``Sync()``
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Position
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -346,17 +373,7 @@ class position:
 class reverse:
     """The direction of rotation CCW or CW
 
-    Raises:
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
-    * Rotation is normally in degrees counterclockwise as viewed
-      from behind the rotator, looking toward the sky. This corresponds
-      to the direction of equatorial position angle. Set this property True
-      to cause rotation opposite to equatorial PositionAngle, i.e. clockwise.
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Reverse
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -392,14 +409,7 @@ class reverse:
 class stepsize:
     """Minimum rotation step size (deg)
 
-    Raises:
-        NotConnectedException
-            if device not connected
-        NotImplementedException
-            if this is not available
-        DriverException
-            see :ref:`driver-exception`
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.StepSize
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -419,16 +429,7 @@ class stepsize:
 class targetposition:
     """The destination angle for ``Move()`` and ``MoveAbsolute()``
 
-    Raises:
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
-    * This must contain the new Position, including any ``Sync()``
-      offset, immediately upon return from a call to ``Move()`` or
-      ``MoveAbsolute()``.
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.TargetPosition
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -446,15 +447,9 @@ class targetposition:
 
 @before(PreProcessRequest(maxdev))
 class halt:
-    """Halt rotator motion.
+    """Immediately stop any rotator motion
 
-    Raises:
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
-    * Halting the rotator must not cause an error on subsequent operations.
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Halt
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -475,28 +470,7 @@ class halt:
 class move:
     """Start rotation relative to the current position (degrees)
 
-    Must cause the ``TargetPosition`` property to change to the sum of the current
-    virtual position and the value of the Position argument (modulo 360 degrees),
-    then start rotation to ``TargetPosition``.
-
-    **Non-blocking**: Must return immediately with ``IsMoving = True`` if
-    the operation has *successfully* been started and the rotator is moving
-    to a new position. If the rotator is already at the requested position
-    then ``IsMoving`` may immediately return ``False``. See
-    :ref:`async-intro`.
-
-    Arguments:
-        Position: The angular amount (degrees) to move relative to the
-            current position.
-
-    Raises:
-        InvalidValueException
-            if the Position argument is not a numeric value
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Move
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -529,30 +503,9 @@ class move:
 
 @before(PreProcessRequest(maxdev))
 class moveabsolute:
-    """Start rotation to the given new virtual position (degrees)
+    """Start rotation to the given ``Position`` (degrees)
 
-    Must cause the (virtual) ``TargetPosition`` property to change to the
-    value of the Position argument then start rotation to ``TargetPosition``.
-
-    **Non-blocking**: Must return immediately with ``IsMoving = True`` if
-    the operation has *successfully* been started and the rotator is moving
-    to a new position. If the rotator is already at the requested position
-    then ``IsMoving`` may immediately return ``False``. See
-    :ref:`async-intro`.
-
-    Arguments:
-        Position:
-            The new virtual position, taking into account ``Sync()`` offset.
-
-    Raises:
-        InvalidValueException
-            if the (virtual) Position argument is not a numeric value,
-            or is outside 0 <= position < 360.
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.MoveAbsolute
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
         if not rot_dev.connected:
@@ -583,29 +536,7 @@ class moveabsolute:
 class movemechanical:
     """Start rotation to the given new mechanical position (degrees)
 
-    The Position is the mechanical angle, independent of any ``Sync()``
-    offset. This method is to address requirements that need a physical
-    rotation angle such as taking sky flats.
-
-    **Non-blocking**: Must return immediately with ``IsMoving = True`` if
-    the operation has *successfully* been started and the rotator is moving
-    to a new position. If the rotator is already at the requested position
-    then ``IsMoving`` may immediately return ``False``. See
-    :ref:`async-intro`.
-
-    Arguments:
-        Position:
-            The new mechanical position, ignoring any ``Sync()`` offset.
-
-    Raises:
-        InvalidValueException
-            if the (virtual) Position argument is not a numeric value,
-            or is outside 0 <= position < 360.
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
+    See https://ascom-standards.org/newdocs/rotator.html#Rotator.MoveMechanical
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()
@@ -637,25 +568,7 @@ class movemechanical:
 class sync:
     """Syncs the rotator to the specified position angle (degrees) without moving it.
 
-    Once this method has been called and the sync offset determined, both the
-    ``MoveAbsolute()`` method and the ``Position`` property must function in synced
-    coordinates rather than mechanical coordinates.
-
-    Arguments:
-        Position: The requested angle, degrees.
-
-    Raises:
-        InvalidValueException
-            if the (virtual) Position argument is not a numeric value,
-            or is outside 0 <= position < 360.
-        NotConnectedException
-            if device not connected
-        DriverException
-            see :ref:`driver-exception`
-
-    Note:
-        The sync offset must persist across driver starts and device reboots.
-
+        See https://ascom-standards.org/newdocs/rotator.html#Rotator.Sync
     """
     def on_put(self, req: Request, resp: Response, devnum: int):
         formdata = req.get_media()

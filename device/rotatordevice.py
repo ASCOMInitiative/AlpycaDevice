@@ -135,6 +135,7 @@ class RotatorDevice:
             self._stopped = False
             #print('[start] new timer')
             self._timer = Timer(self._interval, self._run)
+            self._timer.name = 'Rotation step'
             #print('[start] now start the timer')
             self._timer.start()
             #print('[start] timer started')
@@ -311,6 +312,7 @@ class RotatorDevice:
         self._connected = False
         self._connlock.release()
         self._timer = Timer(self._conn_time_sec, self._conn_complete)
+        self._timer.name = 'Connect delay'
         #print('[connect] now start the timer')
         self._timer.start()
 
