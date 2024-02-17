@@ -25,7 +25,7 @@ conforming Alpaca device with a minimum of "just in time learning".
     **Start Here:** :doc:`/quickstart` then look through :doc:`/introduction`.
 
 .. Note::
-    This is the 0.5.0 (November 28, 2023) experimental version. For release notes see
+    This is the 0.6.0 (February 16, 2023) experimental version. For release notes see
     |changes| on the |github|.
 
 For background see |about| and |alpcon| on the |ascsite|. As an astronomy

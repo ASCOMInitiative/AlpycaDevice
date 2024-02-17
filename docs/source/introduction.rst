@@ -227,8 +227,8 @@ general set of steps.
 
 .. |ascspecs| raw:: html
 
-    <a href="https://ascom-standards.org/Help/Platform/html/N_ASCOM_DeviceInterface.htm" target="_blank">
-    Master Official ASCOM Device Interface Specifications</a>
+    <a href="https://ascom-standards.org/newdocs/" target="_blank">
+    Master Generic ASCOM Device Interface Specifications</a>
 
 .. |devhelp| raw:: html
 
