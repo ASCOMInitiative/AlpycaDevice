@@ -36,27 +36,45 @@
 # 25-Dec-2022   rbd 0.1 More config items, separate logging section
 # 27-Dec-2022   rbd 0.1 Move shared logger construction and global
 #               var here. MIT license and module header. No mcast.
+# 17-Feb-2024   ltf 0.6 GitHub PR #11 "docker friendly configuration"
+#               https://github.com/ASCOMInitiative/AlpycaDevice/pull/11
+#               (manually merged). Remove comment about "slimy hack".
 #
 import sys
 import toml
 import logging
 
-#
-# This slimy hack is for Sphinx which, despite the toml.load() being
-# run only once on the first import, it can't deal with _dict not being
-# initialized or ?!?!?!?!? If you try to use getcwd() in the file name
-# here, it will also choke Sphinx. This cost me a day.
-#
 _dict = {}
 _dict = toml.load(f'{sys.path[0]}/config.toml')    # Errors here are fatal.
+_dict2 = {}
+try:
+    # ltf - this file, if it exists can override or supplement definitions
+    # in the normal config.toml. This facilitates putting the driver in a
+    # docker container where installation specific configuration can be
+    # put in a file that isn't pulled from a repository
+    _dict2 = toml.load('/alpyca/config.toml')
+except:
+    _dict2 = {}
+    # file is optional so it's ok if it isn't there
+
 def get_toml(sect: str, item: str):
-    if not _dict is {}:
-        return _dict[sect][item]
-    else:
-        return ''
+    setting = ''
+    s = None
+    try:
+        setting = _dict2[sect][item]
+    except:
+        try:
+            setting = _dict[sect][item]
+        except:
+            setting = ''
+    return setting
 
 class Config:
-    """Device configuration in ``config.toml``"""
+    """Device configuration. For docker based installation specific
+        configuration, will first look for ``/alpyca/config.toml``
+        and if exists, any setting there will override those in
+        ``./config.toml`` (the default settings file).
+    """
     # ---------------
     # Network Section
     # ---------------
