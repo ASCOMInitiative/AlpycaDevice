@@ -4,16 +4,16 @@ Version 0.6.0 Experimental (2024-02-20, for Platform 7)
   Validation and Alpaca Protocol Tests.
 * Replace docstrings in Rotator example with links to the
   expanded interface member documentation in the
-  `ASCOM Master Interfaces<https://ascom-standards.org/newdocs/>`_.
+  `ASCOM Master Interfaces <https://ascom-standards.org/newdocs/>`_.
 * Upgrade the device template generator to use JSON instead of YAML.
 * Using Platform 7 JSON, generate new templates for all devices to
   include additional interface members for Platform 7.
 * Update and enhance the
-  `SDK documentation<https://ascom-standards.org/alpycadevice/>`_.
+  `SDK documentation <https://ascom-standards.org/alpycadevice/>`_.
 * References in documentation changed to reference the new
-  `ASCOM Master Interfaces<https://ascom-standards.org/newdocs/>`_.
+  `ASCOM Master Interfaces <https://ascom-standards.org/newdocs/>`_.
 * Applied
-  `GitHub Pull Request #11<https://github.com/ASCOMInitiative/AlpycaDevice/pull/11>`_
+  `GitHub Pull Request #11 <https://github.com/ASCOMInitiative/AlpycaDevice/pull/11>`_
   and added feature to documentation.
 * Improved the formatting of the "Read the Docs" style for readability, and
   allowing flowed variable page size.
