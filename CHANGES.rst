@@ -4,7 +4,7 @@ Version 0.6.0 Experimental (2024-02-20, for Platform 7)
   Validation and Alpaca Protocol Tests.
 * Replace docstrings in Rotator example with links to the
   expanded interface member documentation in the
-  `ASCOM Master Interfaces<https://ascom-standards.org/newdocs/`_.
+  `ASCOM Master Interfaces<https://ascom-standards.org/newdocs/>`_.
 * Upgrade the device template generator to use JSON instead of YAML.
 * Using Platform 7 JSON, generate new templates for all devices to
   include additional interface members for Platform 7.
