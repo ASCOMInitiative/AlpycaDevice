@@ -9,9 +9,9 @@ Version 0.6.0 Experimental (2024-02-20, for Platform 7)
 * Using Platform 7 JSON, generate new templates for all devices to
   include additional interface members for Platform 7.
 * Update and enhance the
-  `SDK documentation <https://ascom-standards.org/alpycadevice/>`_.
+  `SDK documentation<https://ascom-standards.org/alpycadevice/>`_.
 * References in documentation changed to reference the new
-  `ASCOM Master Interfaces<https://ascom-standards.org/newdocs/`_.
+  `ASCOM Master Interfaces<https://ascom-standards.org/newdocs/>`_.
 * Applied
   `GitHub Pull Request #11<https://github.com/ASCOMInitiative/AlpycaDevice/pull/11>`_
   and added feature to documentation.
