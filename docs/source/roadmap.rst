@@ -14,9 +14,42 @@ This roadmap is written with that in mind.
 
 .. note::
     If you are more inclined to dive in and sink or swim, follow the steps in
-    :ref:`create-first_driver` then when you get mixed up, don't know what'same
+    :ref:`create-first_driver` then when you get mixed up, don't know what's
     what, you can come back here and take the time to come up to speed on the
     structure and usage of the moving parts.
+
+.. _logging_support:
+
+Logging Support
+---------------
+
+The boilerplate logic includes an app-wide logging function. See :doc:`log`
+for details. Calls to ``logger.info()``, ``logger.debug()``,
+etc., write to a file ``alpaca.log``. See |loghowto|.
+
+**Logging Level**
+
+Normally, the logger will log at level INFO. This means ``info`` and higher
+messages will be logged, and ``debug`` ones will not. See |loghowto|. To change
+the logging level, edit ``config.toml`` at ``log_level``. Note that ``config.py``
+converts the text level name (e.g. ``INFO``) to the numeric value needed. So
+you can use ``INFO``, ``DEBUG``, ``WARNING``, etc.
+
+**Rotation of Logs**
+
+Each time the app is started, the existing ``alpaca.log`` is renamed
+``alpaca.log.1``. Next ime that one will be renamed ``alpaca.log.2`` and the
+``alpaca.log`` will  be renamed ``alpaca.log.1`` with the newest log being
+``alpaca.log``. The logger will kee up to 10 generations, but you can change
+this in ``config.toml`` as ``num_keep_logs``. Logs will be rotated if the size
+exceeeds 5MB, but you can change this in ``config.toml`` as ``max_size_mb``.
+
+**Logging to the Console**
+
+The logger normally writes only to ``alpaca.log`` since a device driver will
+not normally run with an interactive console. However for debugging purposes,
+you may wish to have it log to the console (stdout) as well as the file.
+This is set in ``config.toml`` as ``log_to_stdout``.
 
 Alpaca Driver Request Flow - Responder Classes
 ----------------------------------------------
@@ -106,7 +139,7 @@ from the PUT body, including capitalization requirements, raising an
 `HTTPBadRequest` exception if anything
 goes wrong. The PUT responder uses the :py:class:`~shr.MethodResponse` class
 to construct the JSON response. We'll cover the more detailed exception
-handling in the next section. :py:func``
+handling in the next section.
 
 
 Alpaca Exceptions
@@ -164,8 +197,7 @@ this works...
     to the app via one of the Alpaca exceptions. For most problems, this will be
     the ``DriverException``.
 
-Throughout the template/sample, the invocation of ``DriverException`` uses some
-Python magic to The :py:class:`~exceptions.DriverException` has unique
+The :py:class:`~exceptions.DriverException` has unique
 enhancements. Look now. In the example above, note the construction of
 ``DriverException`` includes an error code, an automaticelly constructed
 responder class name, and the Python exception object. This allows
@@ -188,14 +220,13 @@ this pattern used throughout the template/sample and it is self-documenting
 thanks to the templates already having the device and member names.
 
 .. code-block:: python
-    :caption: Alpaca **DriverException** response
+    :caption: Alpaca ``DriverException`` response
     :emphasize-lines: 3
 
     except Exception as ex:
         resp.text = MethodResponse(req, # Put is actually like a method :-(
                         DriverException(0x500, '{Device.Member} failed', ex)).json
         return
-
 
 .. attention::
 
@@ -211,6 +242,8 @@ with a detailed error message like ``Rotator has failed, possible jam or cable
 wrap``. If the *completion property* ``IsMoving`` returns False it means "no
 longer moving and it got there *successfully*."
 
+**Ease of Raising Exceptions**
+
 In this case, even deep within your device code, raise *any Python exception*
 (e.g. ``RuntimeError``) with your detailed message. The boiler plate exception
 handling shown above and used in all of the responder classes will turn this
@@ -222,13 +255,12 @@ into a useful Alpaca ``DriverException``.
     to make sure that the move request completed successfully.
 
 
-Example of DriverException with Verbose and Concise Exceptions
+Example of DriverException with Normal and Verbose Exceptions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To see the exception handling in action, look at the
-:py:meth:`rotatordevice.RotatorDevice.MoveAbsolute` method in the simulated
-rotator logic where it checks to see if it's being asked to move while it's
-already moving:
+To see the exception handling in action, look at the ``MoveAbsolute()`` method in
+the simulated rotator logic ``rotatordevice.py`` where it checks to see if it's
+being asked to move while it's already moving:
 
 .. code-block:: python
     :emphasize-lines: 3
@@ -246,8 +278,35 @@ returning something like the following ``DriverException`` (with a ``200 OK``
 HTTP status).
 
 .. code-block::
-    :caption: Alpaca Verbose **DriverException** Response
-    :emphasize-lines: 4,5,6,7,8,9,10,11
+    :caption: Alpaca **Normal** ``DriverException`` Response
+    :emphasize-lines: 4,5,6
+
+    {
+        "ServerTransactionID": 3,
+        "ClientTransactionID": 321,
+        "ErrorNumber": 1280,
+        "ErrorMessage": "DriverException: Rotator.MoveAbsolute failed
+                RuntimeError: Cannot start a move while the rotator is moving"
+    }
+
+The ``DriverException`` class produces the first line, indicating which Alpaca
+method or property failed, followed by the Python exception name (``RuntimeError``)
+and the text you gave Python for this exception.
+
+.. note::
+
+    All of this is provided by the "boilerplate" logic in the sample/template.
+    All you need to do is raise an exception in your Python code that gets
+    called from any of the Alpaca API responder classes.
+
+**Verbose Exception Reporting**
+
+If your driver's configuration in ``./config.toml`` has
+``verbose_driver_exceptions = true`` then you'll get a traceback as well
+
+.. code-block::
+    :caption: Alpaca **Verbose** ``DriverException`` Response
+    :emphasize-lines: 4,5,6,7,8,9,10,11, 12
 
     {
         "ServerTransactionID": 3,
@@ -255,9 +314,10 @@ HTTP status).
         "ErrorNumber": 1280,
         "ErrorMessage": "DriverException: MoveAbsolute failed
                 Traceback (most recent call last):
-                File \"device/rotator.py\", line 292, in on_put
+                File \"device/rotator.py\", line 528, in on_put
                     rot_dev.MoveAbsolute(newpos)    # async
-                        File \"device/rotatordevice.py\", line 289, in MoveAbsolute
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        File \"device/rotatordevice.py\", line 357, in MoveAbsolute
                             raise RuntimeError('Cannot start a move while the rotator is moving')
                             RuntimeError: Cannot start a move while the rotator is moving"
     }
@@ -265,10 +325,9 @@ HTTP status).
 Since the low-level call and the Alpaca endpoint names are the same and also the
 line numbers in the two modules are similar, this may be confusing. What this
 traceback says is that the Python exception ``RunTimeError`` is raised at line
-289 in the **rotatordevice.py** module (in *its*
-:py:meth:`~rotatordevice.RotatorDevice.MoveAbsolute`) method, and that was
-called at line 292 in the Alpaca API responder class'
-:py:meth:`rotator.MoveAbsolute.on_put` handler. Note the first part of the
+357 in the **rotatordevice.py** module (in *its* ``MoveAbsolute``) method, and
+that was called at line 528 in the Alpaca API responder class'
+:py:meth:`Rotator.MoveAbsolute` ``on_put()`` handler. Note the first part of the
 ``ErrorMessage`` automatically prints the Alpaca exception type
 ``DriverException`` as well at the name of the Alpaca API EndPoint
 ``MoveAbsolute``. Also note that the error message passed To the Python
@@ -281,31 +340,6 @@ RunTimeError exception appears in the Alpaca DriverException error message.
     transition from ``True`` To ``False``. The failed second ``MoveAbsolute()``
     will fail without compromising the device's operation.
 
-With the :py:attr:`~config.Config.verbose_driver_exceptions` config option set
-to ``false``, this is what is returned when the app violates the "can't move
-while moving" rule.
-
-.. code-block:: json
-    :caption: Alpaca Normal **DriverException** Response
-    :emphasize-lines: 4,5,6
-
-
-    {
-        "ServerTransactionID": 3,
-        "ClientTransactionID": 321,
-        "ErrorNumber": 1280,
-        "ErrorMessage": "DriverException: MoveAbsolute failed
-                RuntimeError: Cannot start a move while the rotator is moving"
-    }
-
-This is more suitable for production and end-user operations. However to help
-troubleshoot device and driver issues, the verbose/traceback option is provided.
-
-.. note::
-
-    All of this is provided by the "boilerplate" logic in the sample/tempate.
-    All you need to do is raise an exception in your Python code that gets
-    called from any of the Alpaca API responder classes.
 
 Unhandled Exceptions
 --------------------
@@ -373,3 +407,6 @@ handler is installed during app startup :py:func:`app.main`.
     <a href="https://www.thunderclient.com/" target="_blank">
     Thunder Client for VS Code</a>
 
+.. |loghowto| raw:: html
+
+    <a href="https://docs.python.org/3/howto/logging.html" target="_blank">Logging HOWTO (Python)</a>

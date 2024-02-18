@@ -21,7 +21,7 @@ sys.setrecursionlimit(1500)
 
 # -- Project information -----------------------------------------------------
 
-project = 'Alpyca Device - Template/Sample Alpaca Server/Driver'
+project = 'AlpycaDevice SDK'
 copyright = '2022-2024, ASCOM Initiative, MIT License'
 author = 'Bob Denny'
 
@@ -86,6 +86,18 @@ exclude_patterns = []
 #
 # https://sphinx-themes.org/sample-sites/sphinx-rtd-theme/
 html_theme = 'sphinx_rtd_theme'
+
+#
+# https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html
+#
+html_theme_options = {
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': -1,
+    'prev_next_buttons_location': 'both',
+    'style_external_links': True,
+    'style_nav_header_background': '#000040',
+}
 
 # -- Options for PDF Output using rinohtype --
 

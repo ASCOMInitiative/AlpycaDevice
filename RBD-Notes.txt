@@ -199,3 +199,11 @@ workspace so to hell with it.
 * I had a few messages with Thunder and they had to make a change. After doing so, I was able to
 successfully register ThunderClient on the main W10 system so now I can keep the ThunderClient
 requests within the AlpycaDevice workspace once again. This is good.
+
+17-Feb-2024
+-----------
+* Back to this s**t
+    RuntimeWarning: 'doc8.main' found in sys.modules after import of package 'doc8',
+    but prior to execution of 'doc8.main'; this may result in unpredictable behaviour"
+This time, in User settings (W10 system), reStructuredText, Disabled Linters, add doc8
+along with rst-check, leaving rstcheck as the linter. Good enough.

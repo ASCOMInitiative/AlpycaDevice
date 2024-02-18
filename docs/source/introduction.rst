@@ -108,7 +108,8 @@ may appear during processing of requests. The HTTP server is allowed to write
 the post-request log line for non-200 (OK) HTTP responses.
 
 Finally the ``setup`` endpoint simply displays a static web page. Configuration
-for this lightweight sample uses a config file in |toml|. Of course you can
+for this lightweight sample uses a config file in |toml|. For details
+see :doc:`/config`. Of course you can
 provide your own web pages, or get really fancy and use |falcjinja|.
 
 .. _async-intro:
@@ -127,7 +128,6 @@ explicit endpoints acting as *initiators* and *completion properties*.
     * This may surprise you, but if your device runs into trouble after
       successfully starting an operation, you *should* raise an exception when
       the client app later asks for the status of that operation. See |async|.
-      test
 
 
 .. _excep-intro:
@@ -208,6 +208,7 @@ general set of steps.
    the fields for your device. Generate your own unique **ID** using the
    |guidgen|.
 5. Adjust the user configuration file (config.toml) for the Title, IP/Port etc.
+   Use this to store your device's settings as well. See :doc:`/config`.
 6. Develop the low-level code to control your device. Try to design it so that
    it provides variables and functions that can be used by the Alpaca methods
    and properties. Obviously this is going to be the major portion of your work,

@@ -14,6 +14,6 @@ member that is described in the |ascspecs|.
 
 .. |ascspecs| raw:: html
 
-    <a href="https://ascom-standards.org/Help/Platform/html/N_ASCOM_DeviceInterface.htm" target="_blank">
-    Master Official ASCOM Device Interface Specifications</a>
+    <a href="https://ascom-standards.org/newdocs/" target="_blank">
+    ASCOM Master Interfaces (Alpaca and COM)</a>
 

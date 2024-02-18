@@ -36,13 +36,21 @@ App Startup and Device Declarations
 
 .. Important::
    For each device type module (template + enhancements) you include in the app, you must make
-   a 1-line edit here so the app can support that app type. See the App Startup dsocumentation
+   a 1-line edit here so the app can support that app type. See the App Startup documentation
    linked below.
 
 .. toctree::
    :maxdepth: 1
 
    app
+
+App Configuration and Device Settings
+-------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   config
 
 Boilerplate Support Logic
 -------------------------
@@ -57,6 +65,5 @@ Boilerplate Support Logic
 
    exceptions
    discovery
-   config
    log
    shr

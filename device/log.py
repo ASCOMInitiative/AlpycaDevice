@@ -35,6 +35,7 @@
 # 01-Jan-2023   rbd 0.1 Initial edit, moved from config.py
 # 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
 # 08-Nov-2023   rbd 0.4 Log name is now 'alpyca'
+# 17-Feb-2024   rbd 0.6 Additional documentation.
 
 import logging
 import logging.handlers
@@ -50,16 +51,19 @@ def init_logging():
 
         **MASTER LOGGER**
 
-        This single logger is used throughout. The module name (the param for get_logger())
-        isn't needed and would be 'root' anyway, sort of useless. Also the default date-time
-        is local time, and not ISO-8601. We log in UTC/ISO format, and with fractional seconds.
-        Finally our config options allow for suppression of logging to stdout, and for this
-        we remove the default stdout handler. Thank heaven that Python logging is thread-safe!
+        This single logger is used throughout. The module name (the param for
+        get_logger()) isn't needed and would be 'root' anyway, sort of useless.
+        Logs time stamps in UTC/ISO format, and with fractional seconds. Since
+        our config options allow for suppression of logging to stdout, we remove
+        the default stdout handler. Thank heaven that Python logging is
+        thread-safe!
 
-        This logger is passed around throughout the app and may be used throughout. The
-        :py:class:`config.Config` class has options to control the number of back generations
-        of logs to keep, as well as the max size (at which point the log will be rotated).
-        A new log is started each time the app is started.
+        This logger is passed around throughout the app and may be used
+        throughout, even the device control. The :py:class:`config.Config` class
+        has options to control the number of back generations of logs to keep,
+        as well as the max size (at which point the log will be rotated). Also
+        there is an option to cause logged messages to go to the console for
+        debugging purposes. A new log is started each time the app is started.
 
     Returns:
         Customized Python logger.
