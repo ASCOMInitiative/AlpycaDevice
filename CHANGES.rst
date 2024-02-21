@@ -1,4 +1,11 @@
-Version 0.6.0 Experimental (2024-02-20, for Platform 7)
+Version 0.7.0 Experimental (2024-02-20, for Platform 7)
+=======================================================
+* Add setting ``sync_write_connected`` to control whether writing
+  ``True`` to ``Rotator.Connected`` acts synchrnonously
+  or asynchronously. Conform assumes this deprecated action acts
+  synchronously, so this defaults to ``True`` (see ``config.toml``)
+
+Version 0.6.0 Experimental (2024-02-18, for Platform 7)
 =======================================================
 * Upgrade Rotator example to ``IRotatatorV4``, complete ConformU
   Validation and Alpaca Protocol Tests.

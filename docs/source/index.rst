@@ -25,7 +25,7 @@ conforming Alpaca device with a minimum of "just in time learning".
     **Start Here:** :doc:`/quickstart` then look through :doc:`/introduction`.
 
 .. Note::
-    This is the 0.6.0 (February 20, 2023) experimental version. This is the first
+    This is the 0.7.0 (February 20, 2023) experimental version. This is the first
     release that contains the additions to the interfaces for Platform 7
     as |plat7changes| on the ASCOM Developer Forum. For release notes see
     |changes| on the |github|.

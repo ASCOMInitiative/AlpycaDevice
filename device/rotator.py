@@ -58,6 +58,8 @@
 #               superfluous () on class declarations.
 # 15-Feb-2024   rbd 0.6 Upgrade to Rotator V4 (Platform 7)
 # 16-Feb-2024   rbd 0.6 Passes Validtion and Protocol ConformU 2.1.0
+# 20-Feb-2024   rbd 0.7 Wow. Load device from Config (and toml) ha ha.
+#               Add setting for sync/async Connected write.
 #
 import datetime, json
 from falcon import Request, Response, HTTPBadRequest, before
@@ -104,6 +106,10 @@ def start_rot_device(logger: logger):
     logger = logger
     global rot_dev
     rot_dev = RotatorDevice(logger)
+    rot_dev.can_reverse = Config.can_reverse
+    rot_dev.step_size = Config.step_size
+    rot_dev.steps_per_sec = Config.steps_per_sec
+    rot_dev.sync_write_connected = Config.sync_write_connected
 
 # --------------------
 # RESOURCE CONTROLLERS
@@ -240,6 +246,12 @@ class connected:
     """Retrieves or sets the connected state of the device
 
         See https://ascom-standards.org/newdocs/rotator.html#Rotator.Connected
+
+        Notes:
+            There is a setting ``sync_write_connected`` in config.toml that
+            determines whether connecting by writing ``Connected = True`` behaves
+            synchronously or acts asynchronously. Conform requires this to be synchronous
+            per IRotatorV3 (PLatform 6).
     """
     def on_get(self, req: Request, resp: Response, devnum: int):
         resp.text = PropertyResponse(rot_dev.connected, req).json

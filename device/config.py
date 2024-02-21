@@ -39,6 +39,8 @@
 # 17-Feb-2024   ltf 0.6 GitHub PR #11 "docker friendly configuration"
 #               https://github.com/ASCOMInitiative/AlpycaDevice/pull/11
 #               (manually merged). Remove comment about "slimy hack".
+# 20-Ferb-2024  rbd 0.7 Add sync_write_connected to control sync/async
+#               write-Connected behavior.
 #
 import sys
 import toml
@@ -91,6 +93,7 @@ class Config:
     can_reverse: bool = get_toml('device', 'can_reverse')
     step_size: float = get_toml('device', 'step_size')
     steps_per_sec: int = get_toml('device', 'steps_per_sec')
+    sync_write_connected: bool = get_toml('device', 'sync_write_connected')
     # ---------------
     # Logging Section
     # ---------------

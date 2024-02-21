@@ -12,6 +12,7 @@ verbose_driver_exceptions = true
 can_reverse = true
 step_size = 1.0
 steps_per_sec = 6
+sync_write_connected = true     # True to emulate sync Connected = true (for Conform)
 
 [logging]
 log_level = 'INFO'

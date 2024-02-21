@@ -48,6 +48,8 @@
 # 26-Dec-2022   rbd 0.1 Do not log within lock()ed sections
 # 27-Dec-2022   rbd 0.1 MIT license and module header
 # 15-Jan-2023   rbd 0.1 Documentation. No logic changes.
+# 15-Feb-2024   rbd 0.6 Upgrade to Rotator V4 (Platform 7)
+# 20-Feb-2024   rbd 0.7 Setting for Connected-Write to be sync or async
 #
 from threading import Timer
 from threading import Lock
@@ -83,6 +85,7 @@ class RotatorDevice:
         self._step_size: float = 1.0
         self._steps_per_sec: int = 6
         self._conn_time_sec: float = 5.0    # Async connect delay
+        self._sync_write_connected = True;
         #
         # Rotator device state variables
         #
@@ -197,6 +200,11 @@ class RotatorDevice:
         res =  self._can_reverse
         self._lock.release()
         return res
+    @can_reverse.setter
+    def can_reverse (self, reverse: bool):
+        self._lock.acquire()
+        self._can_reverse = reverse
+        self._lock.release()
 
     @property
     def reverse(self) -> bool:
@@ -232,6 +240,18 @@ class RotatorDevice:
     def steps_per_sec (self, steps_per_sec: int):
         self._lock.acquire()
         self._steps_per_sec = steps_per_sec
+        self._lock.release()
+
+    @property
+    def sync_write_connected(self) -> float:
+        self._lock.acquire()
+        res =  self._sync_write_connected
+        self._lock.release()
+        return res
+    @sync_write_connected.setter
+    def sync_write_connected (self, sync: float):
+        self._lock.acquire()
+        self._sync_write_connected = sync
         self._lock.release()
 
     @property
@@ -281,13 +301,18 @@ class RotatorDevice:
             # Yes you could call Halt() but this is for illustration
             raise RuntimeError('Cannot disconnect while rotator is moving')
         if toconnect:
-            self._connlock.release()
-            self.logger.info('[connecting]')
-            self.Connect()      # Does own locking
+            if (self.sync_write_connected):
+                self._connected = True
+                self.logger.info('[instant connected]')
+                self._connlock.release()
+            else:
+                self._connlock.release()
+                self.logger.info('[delayed connecting]')
+                self.Connect()      # Does own locking
         else:
             self._connected = False
             self._connlock.release()
-            self.logger.info('[disconnected]')
+            self.logger.info('[instant disconnected]')
 
     @property
     def connecting(self) -> bool:
