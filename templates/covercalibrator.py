@@ -184,6 +184,23 @@ class brightness:
                             DriverException(0x500, 'Covercalibrator.Brightness failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
+class calibratorchanging:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Covercalibrator.Calibratorchanging failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
 class calibratorstate:
 
     def on_get(self, req: Request, resp: Response, devnum: int):
@@ -199,6 +216,23 @@ class calibratorstate:
         except Exception as ex:
             resp.text = PropertyResponse(None, req,
                             DriverException(0x500, 'Covercalibrator.Calibratorstate failed', ex)).json
+
+@before(PreProcessRequest(maxdev))
+class covermoving:
+
+    def on_get(self, req: Request, resp: Response, devnum: int):
+        if not ##IS DEV CONNECTED##:
+            resp.text = PropertyResponse(None, req,
+                            NotConnectedException()).json
+            return
+        try:
+            # ----------------------
+            val = ## GET PROPERTY ##
+            # ----------------------
+            resp.text = PropertyResponse(val, req).json
+        except Exception as ex:
+            resp.text = PropertyResponse(None, req,
+                            DriverException(0x500, 'Covercalibrator.Covermoving failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class coverstate:
