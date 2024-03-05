@@ -41,6 +41,7 @@
 # 27-Dec-2022   rbd 0.1 MIT License and module header
 # 13-Jan-2023   rbd 0.1 Fix DriverException's recovery from bad error number
 # 16-Jan-2023   rbd 0.1 Docstrings for other exception classes
+# 05-Mar-2024   rbd 0.7 OperationCancelled exception for Platform 7
 #
 import traceback
 from config import Config
@@ -261,6 +262,33 @@ class NotImplementedException:
         * Logs ``NotImplementedException: {message}``
         """
         self.number = 0x400
+        self.message = message
+        cname = self.__class__.__name__
+        logger.error(f'{cname}: {message}')
+
+    @property
+    def Number(self) -> int:
+        return self.number
+
+    @property
+    def Message(self) -> str:
+        return self.message
+
+class OperationCancelledException:
+    """An (asynchronous) in-progress operation has been cancelled"""
+    def __init__(
+            self,
+            message: str = 'In-progress (async) operation was cancelled.'
+        ):
+        """Initialize the ``OperationCancelledException`` object
+
+        Args:
+            number (int):   0x400 (1024)
+            message (str):  'In-progress (async) operation was cancelled.'
+
+        * Logs ``OperationCancelledException: {message}``
+        """
+        self.number = 0x40E
         self.message = message
         cname = self.__class__.__name__
         logger.error(f'{cname}: {message}')

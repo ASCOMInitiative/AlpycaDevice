@@ -207,3 +207,10 @@ requests within the AlpycaDevice workspace once again. This is good.
     but prior to execution of 'doc8.main'; this may result in unpredictable behaviour"
 This time, in User settings (W10 system), reStructuredText, Disabled Linters, add doc8
 along with rst-check, leaving rstcheck as the linter. Good enough.
+
+05-Mar-2024
+-----------
+* Using the most recent (March 2) JSON from the OmniSimulator, the templates were rebuilt. CoverCalibrator
+  now has the formerly missing members.
+* Added OperationCancelledException
+* Docs for the 0.7.0 built.
