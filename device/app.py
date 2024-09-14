@@ -12,7 +12,7 @@
 # -----------------------------------------------------------------------------
 # MIT License
 #
-# Copyright (c) 2022 Bob Denny
+# Copyright (c) 2022-2024 Bob Denny
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -51,11 +51,14 @@
 #               Corect routing device number capture spelling.
 # 23-May-2023   rbd 0.2 Refactoring for  multiple ASCOM device type support
 #               GitHub issue #1
+# 13-Sep-2024   rbd 1.0 Add support for enum classes within the responder modules
+#               GitHub issue #12
 #
 import sys
 import traceback
 import inspect
 from wsgiref.simple_server import WSGIRequestHandler, make_server
+from enum import IntEnum
 
 # -- isort wants the above line to be blank --
 # Controller classes (for routing)
@@ -151,7 +154,8 @@ def init_routes(app: App, devname: str, module):
 
     memlist = inspect.getmembers(module, inspect.isclass)
     for cname,ctype in memlist:
-        if ctype.__module__ == module.__name__:    # Only classes *defined* in the module
+        # Only classes *defined* in the module and not the enum classes
+        if ctype.__module__ == module.__name__ and not issubclass(ctype, IntEnum):
             app.add_route(f'/api/v{API_VERSION}/{devname}/{{devnum:int(min=0)}}/{cname.lower()}', ctype())  # type() creates instance!
 
 

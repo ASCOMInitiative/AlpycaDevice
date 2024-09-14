@@ -46,6 +46,7 @@ class RotatorMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # IRotatorVxxx
 
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------

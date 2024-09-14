@@ -13,6 +13,15 @@
             "justMyCode": true
         },
         {
+            "name": "Generator",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/templates",
+            "program": "app.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: Current File",
             "type": "debugpy",
             "request": "launch",

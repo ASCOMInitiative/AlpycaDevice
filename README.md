@@ -1,14 +1,14 @@
 # AlpycaDevice - Python Alpaca Device Driver SDK
 
-## Version 0.70, February 20, 2024 (experimental)
+## Version 1.0.0, September 13, 2024 (ASCOM Platform 7)
 
 <img align="right" width="210" height="166" hspace="20" vspace="20" src="https://ascom-standards.org/alpyca/readme-assets/AlpacaLogo210.png">
 
 This project is a lightweight Python framework for a device
-driver that supports the Alpaca protocol and ASCOM Standards. It implements a basic Rotator device with a simple simulation for Conform tests. **Templates for all ASCOM device types are provided**.
+driver that supports the Alpaca protocol and ASCOM Standards as of Platform 7. It implements a basic Rotator device with a simple simulation for Conform tests. **Templates for all ASCOM device types are provided**.
 The "boiler plate" logic remains the same for any device.
 
-## [AlpycaDevice SDK 0.7.0 Documentation](https://ascom-standards.org/alpycadevice/)
+## [AlpycaDevice SDK 1.0.0 Documentation](https://ascom-standards.org/alpycadevice/)
 
 [![AlpycaDevice Video](https://raw.githubusercontent.com/BobDenny/AlpycaDevice/master/docs/source/vthumb.png)](https://www.youtube.com/watch?v=soGb0j4iOt4 "AlpycaDevice Video")
 
@@ -22,17 +22,17 @@ skeleton Alpaca driver for any ASCOM device using the provided templates.
 
 ## Status of this project
 
-Stable except for additrions for ASCOM PLatform 7.
+Production release includes ASCOM Platform 7 Interface Additions. For details see
+[Release Notes for Interfaces as of ASCOM Platform 7](https://ascom-standards.org/newdocs/relnotes.html)
 
 **Templates for all ASCOM device types are included**. While preserving
-simplicity as much as possible, version 0.6.0 can easily be configured for
+simplicity as much as possible, it can easily be configured for
 multiple ASCOM device types and multiple instances of a given ASCOM device type
 within the Alpaca device/server. The sample Rotator simulator passes [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) for
 Rotator device, as well as [Conform
 Universal](https://github.com/ASCOMInitiative/ConformU#conform-universal) Alpaca
-Protocol tests. The 0.4.0 Conform logs are part of the repository. No changes to
-0.5.0 that would affect the Rotator simulator, only changes to the templates.
+Protocol tests.
 
 ## Potential Applications
 

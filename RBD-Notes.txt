@@ -214,3 +214,9 @@ along with rst-check, leaving rstcheck as the linter. Good enough.
   now has the formerly missing members.
 * Added OperationCancelledException
 * Docs for the 0.7.0 built.
+
+13-Sep-2024
+-----------
+* Add separate enum definitions in files under templates/enum, then merge the enum blocks into the
+  templates during generation. Required a chnage to the device boilerplate app.py to avoid trying
+  to make a responder for the enum classes.

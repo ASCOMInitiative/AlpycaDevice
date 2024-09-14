@@ -8,10 +8,6 @@
 #
 # Python Compatibility: Requires Python 3.7 or later
 #
-# Tools:
-# ruamel.yaml (later pyYAML) https://yaml.readthedocs.io/en/latest/index.html
-# munch to provide object (dotted) access to the dict made by pyYAML.
-#
 # -----------------------------------------------------------------------------
 # MIT License
 #
@@ -53,15 +49,15 @@
 # 28-Nov-2023   rbd GitHub #9 Missing line and extra parenthesis in
 #               class Connected. Also substitute {memname} in mod_hdr
 #               to avoid naked {memhdr} in the templates.
-# 14-Feb-2024   rbd Overhaul to use JSON insteadc of YAML, use the JSON
+# 14-Feb-2024   rbd Overhaul to use JSON instead of YAML, use the JSON
 #               from the Omni Simulator swagger for Platform 7 changes.
-#               **UNTESTED** and Platform 7 is not yet released!!
 # 16-Feb-2024   rbd DeviceState has template code for construction
+# 13-Sep-2024   rbd Add support for enum classes within the responder
+#               modules. These come from separate files not JSON.
+#               GitHub issue #12
 
 import json
-
-cls_tmpl = '''@before(PreProcessRequest(maxdev))
-class {mname}'''
+import os.path
 
 mod_hdr = '''
 # -*- coding: utf-8 -*-
@@ -111,6 +107,7 @@ class {Devname}Metadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # I{Devname}Vxxx
 
+{enum_block}
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------
@@ -312,6 +309,13 @@ def main():
                 mf.close
             mf = open(f'{devname}.py', 'w')
             temp = mod_hdr.replace('{devname}', devname)
+            if os.path.exists(f'enum/{devname}_enum.py'):
+                ef = open(f'enum/{devname}_enum.py')
+                enumtxt = ef.read()
+                ef.close()
+                temp = temp.replace('{enum_block}', enumtxt)
+            else:
+                temp = temp.replace('{enum_block}', '')
             mf.write(temp.replace('{Devname}', Devname))
             seendevs.append(devname)
         mf.write(cls_tmpl.replace('{memname}', memname))

@@ -1,3 +1,11 @@
+Version 0.8.0 Experimental (2024-09-13, for Platform 7)
+=======================================================
+* Add symbolic enums to templates using separate files since they
+  are not part of the JSON OpenAPI stuff. Required a small change to
+  the boilerplate app.py for the device to avoid making responders
+  for the enum classes. This responds to
+  `GitHub Issue #12 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/12>`_
+
 Version 0.7.0 Experimental (2024-02-20, for Platform 7)
 =======================================================
 * Add setting ``sync_write_connected`` to control whether writing
@@ -28,23 +36,23 @@ Version 0.6.0 Experimental (2024-02-18, for Platform 7)
 Version 0.5.0 Experimental (2023-11-28)
 =======================================
 * Fixed Connected class in several ways. See
-  `GitHub Issue #10 <https://github.com/BobDenny/AlpycaDevice/issues/10>`_
+  `GitHub Issue #10 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/10>`_
 * Regenerated all templates.
 
 Version 0.4.0 Experimental (2023-11-08)
 =======================================
 * Fix templates to remove ``to_int()`` and ``to_float()`` from import
   of ``shr``, These were eliminated  in earlier refactoring.
-  `GitHub Issue #6 <https://github.com/BobDenny/AlpycaDevice/issues/6>`_.
+  `GitHub Issue #6 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/6>`_.
 * Rename ``rotator.log`` in ``log.py`` module to ``alpyca.log`` since this server can
   support multiple device types. Update QuickStart to mention
   that the name may be changed to match the single device type (dome e.g.).
-  `GitHub Issue #7 <https://github.com/BobDenny/AlpycaDevice/issues/7>`_.
+  `GitHub Issue #7 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/7>`_.
 * Add missing Connected member to all device type templates
-  `GitHub Issue #8 <https://github.com/BobDenny/AlpycaDevice/issues/8>`_.
+  `GitHub Issue #8 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/8>`_.
 * Fixed the template generator app to avoid adding duplicate and
   fragmentary `on_put()` calls in addition to the correct ones.
-  `GitHub Issue #9 <https://github.com/BobDenny/AlpycaDevice/issues/9>`_.
+  `GitHub Issue #9 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/9>`_.
 * Regenerated all templates.
 
 Version 0.3.0 Experimental (2023-06-01)
@@ -52,12 +60,12 @@ Version 0.3.0 Experimental (2023-06-01)
 * Refactoring for multi-device types, mainly movement of the common endpoints
   into the individual device modules, so they can be implemented separately
   for each device *types*. Same with metadata. This covers
-  `GitHub Issue #1 <https://github.com/BobDenny/AlpycaDevice/issues/1>`_
+  `GitHub Issue #1 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/1>`_
   and
-  `GitHub Issue #3 <https://github.com/BobDenny/AlpycaDevice/issues/3>`_.
+  `GitHub Issue #3 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/3>`_.
 * Enhancment of templates to add explicit names and procesing of PUT parameters
   and for proper exception reporting. This includes
-  `GitHub Issue #2 <https://github.com/BobDenny/AlpycaDevice/issues/2>`_.
+  `GitHub Issue #2 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/2>`_.
 * Passes the new Alpaca Protocol checker (this required numerous changes!)
 * Documentation enhancements (lots!)
 

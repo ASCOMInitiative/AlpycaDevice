@@ -46,6 +46,7 @@ class ObservingconditionsMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # IObservingconditionsVxxx
 
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------

@@ -46,6 +46,7 @@ class FilterwheelMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # IFilterwheelVxxx
 
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------

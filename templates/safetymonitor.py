@@ -46,6 +46,7 @@ class SafetymonitorMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # ISafetymonitorVxxx
 
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------

@@ -46,6 +46,7 @@ class SwitchMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # ISwitchVxxx
 
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------

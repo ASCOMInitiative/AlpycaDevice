@@ -14,8 +14,8 @@ sample is actually a fully functional Alpaca Rotator simulator which passes the
 minimum.
 
 The idea here is to provide you, the prospective Alpaca device driver author,
-with the code structure and "boiler-plate" support code needed. No interaction
-with HTTP or JSON is needed. Only two dependencies (and of course *their*
+with the code structure and "boiler-plate" support code needed. **No interaction
+with HTTP or JSON is needed**. Only two dependencies (and of course *their*
 dependencies) are needed.
 
 By starting with this project, you will be able to implement a fully functional
@@ -25,9 +25,9 @@ conforming Alpaca device with a minimum of "just in time learning".
     **Start Here:** :doc:`/quickstart` then look through :doc:`/introduction`.
 
 .. Note::
-    This is the 0.7.0 (February 20, 2023) experimental version. This is the first
-    release that contains the additions to the interfaces for Platform 7
-    as |plat7changes| on the ASCOM Developer Forum. For release notes see
+    This is the 1.0.0 (September, 2024) production version. This is the first
+    release that contains the additions to the interfaces for Platform 7.
+    See |plat7changes|. For Release Notes on this SDK see the
     |changes| on the |github|.
 
 For background see |about| and |alpcon| on the |ascsite|. As an astronomy
@@ -37,12 +37,12 @@ developer wanting to use Alpaca, we suggest you look over |devhelp| and join the
 
 .. |changes| raw:: html
 
-    <a href="https://github.com/BobDenny/AlpycaDevice/blob/master/CHANGES.rst" target="_blank">
-    the CHANGES document</a>
+    <a href="https://github.com/ASCOMInitiative/AlpycaDevice/blob/master/CHANGES.rst" target="_blank">
+    CHANGES document</a>
 
 .. |github| raw:: html
 
-    <a href="https://github.com/BobDenny/AlpycaDevice" target="_blank">
+    <a href="https://github.com/ASCOMInitiative/AlpycaDevice" target="_blank">
     Alpyca Device SDK GitHub repository</a>
 
 .. |ascsite| raw:: html
@@ -97,8 +97,8 @@ developer wanting to use Alpaca, we suggest you look over |devhelp| and join the
 
 .. |plat7changes| raw:: html
 
-    <a href="https://ascomtalk.groups.io/g/Developer/message/7066" target="_blank">
-    Async Interface Changes</a>
+    <a href="https://ascom-standards.org/newdocs/relnotes.html" target="_blank">
+    Release Notes for ASCOM Platform 7</a>
 
 .. toctree::
     :maxdepth: 2
@@ -107,6 +107,7 @@ developer wanting to use Alpaca, we suggest you look over |devhelp| and join the
     introduction
     roadmap
     modules
+    migrating
     vscode
 
 Indices and tables

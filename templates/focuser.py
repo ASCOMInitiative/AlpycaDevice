@@ -46,6 +46,7 @@ class FocuserMetadata:
     MaxDeviceNumber = maxdev
     InterfaceVersion = ##YOUR DEVICE INTERFACE VERSION##        # IFocuserVxxx
 
+
 # --------------------
 # RESOURCE CONTROLLERS
 # --------------------
