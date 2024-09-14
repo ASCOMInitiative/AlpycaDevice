@@ -1,10 +1,12 @@
-Version 0.8.0 Experimental (2024-09-13, for Platform 7)
+Version 1.0.0 Production (2024-09-15, for Platform 7)
 =======================================================
-* Add symbolic enums to templates using separate files since they
-  are not part of the JSON OpenAPI stuff. Required a small change to
-  the boilerplate app.py for the device to avoid making responders
-  for the enum classes. This responds to
-  `GitHub Issue #12 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/12>`_
+* Add symbolic enums to templates since they are not part of the JSON OpenAPI
+  stuff. Required a small change to the boilerplate app.py for the device to
+  avoid making responders for the enum classes. This responds to `GitHub Issue
+  #12 <https://github.com/ASCOMInitiative/AlpycaDevice/issues/12>`_
+* Many edits to the documentation including new Platform 6 to 7 Migration Guide
+* Template generator enhanced to insert enums into templates from separate
+  tidbit files.
 
 Version 0.7.0 Experimental (2024-02-20, for Platform 7)
 =======================================================

@@ -26,7 +26,8 @@ copyright = '2022-2024, ASCOM Initiative, MIT License'
 author = 'Bob Denny'
 
 # The full version, including alpha/beta/rc tags
-release = '0.6.0'
+version = '1.0.0'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 #
@@ -99,6 +100,12 @@ html_theme_options = {
     'style_nav_header_background': '#000040',
 }
 
+#
+# This sets a standard logo for pages, and will be used for the sidebar
+# TOC as well.
+#
+html_logo = 'alpaca128.png'
+
 # -- Options for PDF Output using rinohtype --
 
 # Here are the settings per the rinohtype docs
@@ -110,7 +117,7 @@ html_theme_options = {
 rinoh_documents = [dict(doc='index',                # top-level file (index.rst)
                         target='alpyca',            # output file (alpyca.pdf)
                         title='Alpyca Device',
-                        subtitle='Release 0.6.0',
+                        subtitle='Release 1.0.0',
                         author='Robert B. Denny <rdenny@dc3.com>',
                         logo='alpaca1000.png',
                         template='alpyca.rtt')]

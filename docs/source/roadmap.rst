@@ -51,6 +51,8 @@ not normally run with an interactive console. However for debugging purposes,
 you may wish to have it log to the console (stdout) as well as the file.
 This is set in ``config.toml`` as ``log_to_stdout``.
 
+.. _responder-classes:
+
 Alpaca Driver Request Flow - Responder Classes
 ----------------------------------------------
 

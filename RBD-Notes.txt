@@ -186,7 +186,7 @@ at the rood of the folder tree. No preview on this.
 * ThunderClient stopped working because it wanted a subscription to store the activity and collections
 along with the workspace. I subscribed but the ****ing activation process requirees email on your
 development machine (long story!). I really wanted the collections I made to test AlpycaDevice SDK
-The files in the ThunderTests workspece folder are where they are, but Thunder can no longer use
+The files in the ThunderTests workspace folder are where they are, but Thunder can no longer use
 them without $35/year. In thunder settings you have to shut off the Workspace Data setting.
 Reading their docs, I found that by moving the collection JSON files to
 %APPDATA%\Code\User\globalStorage\rangav.vscode-thunder-client
@@ -210,13 +210,22 @@ along with rst-check, leaving rstcheck as the linter. Good enough.
 
 05-Mar-2024
 -----------
-* Using the most recent (March 2) JSON from the OmniSimulator, the templates were rebuilt. CoverCalibrator
-  now has the formerly missing members.
+* Using the most recent (March 2) JSON from the OmniSimulator, the templates were rebuilt.
+  CoverCalibrator now has the formerly missing members.
 * Added OperationCancelledException
 * Docs for the 0.7.0 built.
 
 13-Sep-2024
 -----------
+* Decided no 0.8 but to go with 1.0 in the platform7 branch
 * Add separate enum definitions in files under templates/enum, then merge the enum blocks into the
-  templates during generation. Required a chnage to the device boilerplate app.py to avoid trying
+  templates during generation. Required a changes to the device boilerplate app.py to avoid trying
   to make a responder for the enum classes.
+* Start on final 1.0 docs - Migration Guide. Not going to make PDF for this due to many links for
+  opening externals in separate tabs, which don't work in PDF.
+
+14-Sep-2024
+-----------
+* Complete Migration Guide, style enhancements, fix a few cross-references etc.
+* Change copyrights to cover thru 2024
+* Update tests to use latest ConformU Version 3.1.0 (Build 31181.cb32ac3), include latest logs.
