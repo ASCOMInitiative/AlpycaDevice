@@ -175,6 +175,7 @@ class maxswitch:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -192,6 +193,15 @@ class canwrite:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -209,6 +219,15 @@ class getswitch:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -226,6 +245,15 @@ class getswitchdescription:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -243,6 +271,15 @@ class getswitchname:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -260,6 +297,15 @@ class getswitchvalue:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -277,6 +323,15 @@ class minswitchvalue:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -294,6 +349,15 @@ class maxswitchvalue:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -311,6 +375,15 @@ class switchstep:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -328,16 +401,22 @@ class setswitch:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
-        state = to_bool(statestr)                       # Same here
+        try:
+            state = to_bool(statestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('State ' + statestr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -356,22 +435,17 @@ class setswitchname:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
-        namestr = get_request_field('Name', req)      # Raises 400 bad request if missing
-        try:
-            name = {cvtfunc}(namestr)
-        except:
-            resp.text = MethodResponse(req,
-                            InvalidValueException(f'Name " + namestr + " not a valid number.')).json
-            return
-
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
+        name = get_request_field('Name', req)         # Raises 400 bad request if missing
+        ### INTEPRET AS NEEDED OR FAIL ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -389,22 +463,23 @@ class setswitchvalue:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
         try:
             value = float(valuestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Value " + valuestr + " not a valid number.')).json
+                            InvalidValueException('Value ' + valuestr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -422,6 +497,15 @@ class canasync:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -439,6 +523,15 @@ class statechangecomplete:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
+        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        try:
+            id = int(idstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+            return
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -456,14 +549,15 @@ class cancelasync:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -481,16 +575,22 @@ class setasync:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
-        state = to_bool(statestr)                       # Same here
+        try:
+            state = to_bool(statestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('State ' + statestr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -509,22 +609,23 @@ class setasyncvalue:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID " + idstr + " not a valid number.')).json
+                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
         try:
             value = float(valuestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Value " + valuestr + " not a valid number.')).json
+                            InvalidValueException('Value ' + valuestr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

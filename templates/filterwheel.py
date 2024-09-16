@@ -175,6 +175,7 @@ class focusoffsets:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -192,6 +193,7 @@ class names:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -209,6 +211,7 @@ class position:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -223,14 +226,15 @@ class position:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
         try:
             position = int(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+                            InvalidValueException('Position ' + positionstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

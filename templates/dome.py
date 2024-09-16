@@ -187,6 +187,7 @@ class altitude:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -204,6 +205,7 @@ class athome:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -221,6 +223,7 @@ class atpark:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -238,6 +241,7 @@ class azimuth:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -255,6 +259,7 @@ class canfindhome:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -272,6 +277,7 @@ class canpark:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -289,6 +295,7 @@ class cansetaltitude:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -306,6 +313,7 @@ class cansetazimuth:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -323,6 +331,7 @@ class cansetpark:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -340,6 +349,7 @@ class cansetshutter:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -357,6 +367,7 @@ class canslave:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -374,6 +385,7 @@ class cansyncazimuth:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -391,6 +403,7 @@ class shutterstatus:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -408,6 +421,7 @@ class slaved:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -422,8 +436,14 @@ class slaved:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         slavedstr = get_request_field('Slaved', req)      # Raises 400 bad request if missing
-        slaved = to_bool(slavedstr)                       # Same here
+        try:
+            slaved = to_bool(slavedstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('Slaved ' + slavedstr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -442,6 +462,7 @@ class slewing:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -459,6 +480,7 @@ class abortslew:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -476,6 +498,7 @@ class closeshutter:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -493,6 +516,7 @@ class findhome:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -510,6 +534,7 @@ class openshutter:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -527,6 +552,7 @@ class park:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -544,6 +570,7 @@ class setpark:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -561,14 +588,15 @@ class slewtoaltitude:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         altitudestr = get_request_field('Altitude', req)      # Raises 400 bad request if missing
         try:
             altitude = float(altitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Altitude " + altitudestr + " not a valid number.')).json
+                            InvalidValueException('Altitude ' + altitudestr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -586,14 +614,15 @@ class slewtoazimuth:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         azimuthstr = get_request_field('Azimuth', req)      # Raises 400 bad request if missing
         try:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Azimuth " + azimuthstr + " not a valid number.')).json
+                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -611,14 +640,15 @@ class synctoazimuth:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         azimuthstr = get_request_field('Azimuth', req)      # Raises 400 bad request if missing
         try:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Azimuth " + azimuthstr + " not a valid number.')).json
+                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

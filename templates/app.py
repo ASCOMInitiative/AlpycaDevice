@@ -55,6 +55,12 @@
 # 13-Sep-2024   rbd Add support for enum classes within the responder
 #               modules. These come from separate files not JSON.
 #               GitHub issue #12
+# 15-Sep-2024   rbd Fix handling of string parameters. Catch parameter
+#               types not supported here.
+# 15-Sep-2024   rbd Fix multiple parameter related issues for both
+#               properties and methods. Add checks for incoming integer
+#               values for enums, fail if integer is not one of the
+#               values in the enum. This addresses GitHub issue #13
 
 import json
 import os.path
@@ -239,6 +245,7 @@ get_tmpl = '''    def on_get(self, req: Request, resp: Response, devnum: int):
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        {GETPARAMS}
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -254,7 +261,8 @@ put_tmpl = '''    def on_put(self, req: Request, resp: Response, devnum: int):
         if not ## IS DEV CONNECTED ##:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
-            return{GETPARAMS}
+            return
+        {GETPARAMS}
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -266,20 +274,35 @@ put_tmpl = '''    def on_put(self, req: Request, resp: Response, devnum: int):
 
 '''
 
-params_tmpl_bool = '''
-        {param}str = get_request_field('{Param}', req)      # Raises 400 bad request if missing
-        {param} = to_bool({param}str)                       # Same here
+params_tmpl_str = '''
+        {param} = get_request_field('{Param}', req)         # Raises 400 bad request if missing
 '''
 
-params_tmpl_num = '''
+params_tmpl_cvt = '''
         {param}str = get_request_field('{Param}', req)      # Raises 400 bad request if missing
         try:
             {param} = {cvtfunc}({param}str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'{Param} " + {param}str + " not a valid number.')).json
+                            InvalidValueException('{Param} ' + {param}str + ' not a valid {ptype}.')).json
             return
 '''
+
+# Only  valid for integer enums
+params_tmpl_enum = '''
+        {param}str = get_request_field('{Param}', req)      # Raises 400 bad request if missing
+        try:
+            {param} = int({param}str)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('{Param} ' + {param}str + ' not a valid integer.')).json
+            return
+        if not {param} in {enumvals}:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('{Param} ' + {param}str + ' not a valid enum value.')).json
+            return
+'''
+
 
 # Skip these common members, they are in the device main template
 common_mems = ['action', 'commandblind', 'commandbool', 'commandstring', 'connect', 'connected', 'connecting',
@@ -320,48 +343,106 @@ def main():
             seendevs.append(devname)
         mf.write(cls_tmpl.replace('{memname}', memname))
         for meth, meta in meths.items():
+            # TODO -- Yes I know this can be refactored! TFB
             if meth == 'get':
                 temp = get_tmpl.replace('{Devname}', Devname)
-                mf.write(temp.replace('{Memname}', Memname))
+                temp = temp.replace('{Memname}', Memname)
+                getparams = ''
+                for param in meths['get']['parameters']:
+                    Pname = param['name']
+                    pname = Pname.lower()
+                    if pname == 'clientid' or pname == 'clienttransactionid' or pname == 'devicenumber':
+                        continue;
+                    if '$ref' in param['schema']:
+                        ref = param['schema']['$ref'].split('/')[3]     # Enum NAME
+                        refdict = toptree['components']['schemas'][ref]
+                        ptype = refdict['type']                         # Data type of enum
+                        if ptype != 'integer':
+                            raise Exception('Oops enum with non-integer values')
+                        if 'enum' in refdict:
+                            ptype = 'enum'                              # Enum parameter template range check
+                            enumvals = refdict['enum']                  # List of valid integer values
+                        else:
+                            raise Exception('Oops, $ref of type other than enum')
+                        #{'enum': [0, 1, 2], 'type': 'integer', 'description': 'The telescope axes', 'format': 'int32'}
+                    else:
+                        ptype = param['schema']['type']
+                    if ptype == 'string':
+                        ptemp = params_tmpl_str
+                        ptemp += '        ### INTEPRET AS NEEDED OR FAIL ###  # Raise Alpaca InvalidValueException with details!'
+                    elif ptype == 'boolean':
+                        ptemp = params_tmpl_cvt
+                        ptemp = ptemp.replace('{cvtfunc}', 'to_bool')
+                    elif ptype == 'integer':
+                        ptemp = params_tmpl_cvt
+                        ptemp = ptemp.replace('{cvtfunc}', 'int')
+                        ptemp += '        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!'
+                    elif ptype == 'number':
+                        ptemp = params_tmpl_cvt
+                        ptemp = ptemp.replace('{cvtfunc}', 'float')
+                        ptemp += '        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!'
+                    elif ptype == 'enum':
+                        ptemp = params_tmpl_enum
+                        ptemp = ptemp.replace('{enumvals}', str(enumvals))
+                    else:
+                        raise Exception('Unsupported parameter type {ptype}')
+                    ptemp = ptemp.replace('{param}', pname)      # Parameter name
+                    ptemp = ptemp.replace('{Param}', Pname)
+                    ptemp = ptemp.replace('{ptype}', ptype)
+                    getparams += ptemp
+                    #mf.write('#------ 1 ------\n')                                  # Direct RequestBody with parameters
+                mf.write (temp.replace('{GETPARAMS}', getparams))
             else:
                 temp = put_tmpl.replace('{Devname}', Devname)
                 temp = temp.replace('{Memname}', Memname)
                 getparams = ''
                 if 'content' in  meths['put']['requestBody']:
                     for param in meths['put']['requestBody']['content']['multipart/form-data']['schema']['properties'].items():
-                        if param[0].lower() == 'clientid' or param[0].lower() == 'clienttransactionid':
+                        Pname = param[0]
+                        pname = Pname.lower()
+                        if pname == 'clientid' or pname == 'clienttransactionid':
                             continue;
-                        ptemp = params_tmpl_num
-                        ptemp = ptemp.replace('{param}', param[0].lower())    # Parameter name
-                        ptemp = ptemp.replace('{Param}', param[0])
                         if '$ref' in param[1]:
                             ref = param[1]['$ref'].split('/')[3]
-                            ptype = toptree['components']['schemas'][ref]['type']
+                            refdict = toptree['components']['schemas'][ref]
+                            ptype = refdict['type']                         # Data type of enum
+                            if ptype != 'integer':
+                                raise Exception('Oops enum with non-integer values')
+                            if 'enum' in refdict:
+                                ptype = 'enum'                              # Enum parameter template range check
+                                enumvals = refdict['enum']                  # List of valid integer values
+                            else:
+                                raise Exception('Oops, $ref of type other than enum')
                         else:
                             ptype = param[1]['type']
-                        if ptype == 'boolean':
-                            ptemp = params_tmpl_bool
-                            ptemp = ptemp.replace('{param}', param[0].lower())      # Parameter name
-                            ptemp = ptemp.replace('{Param}', param[0])
-                        if ptype == 'integer':
-                            ptemp = params_tmpl_num
-                            ptemp = ptemp.replace('{param}', param[0].lower())      # Parameter name
-                            ptemp = ptemp.replace('{Param}', param[0])
+                        if ptype == 'string':
+                            ptemp = params_tmpl_str
+                            ptemp += '        ### INTEPRET AS NEEDED OR FAIL ###  # Raise Alpaca InvalidValueException with details!'
+                        elif ptype == 'boolean':
+                            ptemp = params_tmpl_cvt
+                            ptemp = ptemp.replace('{cvtfunc}', 'to_bool')
+                        elif ptype == 'integer':
+                            ptemp = params_tmpl_cvt
                             ptemp = ptemp.replace('{cvtfunc}', 'int')
-                            ptemp += '        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!'
-                        if ptype == 'number':
-                            ptemp = params_tmpl_num
-                            ptemp = ptemp.replace('{param}', param[0].lower())      # Parameter name
-                            ptemp = ptemp.replace('{Param}', param[0])
+                            ptemp += '        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!'
+                        elif ptype == 'number':
+                            ptemp = params_tmpl_cvt
                             ptemp = ptemp.replace('{cvtfunc}', 'float')
-                            ptemp += '        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!'
+                            ptemp += '        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!'
+                        elif ptype == 'enum':
+                            ptemp = params_tmpl_enum
+                            ptemp = ptemp.replace('{enumvals}', str(enumvals))
+                        else:
+                            raise Exception('Unsupported parameter type {ptype}')
+                        ptemp = ptemp.replace('{param}', pname)      # Parameter name
+                        ptemp = ptemp.replace('{Param}', Pname)
+                        ptemp = ptemp.replace('{ptype}', ptype)
+
                         getparams += ptemp
                     #mf.write('#------ 1 ------\n')                                  # Direct RequestBody with parameters
                     mf.write (temp.replace('{GETPARAMS}', getparams))
 
-
     mf.close()
-
     print('end')
 
 

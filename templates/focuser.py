@@ -175,6 +175,7 @@ class absolute:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -192,6 +193,7 @@ class ismoving:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -209,6 +211,7 @@ class maxincrement:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -226,6 +229,7 @@ class maxstep:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -243,6 +247,7 @@ class position:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -260,6 +265,7 @@ class stepsize:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -277,6 +283,7 @@ class tempcomp:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -291,8 +298,14 @@ class tempcomp:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         tempcompstr = get_request_field('TempComp', req)      # Raises 400 bad request if missing
-        tempcomp = to_bool(tempcompstr)                       # Same here
+        try:
+            tempcomp = to_bool(tempcompstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('TempComp ' + tempcompstr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -311,6 +324,7 @@ class tempcompavailable:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -328,6 +342,7 @@ class temperature:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -345,6 +360,7 @@ class halt:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -362,14 +378,15 @@ class move:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
         try:
             position = int(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+                            InvalidValueException('Position ' + positionstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

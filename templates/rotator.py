@@ -175,6 +175,7 @@ class canreverse:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -192,6 +193,7 @@ class ismoving:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -209,6 +211,7 @@ class mechanicalposition:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -226,6 +229,7 @@ class position:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -243,6 +247,7 @@ class reverse:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -257,8 +262,14 @@ class reverse:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         reversestr = get_request_field('Reverse', req)      # Raises 400 bad request if missing
-        reverse = to_bool(reversestr)                       # Same here
+        try:
+            reverse = to_bool(reversestr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('Reverse ' + reversestr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -277,6 +288,7 @@ class stepsize:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -294,6 +306,7 @@ class targetposition:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -311,6 +324,7 @@ class halt:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -328,14 +342,15 @@ class move:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
         try:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -353,14 +368,15 @@ class moveabsolute:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
         try:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -378,14 +394,15 @@ class movemechanical:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
         try:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -403,14 +420,15 @@ class sync:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         positionstr = get_request_field('Position', req)      # Raises 400 bad request if missing
         try:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position " + positionstr + " not a valid number.')).json
+                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###

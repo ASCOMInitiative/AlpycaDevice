@@ -207,6 +207,7 @@ class bayeroffsetx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -224,6 +225,7 @@ class bayeroffsety:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -241,6 +243,7 @@ class binx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -255,14 +258,15 @@ class binx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         binxstr = get_request_field('BinX', req)      # Raises 400 bad request if missing
         try:
             binx = int(binxstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'BinX " + binxstr + " not a valid number.')).json
+                            InvalidValueException('BinX ' + binxstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -280,6 +284,7 @@ class biny:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -294,14 +299,15 @@ class biny:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         binystr = get_request_field('BinY', req)      # Raises 400 bad request if missing
         try:
             biny = int(binystr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'BinY " + binystr + " not a valid number.')).json
+                            InvalidValueException('BinY ' + binystr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -319,6 +325,7 @@ class camerastate:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -336,6 +343,7 @@ class cameraxsize:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -353,6 +361,7 @@ class cameraysize:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -370,6 +379,7 @@ class canabortexposure:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -387,6 +397,7 @@ class canasymmetricbin:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -404,6 +415,7 @@ class canfastreadout:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -421,6 +433,7 @@ class cangetcoolerpower:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -438,6 +451,7 @@ class canpulseguide:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -455,6 +469,7 @@ class cansetccdtemperature:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -472,6 +487,7 @@ class canstopexposure:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -489,6 +505,7 @@ class ccdtemperature:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -506,6 +523,7 @@ class cooleron:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -520,8 +538,14 @@ class cooleron:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         cooleronstr = get_request_field('CoolerOn', req)      # Raises 400 bad request if missing
-        cooleron = to_bool(cooleronstr)                       # Same here
+        try:
+            cooleron = to_bool(cooleronstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('CoolerOn ' + cooleronstr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -540,6 +564,7 @@ class coolerpower:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -557,6 +582,7 @@ class electronsperadu:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -574,6 +600,7 @@ class exposuremax:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -591,6 +618,7 @@ class exposuremin:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -608,6 +636,7 @@ class exposureresolution:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -625,6 +654,7 @@ class fastreadout:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -639,8 +669,14 @@ class fastreadout:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         fastreadoutstr = get_request_field('FastReadout', req)      # Raises 400 bad request if missing
-        fastreadout = to_bool(fastreadoutstr)                       # Same here
+        try:
+            fastreadout = to_bool(fastreadoutstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('FastReadout ' + fastreadoutstr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -659,6 +695,7 @@ class fullwellcapacity:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -676,6 +713,7 @@ class gain:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -690,14 +728,15 @@ class gain:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         gainstr = get_request_field('Gain', req)      # Raises 400 bad request if missing
         try:
             gain = int(gainstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Gain " + gainstr + " not a valid number.')).json
+                            InvalidValueException('Gain ' + gainstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -715,6 +754,7 @@ class gainmax:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -732,6 +772,7 @@ class gainmin:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -749,6 +790,7 @@ class gains:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -766,6 +808,7 @@ class hasshutter:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -783,6 +826,7 @@ class heatsinktemperature:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -800,6 +844,7 @@ class imagearray:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -817,6 +862,7 @@ class imagearrayvariant:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -834,6 +880,7 @@ class imageready:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -851,6 +898,7 @@ class ispulseguiding:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -868,6 +916,7 @@ class lastexposureduration:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -885,6 +934,7 @@ class lastexposurestarttime:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -902,6 +952,7 @@ class maxadu:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -919,6 +970,7 @@ class maxbinx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -936,6 +988,7 @@ class maxbiny:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -953,6 +1006,7 @@ class numx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -967,14 +1021,15 @@ class numx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         numxstr = get_request_field('NumX', req)      # Raises 400 bad request if missing
         try:
             numx = int(numxstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'NumX " + numxstr + " not a valid number.')).json
+                            InvalidValueException('NumX ' + numxstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -992,6 +1047,7 @@ class numy:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1006,14 +1062,15 @@ class numy:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         numystr = get_request_field('NumY', req)      # Raises 400 bad request if missing
         try:
             numy = int(numystr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'NumY " + numystr + " not a valid number.')).json
+                            InvalidValueException('NumY ' + numystr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1031,6 +1088,7 @@ class offset:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1045,14 +1103,15 @@ class offset:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         offsetstr = get_request_field('Offset', req)      # Raises 400 bad request if missing
         try:
             offset = int(offsetstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Offset " + offsetstr + " not a valid number.')).json
+                            InvalidValueException('Offset ' + offsetstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1070,6 +1129,7 @@ class offsetmax:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1087,6 +1147,7 @@ class offsetmin:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1104,6 +1165,7 @@ class offsets:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1121,6 +1183,7 @@ class percentcompleted:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1138,6 +1201,7 @@ class pixelsizex:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1155,6 +1219,7 @@ class pixelsizey:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1172,6 +1237,7 @@ class readoutmode:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1186,14 +1252,15 @@ class readoutmode:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         readoutmodestr = get_request_field('ReadoutMode', req)      # Raises 400 bad request if missing
         try:
             readoutmode = int(readoutmodestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ReadoutMode " + readoutmodestr + " not a valid number.')).json
+                            InvalidValueException('ReadoutMode ' + readoutmodestr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1211,6 +1278,7 @@ class readoutmodes:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1228,6 +1296,7 @@ class sensorname:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1245,6 +1314,7 @@ class sensortype:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1262,6 +1332,7 @@ class setccdtemperature:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1276,14 +1347,15 @@ class setccdtemperature:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         setccdtemperaturestr = get_request_field('SetCCDTemperature', req)      # Raises 400 bad request if missing
         try:
             setccdtemperature = float(setccdtemperaturestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'SetCCDTemperature " + setccdtemperaturestr + " not a valid number.')).json
+                            InvalidValueException('SetCCDTemperature ' + setccdtemperaturestr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1301,6 +1373,7 @@ class startx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1315,14 +1388,15 @@ class startx:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         startxstr = get_request_field('StartX', req)      # Raises 400 bad request if missing
         try:
             startx = int(startxstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'StartX " + startxstr + " not a valid number.')).json
+                            InvalidValueException('StartX ' + startxstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1340,6 +1414,7 @@ class starty:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1354,14 +1429,15 @@ class starty:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         startystr = get_request_field('StartY', req)      # Raises 400 bad request if missing
         try:
             starty = int(startystr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'StartY " + startystr + " not a valid number.')).json
+                            InvalidValueException('StartY ' + startystr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1379,6 +1455,7 @@ class subexposureduration:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # ----------------------
             val = ## GET PROPERTY ##
@@ -1393,14 +1470,15 @@ class subexposureduration:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         subexposuredurationstr = get_request_field('SubExposureDuration', req)      # Raises 400 bad request if missing
         try:
             subexposureduration = float(subexposuredurationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'SubExposureDuration " + subexposuredurationstr + " not a valid number.')).json
+                            InvalidValueException('SubExposureDuration ' + subexposuredurationstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1418,6 +1496,7 @@ class abortexposure:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1435,22 +1514,27 @@ class pulseguide:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         directionstr = get_request_field('Direction', req)      # Raises 400 bad request if missing
         try:
             direction = int(directionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Direction " + directionstr + " not a valid number.')).json
+                            InvalidValueException('Direction ' + directionstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        if not direction in [0, 1, 2, 3]:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('Direction ' + directionstr + ' not a valid enum value.')).json
+            return
+
         durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
         try:
             duration = int(durationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Duration " + durationstr + " not a valid number.')).json
+                            InvalidValueException('Duration ' + durationstr + ' not a valid integer.')).json
             return
-        ### RANGE CHECK AS NEEDED ###          # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
@@ -1468,16 +1552,22 @@ class startexposure:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
         try:
             duration = float(durationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Duration " + durationstr + " not a valid number.')).json
+                            InvalidValueException('Duration ' + durationstr + ' not a valid number.')).json
             return
-        ### RANGE CHECK AS NEEDED ###         # Raise Alpaca InvalidValueException with details!
+        ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         lightstr = get_request_field('Light', req)      # Raises 400 bad request if missing
-        light = to_bool(lightstr)                       # Same here
+        try:
+            light = to_bool(lightstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException('Light ' + lightstr + ' not a valid boolean.')).json
+            return
 
         try:
             # -----------------------------
@@ -1496,6 +1586,7 @@ class stopexposure:
             resp.text = PropertyResponse(None, req,
                             NotConnectedException()).json
             return
+        
         try:
             # -----------------------------
             ### DEVICE OPERATION(PARAM) ###
