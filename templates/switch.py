@@ -199,7 +199,7 @@ class canwrite:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -225,7 +225,7 @@ class getswitch:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -251,7 +251,7 @@ class getswitchdescription:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -277,7 +277,7 @@ class getswitchname:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -303,7 +303,7 @@ class getswitchvalue:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -329,7 +329,7 @@ class minswitchvalue:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -355,7 +355,7 @@ class maxswitchvalue:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -381,7 +381,7 @@ class switchstep:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -407,7 +407,7 @@ class setswitch:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
@@ -415,7 +415,7 @@ class setswitch:
             state = to_bool(statestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('State ' + statestr + ' not a valid boolean.')).json
+                            InvalidValueException(f'State {statestr} not a valid boolean.')).json
             return
 
         try:
@@ -441,7 +441,7 @@ class setswitchname:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         name = get_request_field('Name', req)         # Raises 400 bad request if missing
@@ -469,7 +469,7 @@ class setswitchvalue:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
@@ -477,7 +477,7 @@ class setswitchvalue:
             value = float(valuestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Value ' + valuestr + ' not a valid number.')).json
+                            InvalidValueException(f'Value {valuestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -503,7 +503,7 @@ class canasync:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -529,7 +529,7 @@ class statechangecomplete:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -555,7 +555,7 @@ class cancelasync:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -581,7 +581,7 @@ class setasync:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
@@ -589,7 +589,7 @@ class setasync:
             state = to_bool(statestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('State ' + statestr + ' not a valid boolean.')).json
+                            InvalidValueException(f'State {statestr} not a valid boolean.')).json
             return
 
         try:
@@ -615,7 +615,7 @@ class setasyncvalue:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ID ' + idstr + ' not a valid integer.')).json
+                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
@@ -623,7 +623,7 @@ class setasyncvalue:
             value = float(valuestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Value ' + valuestr + ' not a valid number.')).json
+                            InvalidValueException(f'Value {valuestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

@@ -328,7 +328,7 @@ class calibratoron:
             brightness = int(brightnessstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Brightness ' + brightnessstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Brightness {brightnessstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

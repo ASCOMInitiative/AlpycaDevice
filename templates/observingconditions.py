@@ -196,7 +196,7 @@ class averageperiod:
             averageperiod = float(averageperiodstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('AveragePeriod ' + averageperiodstr + ' not a valid number.')).json
+                            InvalidValueException(f'AveragePeriod {averageperiodstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

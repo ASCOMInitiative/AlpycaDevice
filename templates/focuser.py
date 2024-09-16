@@ -304,7 +304,7 @@ class tempcomp:
             tempcomp = to_bool(tempcompstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('TempComp ' + tempcompstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'TempComp {tempcompstr} not a valid boolean.')).json
             return
 
         try:
@@ -384,7 +384,7 @@ class move:
             position = int(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Position ' + positionstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Position {positionstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

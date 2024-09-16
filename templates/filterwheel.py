@@ -232,7 +232,7 @@ class position:
             position = int(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Position ' + positionstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Position {positionstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

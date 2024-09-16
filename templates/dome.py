@@ -442,7 +442,7 @@ class slaved:
             slaved = to_bool(slavedstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Slaved ' + slavedstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'Slaved {slavedstr} not a valid boolean.')).json
             return
 
         try:
@@ -594,7 +594,7 @@ class slewtoaltitude:
             altitude = float(altitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Altitude ' + altitudestr + ' not a valid number.')).json
+                            InvalidValueException(f'Altitude {altitudestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -620,7 +620,7 @@ class slewtoazimuth:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
+                            InvalidValueException(f'Azimuth {azimuthstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -646,7 +646,7 @@ class synctoazimuth:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
+                            InvalidValueException(f'Azimuth {azimuthstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

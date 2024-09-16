@@ -264,7 +264,7 @@ class binx:
             binx = int(binxstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('BinX ' + binxstr + ' not a valid integer.')).json
+                            InvalidValueException(f'BinX {binxstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -305,7 +305,7 @@ class biny:
             biny = int(binystr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('BinY ' + binystr + ' not a valid integer.')).json
+                            InvalidValueException(f'BinY {binystr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -544,7 +544,7 @@ class cooleron:
             cooleron = to_bool(cooleronstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('CoolerOn ' + cooleronstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'CoolerOn {cooleronstr} not a valid boolean.')).json
             return
 
         try:
@@ -675,7 +675,7 @@ class fastreadout:
             fastreadout = to_bool(fastreadoutstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('FastReadout ' + fastreadoutstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'FastReadout {fastreadoutstr} not a valid boolean.')).json
             return
 
         try:
@@ -734,7 +734,7 @@ class gain:
             gain = int(gainstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Gain ' + gainstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Gain {gainstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1027,7 +1027,7 @@ class numx:
             numx = int(numxstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('NumX ' + numxstr + ' not a valid integer.')).json
+                            InvalidValueException(f'NumX {numxstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1068,7 +1068,7 @@ class numy:
             numy = int(numystr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('NumY ' + numystr + ' not a valid integer.')).json
+                            InvalidValueException(f'NumY {numystr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1109,7 +1109,7 @@ class offset:
             offset = int(offsetstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Offset ' + offsetstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Offset {offsetstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1258,7 +1258,7 @@ class readoutmode:
             readoutmode = int(readoutmodestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('ReadoutMode ' + readoutmodestr + ' not a valid integer.')).json
+                            InvalidValueException(f'ReadoutMode {readoutmodestr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1353,7 +1353,7 @@ class setccdtemperature:
             setccdtemperature = float(setccdtemperaturestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SetCCDTemperature ' + setccdtemperaturestr + ' not a valid number.')).json
+                            InvalidValueException(f'SetCCDTemperature {setccdtemperaturestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1394,7 +1394,7 @@ class startx:
             startx = int(startxstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('StartX ' + startxstr + ' not a valid integer.')).json
+                            InvalidValueException(f'StartX {startxstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1435,7 +1435,7 @@ class starty:
             starty = int(startystr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('StartY ' + startystr + ' not a valid integer.')).json
+                            InvalidValueException(f'StartY {startystr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1476,7 +1476,7 @@ class subexposureduration:
             subexposureduration = float(subexposuredurationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SubExposureDuration ' + subexposuredurationstr + ' not a valid number.')).json
+                            InvalidValueException(f'SubExposureDuration {subexposuredurationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1520,11 +1520,11 @@ class pulseguide:
             direction = int(directionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Direction ' + directionstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Direction {directionstr} not a valid integer.')).json
             return
         if not direction in [0, 1, 2, 3]:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Direction ' + directionstr + ' not a valid enum value.')).json
+                            InvalidValueException(f'Direction {direction} not a valid enum value.')).json
             return
 
         durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
@@ -1532,7 +1532,7 @@ class pulseguide:
             duration = int(durationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Duration ' + durationstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Duration {durationstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1558,7 +1558,7 @@ class startexposure:
             duration = float(durationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Duration ' + durationstr + ' not a valid number.')).json
+                            InvalidValueException(f'Duration {durationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         lightstr = get_request_field('Light', req)      # Raises 400 bad request if missing
@@ -1566,7 +1566,7 @@ class startexposure:
             light = to_bool(lightstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Light ' + lightstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'Light {lightstr} not a valid boolean.')).json
             return
 
         try:

@@ -268,7 +268,7 @@ class reverse:
             reverse = to_bool(reversestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Reverse ' + reversestr + ' not a valid boolean.')).json
+                            InvalidValueException(f'Reverse {reversestr} not a valid boolean.')).json
             return
 
         try:
@@ -348,7 +348,7 @@ class move:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
+                            InvalidValueException(f'Position {positionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -374,7 +374,7 @@ class moveabsolute:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
+                            InvalidValueException(f'Position {positionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -400,7 +400,7 @@ class movemechanical:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
+                            InvalidValueException(f'Position {positionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -426,7 +426,7 @@ class sync:
             position = float(positionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Position ' + positionstr + ' not a valid number.')).json
+                            InvalidValueException(f'Position {positionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

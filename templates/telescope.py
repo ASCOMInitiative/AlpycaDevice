@@ -346,11 +346,11 @@ class axisrates:
             axis = int(axisstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Axis ' + axisstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Axis {axisstr} not a valid integer.')).json
             return
         if not axis in [0, 1, 2]:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Axis ' + axisstr + ' not a valid enum value.')).json
+                            InvalidValueException(f'Axis {axis} not a valid enum value.')).json
             return
 
         try:
@@ -412,11 +412,11 @@ class canmoveaxis:
             axis = int(axisstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Axis ' + axisstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Axis {axisstr} not a valid integer.')).json
             return
         if not axis in [0, 1, 2]:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Axis ' + axisstr + ' not a valid enum value.')).json
+                            InvalidValueException(f'Axis {axis} not a valid enum value.')).json
             return
 
         try:
@@ -745,7 +745,7 @@ class declinationrate:
             declinationrate = float(declinationratestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('DeclinationRate ' + declinationratestr + ' not a valid number.')).json
+                            InvalidValueException(f'DeclinationRate {declinationratestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -771,7 +771,7 @@ class destinationsideofpier:
             rightascension = float(rightascensionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('RightAscension ' + rightascensionstr + ' not a valid number.')).json
+                            InvalidValueException(f'RightAscension {rightascensionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         declinationstr = get_request_field('Declination', req)      # Raises 400 bad request if missing
@@ -779,7 +779,7 @@ class destinationsideofpier:
             declination = float(declinationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Declination ' + declinationstr + ' not a valid number.')).json
+                            InvalidValueException(f'Declination {declinationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -820,7 +820,7 @@ class doesrefraction:
             doesrefraction = to_bool(doesrefractionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('DoesRefraction ' + doesrefractionstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'DoesRefraction {doesrefractionstr} not a valid boolean.')).json
             return
 
         try:
@@ -915,7 +915,7 @@ class guideratedeclination:
             guideratedeclination = float(guideratedeclinationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('GuideRateDeclination ' + guideratedeclinationstr + ' not a valid number.')).json
+                            InvalidValueException(f'GuideRateDeclination {guideratedeclinationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -956,7 +956,7 @@ class guideraterightascension:
             guideraterightascension = float(guideraterightascensionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('GuideRateRightAscension ' + guideraterightascensionstr + ' not a valid number.')).json
+                            InvalidValueException(f'GuideRateRightAscension {guideraterightascensionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1000,11 +1000,11 @@ class moveaxis:
             axis = int(axisstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Axis ' + axisstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Axis {axisstr} not a valid integer.')).json
             return
         if not axis in [0, 1, 2]:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Axis ' + axisstr + ' not a valid enum value.')).json
+                            InvalidValueException(f'Axis {axis} not a valid enum value.')).json
             return
 
         ratestr = get_request_field('Rate', req)      # Raises 400 bad request if missing
@@ -1012,7 +1012,7 @@ class moveaxis:
             rate = float(ratestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Rate ' + ratestr + ' not a valid number.')).json
+                            InvalidValueException(f'Rate {ratestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1056,11 +1056,11 @@ class pulseguide:
             direction = int(directionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Direction ' + directionstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Direction {directionstr} not a valid integer.')).json
             return
         if not direction in [0, 1, 2, 3]:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Direction ' + directionstr + ' not a valid enum value.')).json
+                            InvalidValueException(f'Direction {direction} not a valid enum value.')).json
             return
 
         durationstr = get_request_field('Duration', req)      # Raises 400 bad request if missing
@@ -1068,7 +1068,7 @@ class pulseguide:
             duration = int(durationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Duration ' + durationstr + ' not a valid integer.')).json
+                            InvalidValueException(f'Duration {durationstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1127,7 +1127,7 @@ class rightascensionrate:
             rightascensionrate = float(rightascensionratestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('RightAscensionRate ' + rightascensionratestr + ' not a valid number.')).json
+                            InvalidValueException(f'RightAscensionRate {rightascensionratestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1186,11 +1186,11 @@ class sideofpier:
             sideofpier = int(sideofpierstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SideOfPier ' + sideofpierstr + ' not a valid integer.')).json
+                            InvalidValueException(f'SideOfPier {sideofpierstr} not a valid integer.')).json
             return
         if not sideofpier in [0, 1, -1]:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SideOfPier ' + sideofpierstr + ' not a valid enum value.')).json
+                            InvalidValueException(f'SideOfPier {sideofpier} not a valid enum value.')).json
             return
 
         try:
@@ -1249,7 +1249,7 @@ class siteelevation:
             siteelevation = float(siteelevationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SiteElevation ' + siteelevationstr + ' not a valid number.')).json
+                            InvalidValueException(f'SiteElevation {siteelevationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1290,7 +1290,7 @@ class sitelatitude:
             sitelatitude = float(sitelatitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SiteLatitude ' + sitelatitudestr + ' not a valid number.')).json
+                            InvalidValueException(f'SiteLatitude {sitelatitudestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1331,7 +1331,7 @@ class sitelongitude:
             sitelongitude = float(sitelongitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SiteLongitude ' + sitelongitudestr + ' not a valid number.')).json
+                            InvalidValueException(f'SiteLongitude {sitelongitudestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1390,7 +1390,7 @@ class slewsettletime:
             slewsettletime = int(slewsettletimestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('SlewSettleTime ' + slewsettletimestr + ' not a valid integer.')).json
+                            InvalidValueException(f'SlewSettleTime {slewsettletimestr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1416,7 +1416,7 @@ class slewtoaltaz:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
+                            InvalidValueException(f'Azimuth {azimuthstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         altitudestr = get_request_field('Altitude', req)      # Raises 400 bad request if missing
@@ -1424,7 +1424,7 @@ class slewtoaltaz:
             altitude = float(altitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Altitude ' + altitudestr + ' not a valid number.')).json
+                            InvalidValueException(f'Altitude {altitudestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1450,7 +1450,7 @@ class slewtoaltazasync:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
+                            InvalidValueException(f'Azimuth {azimuthstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         altitudestr = get_request_field('Altitude', req)      # Raises 400 bad request if missing
@@ -1458,7 +1458,7 @@ class slewtoaltazasync:
             altitude = float(altitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Altitude ' + altitudestr + ' not a valid number.')).json
+                            InvalidValueException(f'Altitude {altitudestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1484,7 +1484,7 @@ class slewtocoordinates:
             rightascension = float(rightascensionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('RightAscension ' + rightascensionstr + ' not a valid number.')).json
+                            InvalidValueException(f'RightAscension {rightascensionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         declinationstr = get_request_field('Declination', req)      # Raises 400 bad request if missing
@@ -1492,7 +1492,7 @@ class slewtocoordinates:
             declination = float(declinationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Declination ' + declinationstr + ' not a valid number.')).json
+                            InvalidValueException(f'Declination {declinationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1518,7 +1518,7 @@ class slewtocoordinatesasync:
             rightascension = float(rightascensionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('RightAscension ' + rightascensionstr + ' not a valid number.')).json
+                            InvalidValueException(f'RightAscension {rightascensionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         declinationstr = get_request_field('Declination', req)      # Raises 400 bad request if missing
@@ -1526,7 +1526,7 @@ class slewtocoordinatesasync:
             declination = float(declinationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Declination ' + declinationstr + ' not a valid number.')).json
+                            InvalidValueException(f'Declination {declinationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1588,7 +1588,7 @@ class synctoaltaz:
             azimuth = float(azimuthstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Azimuth ' + azimuthstr + ' not a valid number.')).json
+                            InvalidValueException(f'Azimuth {azimuthstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         altitudestr = get_request_field('Altitude', req)      # Raises 400 bad request if missing
@@ -1596,7 +1596,7 @@ class synctoaltaz:
             altitude = float(altitudestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Altitude ' + altitudestr + ' not a valid number.')).json
+                            InvalidValueException(f'Altitude {altitudestr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1622,7 +1622,7 @@ class synctocoordinates:
             rightascension = float(rightascensionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('RightAscension ' + rightascensionstr + ' not a valid number.')).json
+                            InvalidValueException(f'RightAscension {rightascensionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         declinationstr = get_request_field('Declination', req)      # Raises 400 bad request if missing
@@ -1630,7 +1630,7 @@ class synctocoordinates:
             declination = float(declinationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Declination ' + declinationstr + ' not a valid number.')).json
+                            InvalidValueException(f'Declination {declinationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1689,7 +1689,7 @@ class targetdeclination:
             targetdeclination = float(targetdeclinationstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('TargetDeclination ' + targetdeclinationstr + ' not a valid number.')).json
+                            InvalidValueException(f'TargetDeclination {targetdeclinationstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1730,7 +1730,7 @@ class targetrightascension:
             targetrightascension = float(targetrightascensionstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('TargetRightAscension ' + targetrightascensionstr + ' not a valid number.')).json
+                            InvalidValueException(f'TargetRightAscension {targetrightascensionstr} not a valid number.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -1771,7 +1771,7 @@ class tracking:
             tracking = to_bool(trackingstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('Tracking ' + trackingstr + ' not a valid boolean.')).json
+                            InvalidValueException(f'Tracking {trackingstr} not a valid boolean.')).json
             return
 
         try:
@@ -1812,7 +1812,7 @@ class trackingrate:
             trackingrate = int(trackingratestr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('TrackingRate ' + trackingratestr + ' not a valid integer.')).json
+                            InvalidValueException(f'TrackingRate {trackingratestr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:

@@ -60,6 +60,8 @@
 # 16-Feb-2024   rbd 0.6 Passes Validtion and Protocol ConformU 2.1.0
 # 20-Feb-2024   rbd 0.7 Wow. Load device from Config (and toml) ha ha.
 #               Add setting for sync/async Connected write.
+# 16-Sep-2024   rbd 1.0 Add logic for proper InvalidValueException on
+#               string to float conversions instead of just 400 errors.
 #
 import datetime, json
 from falcon import Request, Response, HTTPBadRequest, before
@@ -406,8 +408,13 @@ class reverse:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
-        rev_str = get_request_field('Reverse', req)
-        rev = to_bool(rev_str)              # Raises 400 Bad Request if str to bool fails
+        revstr = get_request_field('Reverse', req)
+        try:
+            rev = to_bool(revstr)
+        except:
+            resp.text = MethodResponse(req,
+                            InvalidValueException(f'Reverse {revstr} not a valid boolean.')).json
+            return
         try:
             # ----------------------
             rot_dev.reverse = rev
@@ -489,12 +496,12 @@ class move:
             resp.text = MethodResponse(req,
                             NotConnectedException()).json
             return
-        pos_str = get_request_field('Position', req)    # May raise 400 bad request
+        newpos_str = get_request_field('Position', req)    # May raise 400 bad request
         try:
-            newpos = origpos = float(pos_str)
+            newpos = origpos = float(newpos_str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position {pos_str} not a valid integer.')).json
+                            InvalidValueException(f'Position {newpos_str} not a valid float.')).json
             return
         # The spec calls for "anything goes" requires you to range the
         # final value modulo 360 degrees.
@@ -529,7 +536,7 @@ class moveabsolute:
             newpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position {pos_str} not a valid integer.')).json
+                            InvalidValueException(f'Position {pos_str} not a valid float.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(req,
@@ -561,7 +568,7 @@ class movemechanical:
             newpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
+                            InvalidValueException(f'Position {pos_str} not a valid float.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(req,
@@ -593,7 +600,7 @@ class sync:
             newpos = float(pos_str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'Position {formdata["Position"]} not a valid integer.')).json
+                            InvalidValueException(f'Position {pos_str} not a valid float.')).json
             return
         if newpos < 0.0 or newpos >= 360.0:
             resp.text = MethodResponse(req,

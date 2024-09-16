@@ -61,6 +61,8 @@
 #               properties and methods. Add checks for incoming integer
 #               values for enums, fail if integer is not one of the
 #               values in the enum. This addresses GitHub issue #13
+# 16-Sep-2024   rbd InvalidValueException error messages now use
+#               f-strings instead of concatenation.
 
 import json
 import os.path
@@ -284,7 +286,7 @@ params_tmpl_cvt = '''
             {param} = {cvtfunc}({param}str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('{Param} ' + {param}str + ' not a valid {ptype}.')).json
+                            InvalidValueException(f'{Param} {{param}str} not a valid {ptype}.')).json
             return
 '''
 
@@ -295,11 +297,11 @@ params_tmpl_enum = '''
             {param} = int({param}str)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException('{Param} ' + {param}str + ' not a valid integer.')).json
+                            InvalidValueException(f'{Param} {{param}str} not a valid integer.')).json
             return
         if not {param} in {enumvals}:
             resp.text = MethodResponse(req,
-                            InvalidValueException('{Param} ' + {param}str + ' not a valid enum value.')).json
+                            InvalidValueException(f'{Param} {{param}} not a valid enum value.')).json
             return
 '''
 
