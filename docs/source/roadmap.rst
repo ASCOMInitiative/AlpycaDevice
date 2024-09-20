@@ -144,6 +144,8 @@ to construct the JSON response. We'll cover the more detailed exception
 handling in the next section.
 
 
+.. _roadmap-exceptions:
+
 Alpaca Exceptions
 -----------------
 
@@ -341,7 +343,6 @@ RunTimeError exception appears in the Alpaca DriverException error message.
     ``MoveAbsolute`` will complete normally, at which time ``IsMoving`` will
     transition from ``True`` To ``False``. The failed second ``MoveAbsolute()``
     will fail without compromising the device's operation.
-
 
 Unhandled Exceptions
 --------------------

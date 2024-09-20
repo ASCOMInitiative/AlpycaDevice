@@ -129,7 +129,6 @@ explicit endpoints acting as *initiators* and *completion properties*.
       successfully starting an operation, you *should* raise an exception when
       the client app later asks for the status of that operation. See |async|.
 
-
 .. _excep-intro:
 
 Handling Exceptions
@@ -168,12 +167,13 @@ client? The |apiref| specifies that the Alpaca
 :py:class:`~exceptions.DriverException` should be used for all problems within
 the device and driver code. In this sample, the
 :py:class:`~exceptions.DriverException` class is unique in that it accepts a
-Python
+Python exception object as would come from the `ex` of `except Exception as ex:`.
+See :py:class:`~exceptions.DriverException` and :ref:`roadmap-exceptions`.
 
 .. tip::
 
     The built-in exception handling in this template/sample is detailed in the
-    :doc:`/roadmap`.
+    :doc:`/roadmap`, specifically :ref:`roadmap-exceptions`.
 
 
 Making this sample into your driver
