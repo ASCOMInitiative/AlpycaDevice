@@ -229,3 +229,9 @@ along with rst-check, leaving rstcheck as the linter. Good enough.
 * Complete Migration Guide, style enhancements, fix a few cross-references etc.
 * Change copyrights to cover thru 2024
 * Update tests to use latest ConformU Version 3.1.0 (Build 31181.cb32ac3), include latest logs.
+
+08-Oct-2024
+-----------
+* Merge platform 76 branch onto master.
+* Re-do HTML docs and publish in regular place /public_html/ascomsite/alpycadevice and dump temporary alpycadevice7 folder
+* As usual PDF fails. Put in the Rinoh fix Desc_Sig_Space see conf.py at the top. SUCCEEDED!!!!!
