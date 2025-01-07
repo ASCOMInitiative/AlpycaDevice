@@ -235,3 +235,11 @@ along with rst-check, leaving rstcheck as the linter. Good enough.
 * Merge platform 76 branch onto master.
 * Re-do HTML docs and publish in regular place /public_html/ascomsite/alpycadevice and dump temporary alpycadevice7 folder
 * As usual PDF fails. Put in the Rinoh fix Desc_Sig_Space see conf.py at the top. SUCCEEDED!!!!!
+
+04-Jan-2025
+-----------
+* See GitHub Issue #15 https://github.com/ASCOMInitiative/AlpycaDevice/issues/15 ... the OmniSimulators 0.4.1 has 'ID' in the Switch method parameters. ConformU 4.1.0 tests OmniSim 0.4.1 successfully. So which is it???
+
+07-Jan-2024
+-----------
+* It's 'Id' as in the Master Interfaces. Peter fixed the OmniSim and gave me a new JSON input for the templates AlpacaDeviceAPI_v2_plat7-0.4.1.json

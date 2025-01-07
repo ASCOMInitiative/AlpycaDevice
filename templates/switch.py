@@ -194,12 +194,12 @@ class canwrite:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -220,12 +220,12 @@ class getswitch:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -246,12 +246,12 @@ class getswitchdescription:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -272,12 +272,12 @@ class getswitchname:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -298,12 +298,12 @@ class getswitchvalue:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -324,12 +324,12 @@ class minswitchvalue:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -350,12 +350,12 @@ class maxswitchvalue:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -376,12 +376,12 @@ class switchstep:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -402,12 +402,12 @@ class setswitch:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
@@ -436,12 +436,12 @@ class setswitchname:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         name = get_request_field('Name', req)         # Raises 400 bad request if missing
@@ -464,12 +464,12 @@ class setswitchvalue:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing
@@ -498,12 +498,12 @@ class canasync:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -524,12 +524,12 @@ class statechangecomplete:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -550,12 +550,12 @@ class cancelasync:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         try:
@@ -576,12 +576,12 @@ class setasync:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         statestr = get_request_field('State', req)      # Raises 400 bad request if missing
@@ -610,12 +610,12 @@ class setasyncvalue:
                             NotConnectedException()).json
             return
         
-        idstr = get_request_field('ID', req)      # Raises 400 bad request if missing
+        idstr = get_request_field('Id', req)      # Raises 400 bad request if missing
         try:
             id = int(idstr)
         except:
             resp.text = MethodResponse(req,
-                            InvalidValueException(f'ID {idstr} not a valid integer.')).json
+                            InvalidValueException(f'Id {idstr} not a valid integer.')).json
             return
         ### RANGE CHECK AS NEEDED ###  # Raise Alpaca InvalidValueException with details!
         valuestr = get_request_field('Value', req)      # Raises 400 bad request if missing

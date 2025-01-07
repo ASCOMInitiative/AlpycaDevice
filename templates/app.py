@@ -63,6 +63,7 @@
 #               values in the enum. This addresses GitHub issue #13
 # 16-Sep-2024   rbd InvalidValueException error messages now use
 #               f-strings instead of concatenation.
+# 07-Jan-2025   rbd 1.1 use the new JSON input with the correct 'Id' casing for Switch.
 
 import json
 import os.path
@@ -312,7 +313,7 @@ common_mems = ['action', 'commandblind', 'commandbool', 'commandstring', 'connec
                'name', 'supportedactions']
 
 def main():
-    with open('AlpacaDeviceAPI_v2_plat7.json') as f:
+    with open('AlpacaDeviceAPI_v2_plat7-0.4.1.json') as f:  # Has corrected 'Id' casing for Switch
         toptree = json.load(f)
 
     seendevs = []

@@ -53,6 +53,8 @@
 #               GitHub issue #1
 # 13-Sep-2024   rbd 1.0 Add support for enum classes within the responder modules
 #               GitHub issue #12
+# 03-Jan-2025   rbd 1.1 Clarify devices vs device types at import site. Comment only,
+#               no logic changes.
 #
 import sys
 import traceback
@@ -72,9 +74,9 @@ from config import Config
 from discovery import DiscoveryResponder
 from shr import set_shr_logger
 
-#########################
-# FOR EACH ASCOM DEVICE #
-#########################
+##############################
+# FOR EACH ASCOM DEVICE TYPE #
+##############################
 import rotator
 
 #--------------
