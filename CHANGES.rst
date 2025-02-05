@@ -1,3 +1,11 @@
+Version 1.0.1 Update (2025-02-05)
+=================================
+* This responds to `GitHub Issue  #16
+  <https://github.com/ASCOMInitiative/AlpycaDevice/issues/16>`_ to add the
+  missing ``on_put()`` (property write) to the ``Connected`` property of all
+  templates.
+* The ``Id`` paraameter to some ``Switch`` members has correct capitalization.
+
 Version 1.0.0 Production (2024-09-15, for Platform 7)
 =======================================================
 * Add symbolic enums to templates since they are not part of the JSON OpenAPI

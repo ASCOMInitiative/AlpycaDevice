@@ -25,8 +25,8 @@ conforming Alpaca device with a minimum of "just in time learning".
     **Start Here:** :doc:`/quickstart` then look through :doc:`/introduction`.
 
 .. Note::
-    This is the 1.0.0 (September, 2024) production version. This is the first
-    release that contains the additions to the interfaces for Platform 7.
+    This is the 1.0.1 (February 5, 2025) updated production version. This
+    contains the additions to the interfaces for Platform 7.
     See |plat7changes|. For Release Notes on this SDK see the
     |changes| on the |github|.
 
