@@ -88,11 +88,24 @@ class connected:
     def on_get(self, req: Request, resp: Response, devnum: int):
         try:
             # -------------------------------------
-            is_connecting = ### READ CONN STATE ###
+            is_conn = ### READ CONN STATE ###
             # -------------------------------------
             resp.text = PropertyResponse(is_conn, req).json
         except Exception as ex:
             resp.text = MethodResponse(req, DriverException(0x500, 'Focuser.Connected failed', ex)).json
+
+    def on_put(self, req: Request, resp: Response, devnum: int):
+        conn_str = get_request_field('Connected', req)
+        conn = to_bool(conn_str)              # Raises 400 Bad Request if str to bool fails
+
+        try:
+            # --------------------------------------
+            ### CONNECT OR DISCONNECT THE DEVICE ###
+            # --------------------------------------
+            resp.text = MethodResponse(req).json
+        except Exception as ex:
+            resp.text = MethodResponse(req, # Put is actually like a method :-(
+                            DriverException(0x500, 'Focuser.Connected failed', ex)).json
 
 @before(PreProcessRequest(maxdev))
 class connecting:
