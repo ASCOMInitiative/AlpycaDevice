@@ -34,8 +34,8 @@ copyright = '2022-2025, ASCOM Initiative, MIT License'
 author = 'Bob Denny'
 
 # The full version, including alpha/beta/rc tags
-version = '1.0.1'
-release = '1.0.1'
+version = '1.0.2'
+release = '1.0.2'
 
 # -- General configuration ---------------------------------------------------
 #
@@ -125,7 +125,7 @@ html_logo = 'alpaca128.png'
 rinoh_documents = [dict(doc='index',                # top-level file (index.rst)
                         target='alpyca',            # output file (alpyca.pdf)
                         title='Alpyca Device',
-                        subtitle='Release 1.0.1',
+                        subtitle='Release 1.0.2',
                         author='Robert B. Denny <rdenny@dc3.com>',
                         logo='alpaca1000.png',
                         template='alpyca.rtt')]

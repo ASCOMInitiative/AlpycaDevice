@@ -1,3 +1,10 @@
+Version 1.0.2 Update (2025-02-16)
+=================================
+* This responds to `GitHub Issue  #17
+  <https://github.com/ASCOMInitiative/AlpycaDevice/issues/17>`_ to correct
+  the handling of missing Alpaca ``ClientID`` and ``ClientTransactionID`` HTTP
+  parameters, making them optional with a default value of 0.
+
 Version 1.0.1 Update (2025-02-05)
 =================================
 * This responds to `GitHub Issue  #16

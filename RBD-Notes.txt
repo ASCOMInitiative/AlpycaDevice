@@ -247,3 +247,8 @@ along with rst-check, leaving rstcheck as the linter. Good enough.
 05-Feb-2025
 -----------
 * 1.0.1 Regenerated templates for the Id thing and for Fix #16 for property Connected on_put() and a typo. 1.0.1.
+
+16-Feb-2025
+-----------
+* Fix ClientID and ClientTransactionID in shr.py per GitHub #17. Release 1.0.2
+

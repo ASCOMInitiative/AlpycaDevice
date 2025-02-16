@@ -60,6 +60,9 @@
 # 16-Feb-2024   rbd 0.6 For Platform 7, common DeviceState property.
 #               New StateValue object, and enhance PropertyResponse to
 #               serialize objects into JSON (the StateValue objects).
+# 16-Feb-2025   rbd 1.0.2 Issue #17 Correct handling of ClientID and
+#               ClientTransactionID. Add missing keywords to some Falcon
+#               HTTPBadRequest exceptions to prevent deprecation warnings.
 
 from threading import Lock
 from exceptions import Success
@@ -187,21 +190,21 @@ class PreProcessRequest():
         if devnum > self.maxdev:
             msg = f'Device number {str(devnum)} does not exist. Maximum device number is {self.maxdev}.'
             logger.error(msg)
-            raise HTTPBadRequest(_bad_title, msg)
-        test: str = get_request_field('ClientID', req, True)        # Caseless
-        if test is None:
-            msg = 'Request has missing Alpaca ClientID value'
-            logger.error(msg)
-            raise HTTPBadRequest(_bad_title, msg)
+            raise HTTPBadRequest(title=_bad_title, description=msg)
+        test: str = get_request_field('ClientID', req, True, '0')   # Caseless, default = 0 if missing
         if not self._pos_or_zero(test):
             msg = f'Request has bad Alpaca ClientID value {test}'
             logger.error(msg)
-            raise HTTPBadRequest(_bad_title, msg)
-        test: str = get_request_field('ClientTransactionID', req, True)
+            raise HTTPBadRequest(title=_bad_title, description=msg)
+        if test == '0':
+            req.params['ClientID'] = '0'                            # In case it's missing
+        test: str = get_request_field('ClientTransactionID', req, True, '0') # Caseless, default = 0 if missing
         if not self._pos_or_zero(test):
             msg = f'Request has bad Alpaca ClientTransactionID value {test}'
             logger.error(msg)
-            raise HTTPBadRequest(_bad_title, msg)
+            raise HTTPBadRequest(title=_bad_title, description=msg)
+        if test == '0':
+            req.params['ClientTransactionID'] = '0'                 # In case it's missing
 
     #
     # params contains {'devnum': n } from the URI template matcher
