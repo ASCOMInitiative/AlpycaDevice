@@ -5,7 +5,7 @@ ip_address = ''             # Any address
 port = 5555
 
 [server]
-location = 'Anywhere on Earth'  # Anything you want here
+location = 'Obs in Lauchhammer'  # Anything you want here
 verbose_driver_exceptions = true
 
 [device]
